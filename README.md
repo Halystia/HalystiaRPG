@@ -3,10 +3,10 @@
 
 ## Dependencies
 
-> Uses `CitizensAPI` see https://www.spigotmc.org/resources/citizens.13811/
-> Uses `TAB` see https://www.spigotmc.org/resources/tab-1-5-x-1-15-x-free-version.57806/
-> Uses tchat permissions. See also https://www.spigotmc.org/resources/luckperms-an-advanced-permissions-plugin.28140/
-> Implements `ArmorEquipEvent` librairie by `codingforcookies`. See also https://github.com/Arnuh/ArmorEquipEvent/tree/master/src/com/codingforcookies/armorequip
+- Uses `CitizensAPI` see https://www.spigotmc.org/resources/citizens.13811/
+- Uses `TAB` see https://www.spigotmc.org/resources/tab-1-5-x-1-15-x-free-version.57806/
+- Uses tchat permissions. See also https://www.spigotmc.org/resources/luckperms-an-advanced-permissions-plugin.28140/
+- Implements `ArmorEquipEvent` librairie by `codingforcookies`. See also https://github.com/Arnuh/ArmorEquipEvent/tree/master/src/com/codingforcookies/armorequip
 
 ## Discord
 
