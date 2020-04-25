@@ -1,0 +1,174 @@
+name: HalystiaRPG
+version: 4.0.0
+main: fr.jamailun.halystia.HalystiaRPG
+authors: [jamailun]
+depend: [Citizens, Sentinel]
+softdepend: [PlaceholderAPI]
+loadbefore: [TAB]
+description: Halystia RPG plugin, by jamailun.
+
+api-version: 1.15
+
+commands:
+  #> COMMANDES DE BASE <#
+  classe:
+    usage: /classe
+    permission: halystia.rpg.player
+    permission-message: §cTu n'es pas considéré comme étant un joueur !
+    description: Ouvre une GUI pour sélectionner une nouvelle classe ou voir tes infos de joueur.
+  quests:
+    usage: /quests
+    permission: halystia.rpg.player
+    permission-message: §cTu n'es pas considéré comme étant un joueur !
+    description: Ouvre une GUI pour voir ton avancement des quêtes.
+  titles:
+    usage: /titles
+    permission: halystia.rpg.player
+    permission-message: §cTu n'es pas considéré comme étant un joueur !
+    description: Ouvre une GUI pour choisir ton titre affiché.
+  ping:
+    usage: /ping
+    permission: halystia.rpg.player
+    permission-message: §cTu n'es pas considéré comme étant un joueur !
+    description: Extra command from jamailunAPI ! Easily get your ping !
+  #> SHOPS <#
+  create-shop-classe:
+    usage: /create-shop
+    permission: halystia.rpg.shop
+    permission-message: §cIl te faut le droit de manipuler les shops RPG !
+    description: Créer un PNJ vendant des objets.
+  reload-shop-classe:
+    usage: /reload-shop-classe
+    permission: halystia.rpg.shop
+    permission-message: §cIl te faut le droit de manipuler les shops RPG !
+    description: Recharger les shops si il y a eu un problème.
+  #> GUI D'EDITION <#
+  edit-mobs:
+    usage: /edit-mobs
+    aliases: mobs
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Ouvrir la GUI de gestion des mobs.
+  edit-npc:
+    usage: /edit-npc <command> <id> [args]
+    aliases: npcs
+    description: Editer les NPCS du jeu.
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+  edit-chunks:
+    usage: /edit-chunks
+    aliases: chunks
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Ouvrir la GUI pour la gestion des chunks.
+  edit-quests:
+    usage: /edit-quests <args>
+    aliases: quts
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Editer les quetes du jeu.
+  edit-titles:
+    usage: /edit-titles <args>
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Editer les titres du jeu.
+  #> SET LES VALEURS <#
+  set-roi:
+    usage: /set-roi <royaume> <joueur>
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Modifier le Roi d'un royaume.
+  set-chunk:
+    usage: /set-chunk <§bset §e<nom> [rayon (convertit les chunks dans un carré de demi-coté égal à 'rayon')] | §btoggle-vision§c>
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Modifie le type de chunk.
+  set-spawner:
+    usage: /set-spawner <create/set/remove> [type]
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Edite le bloc ciblé en spawner ou non.
+  set-xp:
+    usage: /set-xp <player> xp
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Set de l'exp pour un joueur.
+  set-tag:
+    usage: /set-tag <player> <add/list/remove/clear> [tag]
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Set des tags d'un joueur
+  set-spawner:
+    usage: /set-spawner <create/mode/remove> [arg]
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Creér un spawner custom ou le modifie.
+  set-job:
+    usage: /set-job <player> <cmd> [arg]
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Modifier le travail d'un joueur
+  #> COMMANDES A EFFET DIRECT <#
+  purge:
+    usage: /purge
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Tue tous les mobs customs.
+  summon-mob:
+    usage: /summonMob <id>
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Crée un mob custom spécifique.
+  give-spell:
+    usage: /give-spell <spell>
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Obtenir un spell
+  give-canne:
+    usage: /give-canne <canne>
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Obtenir une canne
+  is:
+    usage: /is <material> <title> ; <lore 1>, <lore 2>, ... , <lore n>
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Créer un item custom.
+  give-potion:
+    usage: /give-potion <mana>
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Give une potion de mana.
+  #> SUPER MOBS <#
+  set-oeil-antique:
+    usage: /set-oeil-antique
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Place un Oeil Antique sur vos pieds.
+  remove-oeil-antique:
+    usage: /remove-oeil-antique
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Retire l'Oeil Antique de vos pieds.
+
+permissions:
+  halystia.rpg.*:
+    description: Toutes les permissions halystias.
+    default: op
+    children:
+      halystia.rpg.world: true
+      halystia.rpg.shop: true
+      halystia.rpg.master: true
+      halystia.rpg.player: true
+  halystia.rpg.world:
+    description: Donne les droits sur les editions des chunks + mobs et affectation.
+    default: false
+  halystia.rpg.shops:
+    description: Donne les droits sur les editions de shops.
+    default: false
+  halystia.rpg.master:
+    description: Donne les droits sur les editions des joueurs.
+    default: false
+  halystia.rpg.player:
+    description: Permissions de base des joueurs.
+    default: true
