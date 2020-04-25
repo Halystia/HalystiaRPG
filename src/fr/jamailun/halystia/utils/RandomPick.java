@@ -26,6 +26,10 @@ public class RandomPick<T> {
 				all.add(new Element<T>(object));
 	}
 	
+	/**
+	 * Randomize a thing.
+	 * @return T the next randomized picked element.
+	 */
 	public T nextPick() {
 		int t = new Random().nextInt(all.size());
 		return all.get(t).getObject();

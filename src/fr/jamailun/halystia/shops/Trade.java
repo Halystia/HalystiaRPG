@@ -9,6 +9,7 @@ import static org.bukkit.ChatColor.WHITE;
 import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -23,6 +24,11 @@ import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.utils.ItemBuilder;
 
+/**
+ * Trade to allow the plugin to exchange object to others under certains cunditions.
+ * @see Shop
+ * @see TradeManager
+ */
 public class Trade implements Comparable<Trade> {
 	
 	private ItemStack toSell;
@@ -32,6 +38,32 @@ public class Trade implements Comparable<Trade> {
 	
 	private final String key;
 	
+	/**
+	 * Contructor for one-time use usage.
+	 * @param toSell ItemStack that will be given to the Player.
+	 * @param toTrade ItemStack that will wbe required then taken away from the Player in order to proceed the trade.
+	 */
+	public Trade(ItemStack toSell, ItemStack toTrade) {
+		this(toSell, Arrays.asList(toTrade));
+	}
+	
+	/**
+	 * Contructor for one-time use usage.
+	 * @param toSell ItemStack that will be given to the Player.
+	 * @param toTrade ItemStack that will wbe required then taken away from the Player in order to proceed the trade.
+	 */
+	public Trade(ItemStack toSell, List<ItemStack> toTrade) {
+		this(null, Classe.NONE, toSell, toTrade, 0);
+	}
+	
+	/**
+	 * Construct a new Trade. Contructor used in {@link Shop shops}.
+	 * @param key optional : key to save the trade if needed (Serialization in the {@linkplain TradeManager}.
+	 * @param classe Classe required for a Player to do the trade. NONE will be ok for everyone.
+	 * @param toSell ItemStack that will be given to the Player.
+	 * @param toTrade List<ItemStack> that will wbe required then taken away from the Player in order to proceed the trade.
+	 * @param levelRequired level in the class required do to the trade
+	 */
 	public Trade(String key, Classe classe, ItemStack toSell, List<ItemStack> toTrade, int levelRequired) {
 		if(toSell == null)
 			this.toSell = null;
@@ -43,6 +75,10 @@ public class Trade implements Comparable<Trade> {
 		this.levelRequired = levelRequired;
 	}
 	
+	/**
+	 * Check if a Player can afford the trade (before the {@link #trade(Player, boolean)} call).
+	 * @return true if the Player can afford the trade.
+	 */
 	public boolean canAfford(Player p) {
 		for(ItemStack item : toTrade) {
 			if( ! playerHasItems(p, item, item.getAmount()))
@@ -51,10 +87,20 @@ public class Trade implements Comparable<Trade> {
 		return true;
 	}
 	
+	/**
+	 * Do the trade with a player. Use the unsilent way.
+	 * @see #trade(Player, boolean)
+	 */
 	public boolean trade(Player p) {
 		return trade(p, false);
 	}
 	
+	/**
+	 * Do the trade with a player.
+	 * @param p Player who does the trade.
+	 * @param silent if true do not send the messages to the Player.
+	 * @return true if all the conditions arer satisfied. false if a problem occured.
+	 */
 	public boolean trade(Player p, boolean silent) {
 		PlayerData pc = HalystiaRPG.getInstance().getClasseManager().getPlayerData(p);
 		if(pc.getClasse() != classe && classe != Classe.NONE) {
@@ -138,6 +184,10 @@ public class Trade implements Comparable<Trade> {
 		p.updateInventory();
 	}
 	
+	/**
+	 * static method to compare two item stacks. Amount is not considered.
+	 * @return true if both items are considered as the sames.
+	 */
 	public static boolean areItemsTheSame(ItemStack a, ItemStack b) {
 		if(a.getType() != b.getType())
 			return false;
@@ -186,6 +236,10 @@ public class Trade implements Comparable<Trade> {
 		return key;
 	}
 	
+	/**
+	 * Get an con used in GUIs.
+	 * @return an ItemStack to represent the Trade.
+	 */
 	public ItemStack getIcone() {
 		ItemStack toSell = getItemToSell();
 		ItemBuilder builder = new ItemBuilder(toSell).setName(YELLOW + "" + (toSell.hasItemMeta() ? toSell.getItemMeta().getDisplayName() :  toSell.getType()) + GRAY + (toSell.getAmount()>1 ? "x"+toSell.getAmount() : ""));

@@ -5,6 +5,10 @@ import java.util.List;
 
 import fr.jamailun.halystia.npcs.Dialogable;
 
+/**
+ * Classe wich gather all messages used in quests.
+ * Every methods are traight-forward.
+ */
 public class Messages implements Dialogable {
 	
 	private List<String> dialog;

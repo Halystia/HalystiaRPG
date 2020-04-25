@@ -29,6 +29,13 @@ import fr.jamailun.halystia.quests.steps.QuestStepSpeak;
 import fr.jamailun.halystia.titles.Title;
 import fr.jamailun.halystia.utils.FileDataRPG;
 
+/**
+ * Quest. Pick of differents QuestStep.
+ * <br> Saved with the {@link fr.jamailun.halystia.utils.FileDataRPG} system.
+ * @author jamailun
+ * @see QuestManager
+ * @see fr.jamailun.halystia.quests.steps.QuestStep QuestStep
+ */
 public class Quest extends FileDataRPG {
 	
 	private final String id;

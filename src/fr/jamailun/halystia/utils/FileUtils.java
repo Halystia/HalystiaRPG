@@ -10,6 +10,10 @@ import org.bukkit.command.ConsoleCommandSender;
 
 import fr.jamailun.halystia.HalystiaRPG;
 
+/**
+ * @deprecated because not used.
+ */
+@Deprecated
 public final class FileUtils {
 	private FileUtils() {}
 	

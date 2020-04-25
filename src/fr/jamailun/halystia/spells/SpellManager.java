@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -24,6 +26,10 @@ import fr.jamailun.halystia.spells.newSpells.epeiste.*;
 import fr.jamailun.halystia.spells.spellEntity.*;
 import fr.jamailun.halystia.utils.ItemBuilder;
 
+/**
+ * Handle all spells in the game.<br />
+ * You can add a {@link fr.jamailun.halystia.spells.Spell Spell} with the method {@link #addSpell(Class)}.
+ */
 public class SpellManager {
 	
 	private Map<UUID, Long> cooldowns;
@@ -34,6 +40,9 @@ public class SpellManager {
 	
 	private final HalystiaRPG main;
 	
+	/**
+	 * Do not use that.
+	 */
 	public SpellManager(HalystiaRPG main) {
 		this.main = main;
 		mgr = new SpellEntityManager();
@@ -41,55 +50,82 @@ public class SpellManager {
 		cooldowns = new HashMap<>();
 		
 		spells = new ArrayList<>();
-		
-		spells.add(new SoinsPrimaires());
-		spells.add(new Toxine());
-		spells.add(new Flameche());
-		spells.add(new BenedictionNaturelle());
-		spells.add(new SoinsPerfectionnes());
-		spells.add(new Sommeil());
-		spells.add(new Etincelle());
-		spells.add(new SoinsUltimes());
-		spells.add(new JetVolcanique());
+		// Spells pout alchimiste
+		addSpell(SoinsPrimaires.class);
+		addSpell(Toxine.class);
+		addSpell(Flameche.class);
+		addSpell(BenedictionNaturelle.class);
+		addSpell(SoinsPerfectionnes.class);
+		addSpell(Sommeil.class);
+		addSpell(Etincelle.class);
+		addSpell(SoinsUltimes.class);
+		addSpell(JetVolcanique.class);
 
-		spells.add(new InvocationBasique());
-		spells.add(new ResistanceElementaire());
-		spells.add(new DiversionDeGrele());
-		spells.add(new Revenants());
-		spells.add(new FrappeTerrestre());
-		spells.add(new Corruption());
-		spells.add(new InvocationMajeure());
-		spells.add(new InvocationArmee());
-		spells.add(new CatapulteCeleste());
+		// Spells pout invocateur
+		addSpell(InvocationBasique.class);
+		addSpell(ResistanceElementaire.class);
+		addSpell(DiversionDeGrele.class);
+		addSpell(Revenants.class);
+		addSpell(FrappeTerrestre.class);
+		addSpell(Corruption.class);
+		addSpell(InvocationMajeure.class);
+		addSpell(InvocationArmee.class);
+		addSpell(CatapulteCeleste.class);
+
+		// Spells pout archer
+		addSpell(PluieAceree.class);
+		addSpell(Echappatoire.class);
+		addSpell(Propulsion.class);
+		addSpell(AcierEffrene.class);
+		addSpell(Disparition.class);
+		addSpell(VitesseExtreme.class);
+		addSpell(ManaCeleste.class);
+		addSpell(PluieDacier.class);
+		addSpell(Partageforce.class);
+
+		// Spells pout épéiste
+		addSpell(ExuvationSimple.class);
+		addSpell(RepliqueFeu.class);
+		addSpell(FracassTete.class);
+		addSpell(Vague.class);
+		addSpell(Damocles.class);
+		addSpell(Partageforce.class);
+		addSpell(ExuvationComplexe.class);
+		addSpell(AcierBrut.class);
+		addSpell(AcierPrecis.class);
 		
-		spells.add(new PluieAceree());
-		spells.add(new Echappatoire());
-		spells.add(new Propulsion());
-		spells.add(new AcierEffrene());
-		spells.add(new Disparition());
-		spells.add(new VitesseExtreme());
-		spells.add(new ManaCeleste());
-		spells.add(new PluieDacier());
-		spells.add(new Partageforce());
-		
-		spells.add(new ExuvationComplexe());
-		spells.add(new RepliqueFeu());
-		spells.add(new FracassTete());
-		spells.add(new Vague());
-		spells.add(new Seisme());
-		spells.add(new Damocles());
-		spells.add(new ExuvationSimple());
-		spells.add(new AcierPrecis());
-		spells.add(new AcierBrut());
-		
-		for(Spell s : spells)
-			s.init();
+	}
+	/**
+	 * Add spell to the system.
+	 * @param spell {@link fr.jamailun.halystia.spells.Spell Spell} to add.
+	 * @return true if spell could be created. false if error happened.
+	 */
+	public boolean addSpell(Class<? extends Spell> spell) {
+		if(spell == null) {
+			Bukkit.getLogger().log(Level.SEVERE, "Spell argument cannot be null !");
+			return false;
+		}
+		try {
+			Spell instance = spell.newInstance();
+			instance.init();
+			spells.add(instance);
+			return true;
+		} catch (InstantiationException | IllegalAccessException e) {
+			Bukkit.getLogger().log(Level.SEVERE, "Spell's class could not be loaded.");
+			return false;
+		}
 	}
 	
+	/**
+	 * @return {@link fr.jamailun.halystia.spells.spellEntity.SpellEntity SpellEntity} registered by system.
+	 */
 	public SpellEntityManager getSpellEntityManager() {
 		return mgr;
 	}
 	
+	/**
+	 * @return {@link fr.jamailun.halystia.spells.spellEntity.InvocationsManager InvocationsManager} registered by system.
+	 */
 	public InvocationsManager getInvocationsManager() {
 		return invocs;
 	}
@@ -101,6 +137,11 @@ public class SpellManager {
 		return list;
 	}
 	
+	/**
+	 *  Get a spell with is identifier.
+	 * @param id : identifier of the spell.
+	 * @return null if the identifier is not used.
+	 */
 	public Spell getSpellOfIdentification(String id) {
 		for(Spell spell : getAllSpells())
 			if(spell.getStringIdentification().equals(id))
@@ -108,10 +149,19 @@ public class SpellManager {
 		return null;
 	}
 	
+	/**
+	 * Get all registered spells.
+	 * @return a <b>copy</b> of all registered {@link fr.jamailun.halystia.spells.Spell Spell}.
+	 */
 	private List<Spell> getAllSpells() {
 		return new ArrayList<>(spells);
 	}
 	
+	/**
+	 * Get the spell in an item.
+	 * @param item ItemStack to read threw.
+	 * @return null if no {@link fr.jamailun.halystia.spells.Spell Spell} detected.
+	 */
 	public Spell getSpellOfItem(ItemStack item) {
 		try {
 			if(item == null)
@@ -131,6 +181,7 @@ public class SpellManager {
 	}
 	
 	/**
+	 * try to cast the spellof a Player with his item in main hand.
 	 * @return true if {@link fr.jamailun.halystia.spells.Spell Spell} has been casted.
 	 */
 	public boolean tryCastSpell(Player p) {
@@ -190,6 +241,11 @@ public class SpellManager {
 		}
 	}
 	
+	/**
+	 * Show cooldonws with cool maners.
+	 * @param secs seconds of cooldown.
+	 * @return a nice String.
+	 */
 	public String getNiceCooldown(int secs) {
 		int h = 0;
 		while(secs >= 3600) {
@@ -207,6 +263,11 @@ public class SpellManager {
 		return heures+minutes+secondes;
 	}
 	
+	/**
+	 * Substract cooldown of a player.
+	 * @param p concerned {@link org.bukkit.entity.Player Player}.
+	 * @param cooldown : amount of seconds to substract.
+	 */
 	public void substractCooldown(Player p, int cooldown) {
 		int cd = getCooldown(p);
 		cd -= cooldown;
@@ -215,6 +276,11 @@ public class SpellManager {
 		applyCooldown(p, cd);
 	}
 	
+	/**
+	 * Add cooldown to a player.
+	 * @param p concerned {@link org.bukkit.entity.Player Player}.
+	 * @param cooldown : amount of seconds to add.
+	 */
 	public void applyCooldown(Player p, int cooldown) {
 		final UUID uuid = p.getUniqueId();
 		if(cooldowns.containsKey(uuid)) {
@@ -224,6 +290,10 @@ public class SpellManager {
 		cooldowns.put(uuid, System.currentTimeMillis() + (cooldown * 1000));
 	}
 	
+	/**
+	 * Get cooldown of a player (in seconds).
+	 * @param p concerned {@link org.bukkit.entity.Player Player}.
+	 */
 	public int getCooldown(Player p) {
 		final UUID uuid = p.getUniqueId();
 		if( ! cooldowns.containsKey(uuid))
@@ -232,6 +302,11 @@ public class SpellManager {
 		return (int) ( (end - System.currentTimeMillis()) / 1000 );
 	}
 	
+	/**
+	 * Generate spell item.
+	 * @param {@link fr.jamailun.halystia.spells.Spell Spell} to transform. 
+	 * @return the spell paper.
+	 */
 	public ItemStack generateItem(Spell spell) {
 		ItemBuilder builder = new ItemBuilder(Material.PAPER);
 		builder.setName(spell.getColor()+"" + BOLD + spell.getName());
@@ -270,6 +345,10 @@ public class SpellManager {
 		}.runTaskLater(main, 10L);
 	}
 	
+	/**
+	 * Reset the numbers of invocations for all players.
+	 * Please do not use it.
+	 */
 	public void resetInvocations() {
 		for(Spell spell : spells) {
 			if( ! (spell instanceof InvocationSpell))

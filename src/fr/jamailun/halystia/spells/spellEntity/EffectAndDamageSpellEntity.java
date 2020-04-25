@@ -47,7 +47,7 @@ public class EffectAndDamageSpellEntity extends SpellEntity {
 
 	@Override
 	protected void doThing() {
-		for(LivingEntity en : getEntityAround(loc, range, hurtHimSelf)) {
+		for(LivingEntity en : getEntitiesAround(loc, range, hurtHimSelf)) {
 			for(PotionEffect effect : effects)
 				en.addPotionEffect(effect);
 			if(fire > 0)

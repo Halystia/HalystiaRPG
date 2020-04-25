@@ -6,6 +6,10 @@ import java.io.IOException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+/**
+ * Used to stock data in yaml format.
+ * @author jamailun
+ */
 public abstract class FileDataRPG {
 	
 	protected final File file;

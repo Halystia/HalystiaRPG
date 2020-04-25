@@ -89,6 +89,12 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 
+/**
+ * The core of HalystiaRPG.
+ * Get the instance with the static {@link #getInstance()}
+ * <br> Never construct an other.
+ * @author jamailun
+ */
 public final class HalystiaRPG extends JavaPlugin {
 	
 	public final static String WORLD = "RolePlay";
