@@ -14,7 +14,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.donjons.animations.PorteDonjon;
@@ -120,7 +119,7 @@ public class CommandDonjonPorte implements CommandExecutor {
 		double y = loc.getY();
 		y = y + 2;
 		loc.setY(y);
-		loc.getBlock().breakNaturally(new ItemStack(Material.AIR));
+		loc.getBlock().setType(Material.AIR);
 		for(Player pl : loc.getWorld().getPlayers())
 			pl.spawnParticle(Particle.FLAME, loc, 50);
 	}
