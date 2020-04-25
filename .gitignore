@@ -1,5 +1,7 @@
 # Compiled class file
 *.class
+bin/*
+.settings/*
 
 # Log file
 *.log
