@@ -1,5 +1,5 @@
 # HalystiaRPG
-> Minecraft spigot plugin provides RPG features. Used on [play.halystia.xyz]
+Minecraft spigot plugin provides RPG features. Used on __play.halystia.xyz__.
 
 ## Dependencies
 
@@ -16,7 +16,7 @@
 
 Download it, put it into your `/plugins/` folder.
 Then run `/edit-npcs` for npcs, `/edit-quests` for quests, `/edit-mobs` for mobs and `/edit-chunks` for chunks.
-Provides classe system (hardcoded sorry). Player shoulds use `/classe`.
+Provides classe system (hardcoded sorry). Player shoulds use `/classe`. See [wiki].
 As it's used in a private usage, no modifications are curetly permitted.
 
 ## Author
@@ -27,9 +27,4 @@ Distributed under the AGPL 3.0 license. See ``LICENSE`` for more information.
 If you use my plugin, please alert with my name somewhere : https://github.com/jamailun/HalystiaRPG .
 
 <!-- Markdown link & img dfn's -->
-[npm-image]: https://img.shields.io/npm/v/datadog-metrics.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/datadog-metrics
-[npm-downloads]: https://img.shields.io/npm/dm/datadog-metrics.svg?style=flat-square
-[travis-image]: https://img.shields.io/travis/dbader/node-datadog-metrics/master.svg?style=flat-square
-[travis-url]: https://travis-ci.org/dbader/node-datadog-metrics
 [wiki]: https://github.com/jamailun/HalystiaRPG/wiki
