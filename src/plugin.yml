@@ -150,6 +150,13 @@ commands:
     permission: halystia.rpg.world
     permission-message: §cIl te faut le droit de manipuler le monde RPG !
     description: Retire l'Oeil Antique de vos pieds.
+  #> COMMANDES BLOCKS <#
+  donjonPorte:
+    usage: §4/donjonPorte @p <cost> <x> <y> <z>
+    description: Open donjon door (CMD BLOCK ONLY)
+  joindonjon:
+    usage: §4/joinDonjon <donjon-name>
+    description: Join donjon (CMD BLOCK ONLY)
 
 permissions:
   halystia.rpg.*:
@@ -163,12 +170,18 @@ permissions:
   halystia.rpg.world:
     description: Donne les droits sur les editions des chunks + mobs et affectation.
     default: false
+    children:
+      halystia.rpg.player: true
   halystia.rpg.shops:
     description: Donne les droits sur les editions de shops.
     default: false
+    children:
+      halystia.rpg.player: true
   halystia.rpg.master:
     description: Donne les droits sur les editions des joueurs.
     default: false
+    children:
+      halystia.rpg.player: true
   halystia.rpg.player:
     description: Permissions de base des joueurs.
     default: true

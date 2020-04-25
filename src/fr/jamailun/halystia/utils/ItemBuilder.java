@@ -34,6 +34,11 @@ public class ItemBuilder {
     public ItemBuilder(ItemStack is){
         this.is= new ItemStack(is);
     }
+    
+    public ItemBuilder setAmount(int amount) {
+    	this.is.setAmount(amount);
+    	return this;
+    }
     /**
      * Create a new ItemBuilder from scratch.
      * @param m The material of the item.

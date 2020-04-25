@@ -45,6 +45,10 @@ import fr.jamailun.halystia.commands.CommandTitle;
 import fr.jamailun.halystia.commands.ModifyOeilAntiqueCommand;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
 import fr.jamailun.halystia.custom.potions.PotionManager;
+import fr.jamailun.halystia.donjons.DonjonManager;
+import fr.jamailun.halystia.donjons.DonjonsData;
+import fr.jamailun.halystia.donjons.util.CommandDonjonPorte;
+import fr.jamailun.halystia.donjons.util.CommandJoinDonjon;
 import fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.enemies.mobs.NaturalSpawnWorld;
@@ -115,6 +119,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	private TitlesManager titleMgr;
 	private Banque banque;
 	private JobManager jobs;
+	private DonjonManager donjonsMgr;
 	
 	private QuestManager questsMgr;
 	private NpcManager npcMgr;
@@ -179,9 +184,10 @@ public final class HalystiaRPG extends JavaPlugin {
 		titleMgr = new TitlesManager(PATH);
 		banque = new Banque(PATH+"/banque");
 		jobs = new JobManager(PATH+"/jobs", this);
+		donjonsMgr = new DonjonManager();
 		
 		npcMgr.verifyQuests(questsMgr);
-		
+		donjonsMgr.addDonjons(new DonjonsData().getContent());
 		
 		new NaturalSpawnWorld(this, mobMgr, mobsChunksMgr, WORLD);
 		
@@ -228,6 +234,9 @@ public final class HalystiaRPG extends JavaPlugin {
 		
 		getCommand("give-spell").setExecutor(new CommandGiveSpell(this));
 		getCommand("give-potion").setExecutor(new CommandGivePotion(this));
+		
+		getCommand("joindonjon").setExecutor(new CommandJoinDonjon(this));
+		getCommand("donjonPorte").setExecutor(new CommandDonjonPorte(this));
 		
 		new CommandEditNPC(this, npcMgr);
 		new CommandEditQuests(this, npcMgr, questsMgr, mobMgr);
@@ -307,6 +316,10 @@ public final class HalystiaRPG extends JavaPlugin {
 	
 	public static boolean isRpgWorld(World w) {
 		return w.getName().equals(WORLD);
+	}
+	
+	public DonjonManager getDonjonManager() {
+		return donjonsMgr;
 	}
 
 	public Saver getDataBase() {

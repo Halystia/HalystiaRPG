@@ -258,13 +258,15 @@ public class EnemyMob implements Enemy {
 		return wither;
 	}
 	
+	public static final ItemStack DONJON_KEY = new ItemBuilder(Material.IRON_NUGGET).setName(ChatColor.GOLD+"Âme de donjon").addUnsafeEnchantment(Enchantment.DURABILITY, 1).addItemFlag(ItemFlag.HIDE_ENCHANTS).toItemStack();
+	
 	private void setLoots(String name, FileConfiguration config, boolean isDonjon) {
 		loots = new ArrayList<>();
 		if( ! config.contains(name + ".drops.amount"))
 			return;
 		
 		if(isDonjon)
-			loots.add(new ItemBuilder(Material.IRON_NUGGET).setName(ChatColor.GOLD+"Âme de donjon").addUnsafeEnchantment(Enchantment.DURABILITY, 1).addItemFlag(ItemFlag.HIDE_ENCHANTS).toItemStack());
+			loots.add(DONJON_KEY);
 		
 		for(int i = 1; i <= config.getInt(name + ".drops.amount"); i++) {
 			int luck = 10000;
