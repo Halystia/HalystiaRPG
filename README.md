@@ -1,10 +1,6 @@
 # HalystiaRPG
 > Minecraft spigot plugin provides RPG features. Used on [play.halystia.xyz]
 
-[![NPM Version][npm-image]][npm-url]
-[![Build Status][travis-image]][travis-url]
-[![Downloads Stats][npm-downloads]][npm-url]
-
 ## Dependencies
 
 > Uses `CitizensAPI` see https://www.spigotmc.org/resources/citizens.13811/
