@@ -68,6 +68,11 @@ public class CommandJoinDonjon implements CommandExecutor {
 			return true;
 		}
 		
+		if(donjon.isPlayerInside(p)) {
+			p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu es déjà dans ce donjon...");
+			return true;
+		}
+		
 		Trade trade = new Trade(null, donjon.getKeyNeed());
 		if( ! trade.trade(p, true) ) {
 			p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la clef du donjon.");
@@ -76,6 +81,7 @@ public class CommandJoinDonjon implements CommandExecutor {
 
 		p.playSound(p.getLocation(), Sound.ENTITY_SHULKER_TELEPORT, 1f, 1f);
 		p.getPlayer().teleport(donjon.getEntryInDonjon());
+		donjon.playerEnterDonjon(p);
 		p.sendMessage(HalystiaRPG.PREFIX + DARK_GREEN + "Tu as rejoint le " + donjon.getDonjonDifficulty().color + donjon.getName().toLowerCase() + DARK_GREEN + ".");
 		return true;
 	}

@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
+import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.utils.Reloadable;
 
@@ -46,6 +47,7 @@ public class DonjonManager {
 				return false;
 		Donjon donjon = new Donjon(path, configName);
 		donjon.changeEntryLocation(entry);
+		donjon.changeExitLocation(entry);
 		donjon.changeDonjonDifficulty(difficulty);
 		donjons.add(donjon);
 		return true;
@@ -70,6 +72,17 @@ public class DonjonManager {
 		for(DonjonI dj : donjons)
 			if(dj instanceof Reloadable)
 				((Reloadable)dj).reloadData();
+	}
+	
+	/**
+	 * Get the Donjon the Player is in.
+	 * @return null if Player isn't in a donjon.
+	 */
+	public DonjonI getContainerDonjon(Player p) {
+		for(DonjonI dj : donjons)
+			if(dj.isPlayerInside(p))
+				return dj;
+		return null;
 	}
 	
 	//API

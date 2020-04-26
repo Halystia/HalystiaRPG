@@ -1,9 +1,14 @@
 package fr.jamailun.halystia.donjons;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
@@ -15,13 +20,16 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 
 	private final String configName;
 	private String name;
-	private Location entry;
+	private Location entry, exit;
 	private int xpReward, levelNeeded;
 	private DonjonDifficulty difficulty;
+	
+	private final Set<UUID> inside;
 	
 	public Donjon(String path, String name) {
 		super(path, name);
 		this.configName = name;
+		inside = new HashSet<>();
 		reloadData();
 	}
 	
@@ -46,6 +54,8 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 			config.set("name", "Donjon "+configName);
 		if( ! config.contains("entry"))
 			config.set("entry", new Location(Bukkit.getWorld(HalystiaRPG.WORLD), 0, 0, 0));
+		if( ! config.contains("exit"))
+			config.set("exit", new Location(Bukkit.getWorld(HalystiaRPG.WORLD), 0, 0, 0));
 		if( ! config.contains("reward"))
 			config.set("reward", 500);
 		if( ! config.contains("level"))
@@ -59,6 +69,14 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		entry = loc.clone();
 		synchronized (file) {
 			config.set("entry", loc);
+			save();
+		}
+	}
+	
+	public void changeExitLocation(Location loc) {
+		exit = loc.clone();
+		synchronized (file) {
+			config.set("exit", loc);
 			save();
 		}
 	}
@@ -145,6 +163,37 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		if(o instanceof Donjon)
 			return ((Donjon)o).configName.equals(configName);
 		return false;
+	}
+
+	@Override
+	public Location getExitOfDonjon() {
+		return exit.clone();
+	}
+
+	@Override
+	public Set<UUID> getJoinedPlayers() {
+		return new HashSet<>(inside);
+	}
+
+	@Override
+	public boolean isPlayerInside(Player p) {
+		return inside.contains(p.getUniqueId());
+	}
+
+	@Override
+	public boolean playerEnterDonjon(Player p) {
+		if(isPlayerInside(p))
+			return false;
+		inside.add(p.getUniqueId());
+		return true;
+	}
+
+	@Override
+	public boolean forcePlayerExit(Player p) {
+		if( ! isPlayerInside(p))
+			return false;
+		inside.remove(p.getUniqueId());
+		return true;
 	}
 	
 }

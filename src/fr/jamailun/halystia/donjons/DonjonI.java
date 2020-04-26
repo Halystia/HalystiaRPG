@@ -1,6 +1,10 @@
 package fr.jamailun.halystia.donjons;
 
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface DonjonI {
@@ -14,6 +18,11 @@ public interface DonjonI {
 	 * @return location to be teleport when enter the donjon
 	 */
 	public Location getEntryInDonjon();
+	
+	/**
+	 * @return location to be teleport when exit the donjon
+	 */
+	public Location getExitOfDonjon();
 	
 	/**
 	 * @return shortcgut to get world name.
@@ -46,5 +55,28 @@ public interface DonjonI {
 	 *  Destroy all data about it.
 	 */
 	public void destroy();
+	
+	/**
+	 * @return a Set of UUIDof players who are inside the Donjon.
+	 */
+	public Set<UUID> getJoinedPlayers();
+	
+	/**
+	 * Check if a specific player is inside the donjon.
+	 * @return true is it's the case.
+	 */
+	public boolean isPlayerInside(Player p);
+	
+	/**
+	 * Alert the donjon that someone want to enter.
+	 * @return false if player is already in.
+	 */
+	public boolean playerEnterDonjon(Player p);
+	
+	/**
+	 * Force a Player to go out of the donjon.
+	 * @return false if the Player is not in the donjon.
+	 */
+	public boolean forcePlayerExit(Player p);
 	
 }

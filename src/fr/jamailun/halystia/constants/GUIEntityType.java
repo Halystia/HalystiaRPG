@@ -28,6 +28,7 @@ public enum GUIEntityType {
 	
 	BLAZE(EntityType.BLAZE, new ItemBuilder(Material.BLAZE_ROD).setName(DARK_RED+"Blaze").toItemStack()),
 	ENDERMAN(EntityType.ENDERMAN, new ItemBuilder(Material.ENDER_PEARL).setName(DARK_RED+"Enderman").toItemStack()),
+	MAGMA_CUBE(EntityType.MAGMA_CUBE, new ItemBuilder(Material.MAGMA_CREAM).setName(DARK_RED+"Magma cube").toItemStack()),
 	WITCH(EntityType.WITCH, new ItemBuilder(Material.GLASS_BOTTLE).setName(DARK_RED+"Sorcière").toItemStack()),
 	GHAST(EntityType.GHAST, new ItemBuilder(Material.GHAST_TEAR).setName(DARK_RED+"Ghast").toItemStack()),
 	
