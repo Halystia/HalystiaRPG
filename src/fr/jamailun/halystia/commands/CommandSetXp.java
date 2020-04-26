@@ -1,83 +1,89 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.TabCompleteEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.players.PlayerData;
 
-public class CommandSetXp implements CommandExecutor, Listener {
-	
-	private final HalystiaRPG main;
+public class CommandSetXp extends HalystiaCommand {
 	
 	public CommandSetXp(HalystiaRPG main) {
-		this.main = main;
-		Bukkit.getPluginManager().registerEvents(this, main);
+		super(main, "set-xp");
 	}
 	
 	@Override
-	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args) {
-		if( ! (sender instanceof Player)) {
-			sender.sendMessage(RED + "Tu dois être un joueur !");
+	public boolean onCommand(CommandSender sender, Command arg1, String label, String[] args) {
+		
+		if(args.length < 1) {
+			sender.sendMessage(HalystiaRPG.PREFIX + RED + "/"+label+" <joueur> [exp]");
 			return true;
 		}
 		
-		Player p = (Player) sender;
-		if(! HalystiaRPG.isInRpgWorld(p)) {
-			p.sendMessage(HalystiaRPG.PREFIX + RED + "Possible uniquement dans le monde RP !");
-			return true;
-		}
-		
-		if(args.length < 2) {
-			p.sendMessage("/set-xp <joueur> <exp>");
-			return true;
-		}
-		
-		String plStr = args[0];
-		Player cible = Bukkit.getPlayer(plStr);
+		Player cible = Bukkit.getPlayerExact(args[0]);
 		if(cible == null) {
-			p.sendMessage(RED + "Joueur inconnu : " + DARK_RED + plStr + RED + ".");
+			sender.sendMessage(HalystiaRPG.PREFIX + RED + "Joueur inconnu ou non connecté : (" + DARK_RED + args[0] + RED + ").");
+			return true;
+		}
+		
+		PlayerData data = main.getClasseManager().getPlayerData(cible);
+		if(data == null) {
+			sender.sendMessage(HalystiaRPG.PREFIX + DARK_RED + "Une erreur interne est survenue. Réessayez.");
+			return true;
+		}
+		
+		if(args.length == 1) {
+			sender.sendMessage(HalystiaRPG.PREFIX + GREEN + "(" + YELLOW + args[0] + GREEN + " est niveau " + GOLD + data.getLevel() + GREEN + ", et possède " + YELLOW + data.getExpAmount() + GREEN + "xp.");
 			return true;
 		}
 		
 		int xp = -1;
 		try {
-			xp = Integer.parseInt(args[1]);
-			if(xp < 0)
-				throw new IllegalArgumentException();
+			if(args[1].endsWith("L")) {
+				String levelS = args[1].replace("L", "");
+				int level = Integer.parseInt(levelS);
+				if(level > PlayerData.LEVEL_MAX)
+					level = PlayerData.LEVEL_MAX;
+				if(level < 0)
+					level = 0;
+				xp = data.getExpRequired(level);
+			} else {
+				xp = Integer.parseInt(args[1]);
+			}
 		} catch (IllegalArgumentException e) {
-			p.sendMessage(RED + "Nombre incorrect : " + DARK_RED + args[1] + RED + ".");
+			sender.sendMessage(HalystiaRPG.PREFIX + RED + "Nombre incorrect : " + DARK_RED + args[1] + RED + ".");
 			return true;
 		}
 		
-		main.getClasseManager().getPlayerData(cible).forceXp(xp);
-		p.sendMessage(GREEN+"Succès !");
+		if(xp < 0) {
+			sender.sendMessage(HalystiaRPG.PREFIX + RED+"");
+			return true;
+		}
+		
+		data.forceXp(xp);
+		
+		sender.sendMessage(HalystiaRPG.PREFIX + GREEN+"Succès ! Le joueur " + YELLOW + args[0] + GREEN + " est désormais niveau "+GOLD+data.getLevel()+GREEN+".");
 		
 		return true;
 	}
-	
-	@EventHandler
-	public void playerCompletion(TabCompleteEvent e) {
-		String data[] = e.getBuffer().split(" ");
-		if(data[0].equals("/set-xp") && e.getSender().isOp()) {
-			if(data.length <= 2 && ((!e.getBuffer().endsWith(" ")) && data.length > 1)) {
-				List<String> strs = new ArrayList<>();
-				Bukkit.getOnlinePlayers().forEach(pl -> {strs.add(pl.getName());});
-				e.setCompletions(strs);
-			} else {
-				e.setCompletions(new ArrayList<>());
-			}
-		}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args) {
+		if(args.length <= 1)
+			return Bukkit.getOnlinePlayers().stream().map(p -> p.getName()).filter(s -> s.startsWith(args[0])).collect(Collectors.toList());
+		return new ArrayList<>();
 	}
 	
 }

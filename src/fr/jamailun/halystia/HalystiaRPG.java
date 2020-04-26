@@ -91,25 +91,36 @@ import net.citizensnpcs.api.trait.TraitInfo;
 
 /**
  * The core of HalystiaRPG.
- * Get the instance with the static {@link #getInstance()}
- * <br> Never construct an other.
+ * <br />Get the instance with the static {@link #getInstance()} method.
+ * <br />Never construct an other.
  * @author jamailun
+ * @see #getSpellManager() #getSpellManager() to modify the spells
+ * @see #getClasseManager() #getClasseManager() to get the players data
  */
 public final class HalystiaRPG extends JavaPlugin {
 	
+	//TODO make it modifiable.
+	/**
+	 * The world where everything is considered to be part of the RPG.
+	 */
 	public final static String WORLD = "RolePlay";
+	
+	/**
+	 * The prefix of almost all plugin messages.
+	 */
 	public final static String PREFIX = GOLD + "" + BOLD + "R" + GOLD + "ole" + BOLD + "P" + GOLD + "lay" + WHITE + " | ";
-	//public final static String PREFIX = GOLD + "" + BOLD + "C" + GOLD + "lasse" +  YELLOW + " | ";
 	
+	// Data managig things
 	public final static String PATH = "plugins/HalystiaRPG";
-	public static final CharSequence DONJONS_WORLD_CONTAINS = "donjon_";
+	public static final String DONJONS_WORLD_CONTAINS = "donjon_";
 	
+	// static access.
 	private static HalystiaRPG instance;
-	private CommandSender console;
 	
-	
+	// bdd
 	private Saver bdd;
 	
+	//Managers
 	private ClasseManager classesMgr;
 	private ShopManager shopMgr;
 	private TradeManager tradeMgr;
@@ -126,17 +137,16 @@ public final class HalystiaRPG extends JavaPlugin {
 	private Banque banque;
 	private JobManager jobs;
 	private DonjonManager donjonsMgr;
-	
 	private QuestManager questsMgr;
 	private NpcManager npcMgr;
 	
+	//Usefull things
 	private ChooseClasseGui classeGui;
 	private CacheMemory cache;
+	private CommandSender console;
 	
 	@Override
-	public void onLoad() {
-		System.out.println("HalystiaRPG loaded.");
-	}
+	public void onLoad() {/* Yeah, nothing to do here */}
 	
 	@Override
 	public void onEnable() {
@@ -234,25 +244,25 @@ public final class HalystiaRPG extends JavaPlugin {
 		
 		getCommand("edit-mobs").setExecutor(new CommandEditMobs(this));
 		getCommand("edit-chunks").setExecutor(new CommandEditChunks(this));
+		new CommandEditNPC(this, npcMgr);
+		new CommandEditQuests(this, npcMgr, questsMgr, mobMgr);
+		new CommandEditTitles(this, titleMgr);
 		
 		getCommand("set-roi").setExecutor(new CommandSetRoi(this));
-		getCommand("set-xp").setExecutor(new CommandSetXp(this));
+		new CommandSetXp(this);
+		new CommandSetTag(this, bdd);
+		new CommandSetChunk(this);
+		new CommandSetSpawner(this, mobMgr, spawnerMgr);
+		new CommandSetJob(this, jobs);
 		
 		getCommand("give-spell").setExecutor(new CommandGiveSpell(this));
 		getCommand("give-potion").setExecutor(new CommandGivePotion(this));
+		new CommandSummonMob(this, mobMgr);
+		new CommandGiveCanne(this);
 		
 		getCommand("joindonjon").setExecutor(new CommandJoinDonjon(this));
 		getCommand("donjonPorte").setExecutor(new CommandDonjonPorte(this));
 		
-		new CommandEditNPC(this, npcMgr);
-		new CommandEditQuests(this, npcMgr, questsMgr, mobMgr);
-		new CommandSetTag(this, bdd);
-		new CommandSetChunk(this);
-		new CommandSummonMob(this, mobMgr);
-		new CommandEditTitles(this, titleMgr);
-		new CommandGiveCanne(this);
-		new CommandSetSpawner(this, mobMgr, spawnerMgr);
-		new CommandSetJob(this, jobs);
 		
 		if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			PlaceholderAPI.registerExpansion(new TitleHolder(titleMgr, bdd, classesMgr));
@@ -308,102 +318,216 @@ public final class HalystiaRPG extends JavaPlugin {
 		return new HalystiaDataBase(this, server, dataBase, user, password, true);
 	}
 
+	/**
+	 * Get the console to send coloured messages.
+	 * @return a CommandSender used by Bukkit.
+	 */
 	public CommandSender getConsole() {
 		return console;
 	}
 	
+	/**
+	 * Get the instance of HalystiaRPG's API.
+	 * @return the instance of HalystiaRPG used by Bukkit.
+	 */
 	public static HalystiaRPG getInstance() {
 		return instance;
 	}
 	
+	/**
+	 * Check if a specific entity is in the RPG world.
+	 * @param e Entity to check.
+	 * @return true if it's the case.
+	 * @see #isRpgWorld(World)
+	 */
 	public static boolean isInRpgWorld(Entity e) {
-		return e.getWorld().getName().equals(WORLD);
+		return isRpgWorld(e.getWorld());
 	}
 	
+	/**
+	 * Check if a specific world is the RPG world.
+	 * @param w World to check.
+	 * @return true if it's the case.
+	 * @see #isInRpgWorld(Entity)
+	 */
 	public static boolean isRpgWorld(World w) {
-		return w.getName().equals(WORLD);
+		return w.getName().equals(WORLD) || w.getName().startsWith(DONJONS_WORLD_CONTAINS);
 	}
 	
+	/**
+	 * Get the donjon manager of the plugin
+	 * @return the {@link fr.jamailun.halystia.donjons.DonjonManager DonjonManager} of the plugin.
+	 */
 	public DonjonManager getDonjonManager() {
 		return donjonsMgr;
 	}
 
+	/**
+	 * Get the plugin's database.
+	 * @return the current {@link fr.jamailun.halystia.sql.temporary.Saver bdd} of the plugin.
+	 * @see #setDataBase(Saver)
+	 */
 	public Saver getDataBase() {
 		return bdd;
 	}
+	
+	/**
+	 * Change the current database system. Use SQL if you need to.
+	 * @param saver new Saver manager.
+	 */
+	public void setDataBase(Saver saver) {
+		this.bdd = saver;
+		console.sendMessage(PREFIX + ChatColor.YELLOW + "BDD has been updated."); 
+	}
 
+	/**
+	 * Get the chunk managerr of the server.
+	 * @return the {@link fr.jamailun.halystia.chunks.ChunkCreator ChunkCreator} of the plugin.
+	 */
 	public ChunkCreator getChunkCreator() {
 		return chunkCreator;
 	}
 	
+	/**
+	 * Get the player data handler of the server.
+	 * @return the {@link fr.jamailun.halystia.players.ClasseManager ClasseManager} of the plugin.
+	 */
 	public ClasseManager getClasseManager() {
 		return classesMgr;
 	}
 	
+	/**
+	 * Get the job manager of the server.
+	 * @return the {@link fr.jamailun.halystia.jobs.JobManager JobManager} of the plugin.
+	 */
 	public JobManager getJobManager() {
 		return jobs;
 	}
 	
+	/**
+	 * Get the shop manager of the server.
+	 * @return the {@link fr.jamailun.halystia.shops.ShopManager ShopManager} of the plugin.
+	 */
 	public ShopManager getShopManager() {
 		return shopMgr;
 	}
 	
+	/**
+	 * Get the superobs manager of the server.
+	 * @return the {@link fr.jamailun.halystia.enemies.supermobs.SuperMobManager SuperMobManager} of the plugin.
+	 */
 	public SuperMobManager getSuperMobManager() {
 		return superMobMgr;
 	}
 	
+	/**
+	 * Get the trade manager & registry of the server.
+	 * @return the {@link fr.jamailun.halystia.shops.TradeManager TradeManager} of the plugin.
+	 */
 	public TradeManager getTradeManager() {
 		return tradeMgr;
 	}
 	
+	/**
+	 * Get the potions manager of the server.
+	 * @return the {@link fr.jamailun.halystia.custom.boats.CustomBoatManager CustomBoatManager} of the plugin.
+	 */
 	public CustomBoatManager getBoatManager() {
 		return boatMgr;
 	}
 	
+	/**
+	 * Get the potions manager of the server.
+	 * @return the {@link fr.jamailun.halystia.titles.TitlesManager TitleManager} of the plugin.
+	 */
 	public TitlesManager getTitlesManager() {
 		return titleMgr;
 	}
 	
+	/**
+	 * Get the superobs manager of the server.
+	 * @return the {@link fr.jamailun.halystia.guis.ChooseClasseGui ChooseClasseGui} of the plugin.
+	 */
 	public ChooseClasseGui getChooseClasseGui() {
 		return classeGui;
 	}
 	
+	/**
+	 * Get the potions manager of the server.
+	 * @return the {@link fr.jamailun.halystia.custom.potions.PotionManager PotionManager} of the plugin.
+	 */
 	public PotionManager getPotionManager() {
 		return potionMgr;
 	}
 	
+	/**
+	 * Get the chunks manager of the server.
+	 * @return the {@link fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerManager MobSpawnerManager} of the plugin.
+	 */
 	public MobSpawnerManager getMobSpawnerManager() {
 		return spawnerMgr;
 	}
 	
+	/**
+	 * Get the chunks manager of the server.
+	 * @return the {@link fr.jamailun.halystia.enemies.mobs.MobManager MobManager} of the plugin.
+	 */
 	public MobManager getMobManager() {
 		return mobMgr;
 	}
 
+	/**
+	 * Get the chunks manager of the server.
+	 * @return the {@link fr.jamailun.halystia.chunks.ChunkManager ChunkManager} of the plugin.
+	 */
 	public ChunkManager getSpawnChunkManager() {
 		return mobsChunksMgr;
 	}
 	
+	/**
+	 * Get the souls manager of the server.
+	 * @return the {@link fr.jamailun.halystia.players.SoulManager SoulManager} of the plugin.
+	 */
 	public SoulManager getSoulManager() {
 		return soulMgr;
 	}
 
+	/**
+	 * Get the private bank accounts manager of the server.
+	 * @return the {@link fr.jamailun.halystia.bank.Banque Banque} of the plugin.
+	 */
 	public Banque getBanque() {
 		return banque;
 	}
 	
+	/**
+	 * Get the spell registry and manager of the server.
+	 * @return the {@link fr.jamailun.halystia.spells.SpellManager SpellManager} of the plugin.
+	 */
 	public SpellManager getSpellManager() {
 		return spellMgr;
 	}
 
+	/**
+	 * Get the quests manager of the server.
+	 * @return the {@link fr.jamailun.halystia.quests.QuestManager QuestManager} of the plugin.
+	 */
 	public QuestManager getQuestManager() {
 		return questsMgr;
 	}
 	
+	/**
+	 * Get the NPC manager of the server. Uses Citizens.
+	 * @return the {@link fr.jamailun.halystia.npcs.NpcManager NpcManager} of the plugin.
+	 */
 	public NpcManager getNpcManager() {
 		return npcMgr;
 	}
 	
+	/**
+	 * Get the Blocks cache of the server.
+	 * @return the {@link fr.jamailun.halystia.jobs.system.CacheMemory CacheMemory} of the plugin.
+	 */
 	public CacheMemory getCache() {
 		return cache;
 	}
