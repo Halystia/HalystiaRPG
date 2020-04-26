@@ -1,10 +1,12 @@
 package fr.jamailun.halystia.commands;
 
 import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.AQUA;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.YELLOW;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.ChatColor.BOLD;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,16 +20,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.donjons.Donjon;
 import fr.jamailun.halystia.donjons.DonjonDifficulty;
 import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.donjons.DonjonManager;
+import fr.jamailun.halystia.donjons.util.DonjonCreator;
+import fr.jamailun.halystia.enemies.mobs.EnemyMob;
 
 public class CommandEditDonjons extends HalystiaCommand {
 
-	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "list", "rename", "tp", "xp", "level", "difficulty", "set-entry", "reload"));
+	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "ame", "key", "remove", "list", "rename", "tp", "xp", "level", "difficulty", "set-entry", "reload", "generate"));
 	
 	private final DonjonManager donjons;
 	public CommandEditDonjons(HalystiaRPG main, DonjonManager donjons) {
@@ -52,6 +57,11 @@ public class CommandEditDonjons extends HalystiaCommand {
 		}
 		if ( args[0].equals("list")) {
 			sendList(p);
+			return true;
+		}
+		if ( args[0].equals("ame")) {
+			p.getInventory().addItem(EnemyMob.DONJON_KEY);
+			p.sendMessage(GREEN + "Vous avez reçu une âme générique.");
 			return true;
 		}
 		if ( args[0].equals("reload")) {
@@ -114,6 +124,19 @@ public class CommandEditDonjons extends HalystiaCommand {
 			return true;
 		}
 		
+		if(args[0].equals("generate")) {
+			new DonjonCreator(donjon);
+			p.playSound(p.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH, 5f, .8f);
+			p.sendMessage(GREEN + "Entrée du donjon formée avec succès.");
+			return true;
+		}
+		
+		if(args[0].equals("key")) {
+			p.getInventory().addItem(new ItemStack(donjon.getKeyNeed()));
+			p.sendMessage(GREEN + "Clef obtenue pour le donjon "+donjon.getDonjonDifficulty().color + "" + BOLD + donjon.getName()+".");
+			return true;
+		}
+		
 		if(args[0].equals("set-entry")) {
 			p.playSound(p.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 5f, .8f);
 			donjon.changeEntryLocation(p.getLocation());
@@ -166,6 +189,10 @@ public class CommandEditDonjons extends HalystiaCommand {
 				if(i < args.length - 1)
 					builder.append(" ");
 			}
+			if(builder.toString().contains("&")) {
+				p.sendMessage(RED+"Il ne faut pas mettre de couleur ici.");
+				return true;
+			}
 			donjon.changeDonjonName(builder.toString());
 			p.sendMessage(GREEN + "Nom changé avec succès.");
 			return true;
@@ -204,16 +231,18 @@ public class CommandEditDonjons extends HalystiaCommand {
 	}
 	
 	private void sendHelp(Player p, String label) {
-		p.sendMessage(BLUE + "/" + label + " create <id> <difficulty>" + WHITE + ": Créer un nouveau donjon à votre position actuelle.");
-		p.sendMessage(BLUE + "/" + label + " remove <id> " + WHITE + ": Supprime un donjon.");
-		p.sendMessage(BLUE + "/" + label + " list " + WHITE + ": Liste les donjons existants.");
-		p.sendMessage(BLUE + "/" + label + " rename <id> <nom> " + WHITE + ": Change le nom du donjon.");
-		p.sendMessage(BLUE + "/" + label + " tp <id> " + WHITE + ": Vous téléporte à l'entrée du donjon.");
-		p.sendMessage(BLUE + "/" + label + " set-entry <id> " + WHITE + ": Déplace l'entrée du donjon à votre position actuelle.");
-		p.sendMessage(BLUE + "/" + label + " xp <id> [xp]" + WHITE + ": Change l'exp donnée en récompense à la fin du dj.");
-		p.sendMessage(BLUE + "/" + label + " level <id> [level]" + WHITE + ": Change le nivuea requis pour entrer dans le dj.");
-		p.sendMessage(BLUE + "/" + label + " difficulty <id> <slot> <type>" + WHITE + ": Change la difficultée affichée d'un donjon.");
+		p.sendMessage(AQUA + "/" + label + " create <id> <difficulty>" + WHITE + ": Créer un nouveau donjon à votre position actuelle.");
+		p.sendMessage(AQUA + "/" + label + " remove <id> " + WHITE + ": Supprime un donjon.");
+		p.sendMessage(AQUA + "/" + label + " list " + WHITE + ": Liste les donjons existants.");
+		p.sendMessage(AQUA + "/" + label + " rename <id> <nom> " + WHITE + ": Change le nom du donjon.");
+		p.sendMessage(AQUA + "/" + label + " tp <id> " + WHITE + ": Vous téléporte à l'entrée du donjon.");
+		p.sendMessage(AQUA + "/" + label + " set-entry <id> " + WHITE + ": Déplace l'entrée du donjon à votre position actuelle.");
+		p.sendMessage(AQUA + "/" + label + " xp <id> [xp]" + WHITE + ": Change l'exp donnée en récompense à la fin du dj.");
+		p.sendMessage(AQUA + "/" + label + " level <id> [level]" + WHITE + ": Change le nivuea requis pour entrer dans le dj.");
+		p.sendMessage(AQUA + "/" + label + " difficulty <id> <slot> <type>" + WHITE + ": Change la difficultée affichée d'un donjon.");
+		p.sendMessage(BLUE + "/" + label + " key <id> " + WHITE + ": Donne la clef d'un donjon spécifique.");
 		p.sendMessage(BLUE + "/" + label + " reload" + WHITE + ": Recharge les fichiers des donjons.");
+		p.sendMessage(BLUE + "/" + label + " ame " + WHITE + ": Donne un âme générique (portes de donjon).");
 	}
 
 	private void sendList(Player p) {
