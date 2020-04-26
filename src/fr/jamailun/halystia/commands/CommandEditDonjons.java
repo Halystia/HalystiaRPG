@@ -27,7 +27,7 @@ import fr.jamailun.halystia.donjons.DonjonManager;
 
 public class CommandEditDonjons extends HalystiaCommand {
 
-	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "list", "tp", "xp", "level", "difficulty", "set-entry", "reload"));
+	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "list", "rename", "tp", "xp", "level", "difficulty", "set-entry", "reload"));
 	
 	private final DonjonManager donjons;
 	public CommandEditDonjons(HalystiaRPG main, DonjonManager donjons) {
@@ -155,6 +155,22 @@ public class CommandEditDonjons extends HalystiaCommand {
 			return true;
 		}
 		
+		if(args[0].equals("rename")) {
+			if(args.length < 3) {
+				p.sendMessage(RED + "Il faut préciser le nouveau nom.");
+				return true;
+			}
+			StringBuilder builder = new StringBuilder();
+			for(int i = 2; i < args.length; i++) {
+				builder.append(args[i]);
+				if(i < args.length - 1)
+					builder.append(" ");
+			}
+			donjon.changeDonjonName(builder.toString());
+			p.sendMessage(GREEN + "Nom changé avec succès.");
+			return true;
+		}
+		
 		if(args[0].equals("difficulty")) {
 			if(args.length < 3) {
 				p.sendMessage(RED + "Il faut préciser la difficultée.");
@@ -191,6 +207,7 @@ public class CommandEditDonjons extends HalystiaCommand {
 		p.sendMessage(BLUE + "/" + label + " create <id> <difficulty>" + WHITE + ": Créer un nouveau donjon à votre position actuelle.");
 		p.sendMessage(BLUE + "/" + label + " remove <id> " + WHITE + ": Supprime un donjon.");
 		p.sendMessage(BLUE + "/" + label + " list " + WHITE + ": Liste les donjons existants.");
+		p.sendMessage(BLUE + "/" + label + " rename <id> <nom> " + WHITE + ": Change le nom du donjon.");
 		p.sendMessage(BLUE + "/" + label + " tp <id> " + WHITE + ": Vous téléporte à l'entrée du donjon.");
 		p.sendMessage(BLUE + "/" + label + " set-entry <id> " + WHITE + ": Déplace l'entrée du donjon à votre position actuelle.");
 		p.sendMessage(BLUE + "/" + label + " xp <id> [xp]" + WHITE + ": Change l'exp donnée en récompense à la fin du dj.");
@@ -202,7 +219,7 @@ public class CommandEditDonjons extends HalystiaCommand {
 	private void sendList(Player p) {
 		p.sendMessage(BLUE + "Liste des " + donjons.getDonjons().size() + " donjons :");
 		for(DonjonI dj : donjons.getDonjons()) {
-			p.sendMessage(BLUE + "["+YELLOW+dj.getConfigName()+BLUE+"] " + dj.getDonjonDifficulty().getDisplayName() + BLUE + " - lvl="+YELLOW+dj.getLevelNeed()+BLUE+", xp="+YELLOW+dj.getExpReward()+BLUE+".");
+			p.sendMessage(BLUE + "["+YELLOW+dj.getConfigName()+BLUE+"] ("+dj.getDonjonDifficulty().color + dj.getName()+BLUE+") -" + dj.getDonjonDifficulty().getDisplayName() + BLUE + " - lvl="+YELLOW+dj.getLevelNeed()+BLUE+", xp="+YELLOW+dj.getExpReward()+BLUE+".");
 		}
 	}
 }

@@ -141,4 +141,10 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		super.delete();
 	}
 	
+	public boolean equals(Object o) {
+		if(o instanceof Donjon)
+			return ((Donjon)o).configName.equals(configName);
+		return false;
+	}
+	
 }

@@ -52,13 +52,18 @@ public class DonjonManager {
 	}
 	
 	public boolean removeDonjon(String configName) {
+		DonjonI removed = null;
 		for(DonjonI dj : donjons) {
 			if(dj.getConfigName().equalsIgnoreCase(configName)) {
 				dj.destroy();
-				return true;
+				removed = dj;
+				break;
 			}
 		}
-		return false;
+		if(removed == null)
+			return false;
+		donjons.remove(removed);
+		return true;
 	}
 	
 	public void reloadData() {
