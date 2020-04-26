@@ -22,6 +22,7 @@ import fr.jamailun.halystia.chunks.ChunkManager;
 import fr.jamailun.halystia.commands.CommandClasse;
 import fr.jamailun.halystia.commands.CommandCreateShop;
 import fr.jamailun.halystia.commands.CommandEditChunks;
+import fr.jamailun.halystia.commands.CommandEditDonjons;
 import fr.jamailun.halystia.commands.CommandEditMobs;
 import fr.jamailun.halystia.commands.CommandEditNPC;
 import fr.jamailun.halystia.commands.CommandEditQuests;
@@ -46,7 +47,6 @@ import fr.jamailun.halystia.commands.ModifyOeilAntiqueCommand;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
 import fr.jamailun.halystia.custom.potions.PotionManager;
 import fr.jamailun.halystia.donjons.DonjonManager;
-import fr.jamailun.halystia.donjons.DonjonsData;
 import fr.jamailun.halystia.donjons.util.CommandDonjonPorte;
 import fr.jamailun.halystia.donjons.util.CommandJoinDonjon;
 import fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerManager;
@@ -200,10 +200,9 @@ public final class HalystiaRPG extends JavaPlugin {
 		titleMgr = new TitlesManager(PATH);
 		banque = new Banque(PATH+"/banque");
 		jobs = new JobManager(PATH+"/jobs", this);
-		donjonsMgr = new DonjonManager();
+		donjonsMgr = new DonjonManager(PATH+"/donjons");
 		
 		npcMgr.verifyQuests(questsMgr);
-		donjonsMgr.addDonjons(new DonjonsData().getContent());
 		
 		new NaturalSpawnWorld(this, mobMgr, mobsChunksMgr, WORLD);
 		
@@ -247,6 +246,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		new CommandEditNPC(this, npcMgr);
 		new CommandEditQuests(this, npcMgr, questsMgr, mobMgr);
 		new CommandEditTitles(this, titleMgr);
+		new CommandEditDonjons(this, donjonsMgr);
 		
 		getCommand("set-roi").setExecutor(new CommandSetRoi(this));
 		new CommandSetXp(this);

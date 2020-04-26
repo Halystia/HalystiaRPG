@@ -11,7 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.donjons.Donjon;
+import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.players.PlayerData;
 
 public class CommandJoinDonjon implements CommandExecutor {
@@ -57,8 +57,8 @@ public class CommandJoinDonjon implements CommandExecutor {
 			return true;
 		}
 		
-		Donjon donjon = null;
-		for(Donjon dj : api.getDonjonManager().getDonjons())
+		DonjonI donjon = null;
+		for(DonjonI dj : api.getDonjonManager().getDonjons())
 			if(dj.getName().replaceAll(" ", "_").equals(args[0]))
 				donjon = dj;
 		

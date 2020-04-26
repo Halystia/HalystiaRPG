@@ -1,5 +1,8 @@
 package fr.jamailun.halystia.donjons;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -8,24 +11,83 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
+
+import fr.jamailun.halystia.utils.Reloadable;
 
 public class DonjonManager {
 	
-	private Set<Donjon> donjons;
+	private Set<DonjonI> donjons;
 	
-	public DonjonManager() {
+	private final String path;
+	
+	public DonjonManager(String path) {
 		donjons = new HashSet<>();
+		this.path = path;
+		loadData();
 	}
-	public void addDonjons(Collection<Donjon> donjons) {
+	
+	public synchronized void loadData() {
+		donjons.clear();
+		try {
+			Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(f -> {
+				String name = FilenameUtils.removeExtension(f.toFile().getName());
+				donjons.add(new Donjon(path, name));
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean createDonjon(String configName, Location entry, DonjonDifficulty difficulty) {
+		for(DonjonI dj : donjons)
+			if(dj.getConfigName().equalsIgnoreCase(configName))
+				return false;
+		Donjon donjon = new Donjon(path, configName);
+		donjon.changeEntryLocation(entry);
+		donjon.changeDonjonDifficulty(difficulty);
+		donjons.add(donjon);
+		return true;
+	}
+	
+	public boolean removeDonjon(String configName) {
+		for(DonjonI dj : donjons) {
+			if(dj.getConfigName().equalsIgnoreCase(configName)) {
+				dj.destroy();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public void reloadData() {
+		for(DonjonI dj : donjons)
+			if(dj instanceof Reloadable)
+				((Reloadable)dj).reloadData();
+	}
+	
+	//API
+	public void addDonjons(Collection<DonjonI> donjons) {
 		donjons.forEach(d -> addDonjon(d));
 	}
-	
-	public void addDonjon(Donjon donjon) {
+	//API
+	public void addDonjon(DonjonI donjon) {
 		donjons.add(donjon);
 		Bukkit.getLogger().log(Level.INFO, "Donjon (" + donjon.getName() + ") loaded.");
 	}
 	
-	public List<Donjon> getDonjons() {
+	public List<DonjonI> getDonjons() {
 		return new ArrayList<>(donjons);
+	}
+
+	public Donjon getLegacyWithConfigName(String id) {
+		for(DonjonI dj : donjons)
+			if(dj instanceof Donjon) {
+				Donjon donjon = (Donjon) dj;
+				if(donjon.getConfigName().equalsIgnoreCase(id))
+					return donjon;
+			}
+		return null;
 	}
 }

@@ -25,7 +25,6 @@ public enum DonjonDifficulty {
 	}
 	
 	public String getDisplayName() {
-		return color + name;
+		return color + "" + ChatColor.BOLD + name;
 	}
-	
 }

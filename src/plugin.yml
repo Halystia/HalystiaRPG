@@ -72,6 +72,12 @@ commands:
     permission: halystia.rpg.world
     permission-message: §cIl te faut le droit de manipuler le monde RPG !
     description: Editer les titres du jeu.
+  edit-donjons:
+    aliases: [donjons, djs]
+    usage: /edit-donjons <args>
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Editer les donjons du monde.
   #> SET LES VALEURS <#
   set-roi:
     usage: /set-roi <royaume> <joueur>

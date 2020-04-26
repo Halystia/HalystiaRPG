@@ -13,13 +13,13 @@ import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.donjons.Donjon;
+import fr.jamailun.halystia.donjons.DonjonI;
 
 public class DonjonCreator {
 
-	private Donjon donjon;
+	private DonjonI donjon;
 	
-	public DonjonCreator(Donjon donjon) {
+	public DonjonCreator(DonjonI donjon) {
 		this.donjon = donjon;
 	}
 	

@@ -17,7 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.donjons.Donjon;
+import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.donjons.util.DonjonCreator;
 import fr.jamailun.halystia.enemies.mobs.EnemyMob;
 import fr.jamailun.halystia.guis.EditChunkGUI;
@@ -96,7 +96,7 @@ public class TchatListener extends HalystiaListener {
 				p.sendMessage(ChatColor.RED + "Mauvais numéro ( soit mauvais format, soit non précisé, soit incorrect ).");
 				return;
 			}
-			final Donjon dj = main.getDonjonManager().getDonjons().get(index);
+			final DonjonI dj = main.getDonjonManager().getDonjons().get(index);
 			Bukkit.getScheduler().runTaskLater(main, new Runnable() {
 				public void run() {
 					new DonjonCreator(dj).createEntry(e.getPlayer().getLocation());
