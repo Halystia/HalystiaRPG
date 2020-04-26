@@ -2,6 +2,7 @@ package fr.jamailun.halystia.commands;
 
 import static org.bukkit.ChatColor.BLUE;
 import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.YELLOW;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 
@@ -83,7 +84,7 @@ public class CommandEditDonjons extends HalystiaCommand {
 				p.sendMessage(RED + "Difficultée invalide.");
 				return true;
 			}
-			if ( donjons.createDonjon(args[0], p.getLocation(), diff) ) {
+			if ( donjons.createDonjon(args[1], p.getLocation(), diff) ) {
 				p.sendMessage(GREEN + "Le donjon ["+args[1]+"] a été créé avec succès !");
 			} else {
 				p.sendMessage(RED + "Le donjon ["+args[1]+"] existe déjà !");
@@ -201,7 +202,7 @@ public class CommandEditDonjons extends HalystiaCommand {
 	private void sendList(Player p) {
 		p.sendMessage(BLUE + "Liste des " + donjons.getDonjons().size() + " donjons :");
 		for(DonjonI dj : donjons.getDonjons()) {
-			p.sendMessage(BLUE + "["+dj.getConfigName()+"] " + dj.getDonjonDifficulty().getDisplayName() + BLUE + " - lvl="+dj.getLevelNeed()+", xp="+dj.getExpReward()+".");
+			p.sendMessage(BLUE + "["+YELLOW+dj.getConfigName()+BLUE+"] " + dj.getDonjonDifficulty().getDisplayName() + BLUE + " - lvl="+YELLOW+dj.getLevelNeed()+BLUE+", xp="+YELLOW+dj.getExpReward()+BLUE+".");
 		}
 	}
 }
