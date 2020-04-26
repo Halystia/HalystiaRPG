@@ -43,13 +43,9 @@ public class CommandDonjonPorte implements CommandExecutor {
 		
 		Player p = null;
 		Block cmdBlock = ((BlockCommandSender)sender).getBlock();
-		double distance = 5;
+		double distance = 3;
 		for(Player pl : cmdBlock.getWorld().getPlayers()) {
-			double dis = 5.1;
-			Location loc = cmdBlock.getLocation();
-			if(pl.getWorld() != loc.getWorld())
-				continue;
-			dis = Math.sqrt(Math.pow(loc.getX() - pl.getPlayer().getLocation().getX(), 2) + Math.pow(loc.getY() - pl.getPlayer().getLocation().getY(), 2)+ Math.pow(loc.getZ() - pl.getPlayer().getLocation().getZ(), 2));
+			double dis = cmdBlock.getLocation().distance(pl.getLocation());
 			if(dis < distance) {
 				distance = dis;
 				p = pl;

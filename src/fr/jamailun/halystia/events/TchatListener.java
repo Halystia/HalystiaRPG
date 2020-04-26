@@ -17,9 +17,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.donjons.DonjonI;
-import fr.jamailun.halystia.donjons.util.DonjonCreator;
-import fr.jamailun.halystia.enemies.mobs.EnemyMob;
 import fr.jamailun.halystia.guis.EditChunkGUI;
 import fr.jamailun.halystia.guis.EditMobGUI;
 import fr.jamailun.halystia.players.Classe;
@@ -84,31 +81,6 @@ public class TchatListener extends HalystiaListener {
 		PlayerData pc = main.getClasseManager().getPlayerData(p);
 		if(pc == null) {
 			p.sendMessage(RED+"Une erreur est survenue... Sachez que le serveur tache de régler ce problème. Si cela perdure, tentez un deco/reco.");
-			return;
-		}
-		if(e.getMessage().startsWith("new_donjon") && e.getPlayer().isOp()) {
-			e.setCancelled(true);
-			int index = -1;
-			try {
-				index = Integer.parseInt(e.getMessage().split(" ")[1]);
-				main.getDonjonManager().getDonjons().get(index);
-			} catch (NumberFormatException | IndexOutOfBoundsException ex) {
-				p.sendMessage(ChatColor.RED + "Mauvais numéro ( soit mauvais format, soit non précisé, soit incorrect ).");
-				return;
-			}
-			final DonjonI dj = main.getDonjonManager().getDonjons().get(index);
-			Bukkit.getScheduler().runTaskLater(main, new Runnable() {
-				public void run() {
-					new DonjonCreator(dj).createEntry(e.getPlayer().getLocation());
-				}
-			}, 10L);
-			e.getPlayer().sendMessage("ok");
-			return;
-		}
-		if(e.getMessage().startsWith("ame_donjon") && e.getPlayer().isOp()) {
-			e.setCancelled(true);
-			p.getInventory().addItem(EnemyMob.DONJON_KEY);
-			e.getPlayer().sendMessage("ok");
 			return;
 		}
 		

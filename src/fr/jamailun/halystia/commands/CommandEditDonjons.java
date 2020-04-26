@@ -125,7 +125,7 @@ public class CommandEditDonjons extends HalystiaCommand {
 		}
 		
 		if(args[0].equals("generate")) {
-			new DonjonCreator(donjon);
+			new DonjonCreator(donjon).createEntry(p.getLocation());
 			p.playSound(p.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH, 5f, .8f);
 			p.sendMessage(GREEN + "Entrée du donjon formée avec succès.");
 			return true;

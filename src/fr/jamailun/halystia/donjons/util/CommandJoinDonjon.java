@@ -1,7 +1,6 @@
 package fr.jamailun.halystia.donjons.util;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import static org.bukkit.ChatColor.*;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;
@@ -13,6 +12,7 @@ import org.bukkit.entity.Player;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.shops.Trade;
 
 public class CommandJoinDonjon implements CommandExecutor {
 
@@ -25,7 +25,7 @@ public class CommandJoinDonjon implements CommandExecutor {
 	@Override
 	public boolean onCommand(final CommandSender sender, Command command, String cmd, String[] args) {
 		if(!(sender instanceof BlockCommandSender)) {
-			sender.sendMessage(ChatColor.RED + "Commande réservée aux commands blocs !");
+			sender.sendMessage(RED + "Commande réservée aux commands blocs !");
 			return true;
 		}
 		if(args.length < 1)
@@ -33,13 +33,9 @@ public class CommandJoinDonjon implements CommandExecutor {
 
 		Player p = null;
 		Block cmdB = ((BlockCommandSender)sender).getBlock();
-		double distance = 5;
+		double distance = 3;
 		for(Player pl : cmdB.getWorld().getPlayers()) {
-			double dis = 5.1;
-			Location loc = cmdB.getLocation();
-			if(pl.getWorld() != loc.getWorld())
-				continue;
-			dis = Math.sqrt(Math.pow(loc.getX() - pl.getPlayer().getLocation().getX(), 2) + Math.pow(loc.getY() - pl.getPlayer().getLocation().getY(), 2)+ Math.pow(loc.getZ() - pl.getPlayer().getLocation().getZ(), 2));
+			double dis = cmdB.getLocation().distance(pl.getLocation());
 			if(dis < distance) {
 				distance = dis;
 				p = pl;
@@ -53,7 +49,7 @@ public class CommandJoinDonjon implements CommandExecutor {
 		
 		PlayerData pData = api.getClasseManager().getPlayerData(p);
 		if(pData == null) {
-			p.sendMessage("§cUne erreur est survenue...");
+			p.sendMessage(RED + "Une erreur est survenue...");
 			return true;
 		}
 		
@@ -63,18 +59,24 @@ public class CommandJoinDonjon implements CommandExecutor {
 				donjon = dj;
 		
 		if(donjon == null) {
-			p.sendMessage(ChatColor.DARK_RED + "Le donjon [" + args[0] + "] n'est pas valide !");
+			p.sendMessage(DARK_RED + "Le donjon [" + args[0] + "] n'est pas valide !");
 			return true;
 		}
 		
 		if(donjon.getLevelNeed() > pData.getLevel()) {
-			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut être niveau " + ChatColor.GOLD + donjon.getLevelNeed() + ChatColor.RED + " pour pouvoir entrer dans ce donjon !");
+			p.sendMessage(HalystiaRPG.PREFIX + RED + "Il faut être niveau " + GOLD + donjon.getLevelNeed() + RED + " pour pouvoir entrer dans ce donjon !");
+			return true;
+		}
+		
+		Trade trade = new Trade(null, donjon.getKeyNeed());
+		if( ! trade.trade(p, true) ) {
+			p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la clef du donjon.");
 			return true;
 		}
 
 		p.playSound(p.getLocation(), Sound.ENTITY_SHULKER_TELEPORT, 1f, 1f);
 		p.getPlayer().teleport(donjon.getEntryInDonjon());
-		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.DARK_GREEN + "Tu as rejoint le " + donjon.getDonjonDifficulty().color + donjon.getName().toLowerCase() + ChatColor.DARK_GREEN + ".");
+		p.sendMessage(HalystiaRPG.PREFIX + DARK_GREEN + "Tu as rejoint le " + donjon.getDonjonDifficulty().color + donjon.getName().toLowerCase() + DARK_GREEN + ".");
 		return true;
 	}
 
