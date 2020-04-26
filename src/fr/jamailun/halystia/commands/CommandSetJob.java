@@ -92,14 +92,35 @@ public class CommandSetJob extends HalystiaCommand {
 		}
 		
 		if(args[1].equals("xp")) {
-			
-			sender.sendMessage("à venir");
-			
-			
+			JobHandler handler = jobs.getPlayerJobHandler(cible, job);
+			if(handler == null) {
+				sender.sendMessage(RED + "Ce joueur n'a pas ce métier.");
+				return true;
+			}
+			if(args.length == 3) {
+				int exp = handler.getPlayerExp(cible);
+				sender.sendMessage(GREEN + "Joueur " + GOLD + cible.getName() + GREEN + " - " + BLUE + job.toString() + GREEN + " : Niveau " + YELLOW + exp + GREEN + "xp, level " + GOLD + handler.getLevel(exp)+GREEN+".");
+				return true;
+			}
+			int xp = -1;
+			try {
+				xp = Integer.parseInt(args[3]);
+				if(xp < 0)
+					xp = 0;
+				final int expMax = handler.getXpRequired(15);
+				if ( xp > expMax )
+					xp = expMax;
+			} catch (NumberFormatException e) {
+				sender.sendMessage(RED + "Format du nombre invalide.");
+				return true;
+			};
+			handler.forceExp(cible, xp);
+			sender.sendMessage(GREEN + "Exp validé ! Le joueur est désormais niveau " + GOLD + handler.getLevel(xp) + GREEN + ".");
+			cible.sendMessage(RED + "Attention ! " + GRAY + "Un administrateur a fixé ton exp de " + job + " à " + GOLD + xp+"xp"+GRAY+". Vous êtes désormais niveau " + GOLD + handler.getLevel(xp) + GRAY +".");
 			return true;
 		}
 		
-		sender.sendMessage(RED + "Commande inconnue ! (add,remove,list).");
+		sender.sendMessage(RED + "Commande inconnue ! (add,remove,list,xp).");
 		
 		return true;
 	}

@@ -85,6 +85,13 @@ public class JobManager {
 		return false;
 	}
 	
+	public JobHandler getPlayerJobHandler(Player p, JobName job) {
+		for(JobHandler handler : jobs)
+			if(handler.getJobName() == job && handler.hasJob(p))
+				return handler;
+		return null;
+	}
+	
 	public JobHandler[] getJobs(Player p) {
 		List<JobHandler> list = new ArrayList<>();
 		

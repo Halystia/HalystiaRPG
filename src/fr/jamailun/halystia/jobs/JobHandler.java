@@ -156,5 +156,11 @@ public abstract class JobHandler extends FileDataRPG {
 		}
 		return list;
 	}
+
+	public void forceExp(Player p, int exp) {
+		if(hasJob(p)) {
+			xp.replace(p.getUniqueId(), exp);
+		}
+	}
 	
 }
