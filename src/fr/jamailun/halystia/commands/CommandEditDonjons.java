@@ -32,7 +32,9 @@ import fr.jamailun.halystia.enemies.mobs.EnemyMob;
 
 public class CommandEditDonjons extends HalystiaCommand {
 
-	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "ame", "key", "remove", "list", "rename", "tp", "xp", "level", "difficulty", "set-entry", "reload", "generate"));
+	private static final Set<String> firsts = new HashSet<>(Arrays.asList(
+		"create", "ame", "key", "remove", "list", "rename", "tp", "xp", "level", "difficulty", "set-entry", "set-exit", "set-boss", "bossType", "reload", "generate"
+	));
 	
 	private final DonjonManager donjons;
 	public CommandEditDonjons(HalystiaRPG main, DonjonManager donjons) {
@@ -140,7 +142,21 @@ public class CommandEditDonjons extends HalystiaCommand {
 		if(args[0].equals("set-entry")) {
 			p.playSound(p.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 5f, .8f);
 			donjon.changeEntryLocation(p.getLocation());
-			p.sendMessage(GREEN + "Entrée du donjon déplacé avec succès.");
+			p.sendMessage(GREEN + "Entrée du donjon déplacée avec succès.");
+			return true;
+		}
+		
+		if(args[0].equals("set-exit")) {
+			p.playSound(p.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 5f, .8f);
+			donjon.changeExitLocation(p.getLocation());
+			p.sendMessage(GREEN + "Sortie du donjon déplacée avec succès.");
+			return true;
+		}
+		
+		if(args[0].equals("set-boss")) {
+			p.playSound(p.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 5f, .8f);
+			donjon.changeBossLocation(p.getLocation());
+			p.sendMessage(GREEN + "Emplacement du boss du donjon déplacé avec succès.");
 			return true;
 		}
 		
@@ -214,6 +230,17 @@ public class CommandEditDonjons extends HalystiaCommand {
 			p.sendMessage(GREEN + "Difficultée changeé avec succès. Attention, pensez à refaire les portes.");
 			return true;
 		}
+		
+		if(args[0].equals("bossType")) {
+			if(args.length < 3) {
+				p.sendMessage(RED + "Il faut préciser le type du boss.");
+				return true;
+			}
+			//TODO bossType
+			p.sendMessage("Non développé.");
+			//p.sendMessage(GREEN + "Difficultée changeé avec succès. Attention, pensez à refaire les portes.");
+			return true;
+		}
 		p.sendMessage(RED + "Commande ["+args[0] +"] autorisée mais non paramétrée...");
 		return true;
 	}
@@ -231,15 +258,18 @@ public class CommandEditDonjons extends HalystiaCommand {
 	}
 	
 	private void sendHelp(Player p, String label) {
-		p.sendMessage(AQUA + "/" + label + " create <id> <difficulty>" + WHITE + ": Créer un nouveau donjon à votre position actuelle.");
+		p.sendMessage(AQUA + "/" + label + " create <id> <difficulty>" + WHITE + ": Créer un nouveau donjon à votre position.");
 		p.sendMessage(AQUA + "/" + label + " remove <id> " + WHITE + ": Supprime un donjon.");
 		p.sendMessage(AQUA + "/" + label + " list " + WHITE + ": Liste les donjons existants.");
 		p.sendMessage(AQUA + "/" + label + " rename <id> <nom> " + WHITE + ": Change le nom du donjon.");
 		p.sendMessage(AQUA + "/" + label + " tp <id> " + WHITE + ": Vous téléporte à l'entrée du donjon.");
-		p.sendMessage(AQUA + "/" + label + " set-entry <id> " + WHITE + ": Déplace l'entrée du donjon à votre position actuelle.");
+		p.sendMessage(AQUA + "/" + label + " set-entry <id> " + WHITE + ": Déplace l'entrée du donjon à vous.");
+		p.sendMessage(AQUA + "/" + label + " set-entry <id> " + WHITE + ": Déplace la sortie du donjon à vous.");
+		p.sendMessage(AQUA + "/" + label + " set-entry <id> " + WHITE + ": Déplace l'empalcement du boss à vous.");
 		p.sendMessage(AQUA + "/" + label + " xp <id> [xp]" + WHITE + ": Change l'exp donnée en récompense à la fin du dj.");
 		p.sendMessage(AQUA + "/" + label + " level <id> [level]" + WHITE + ": Change le nivuea requis pour entrer dans le dj.");
-		p.sendMessage(AQUA + "/" + label + " difficulty <id> <slot> <type>" + WHITE + ": Change la difficultée affichée d'un donjon.");
+		p.sendMessage(AQUA + "/" + label + " bossType <id> <boss>" + WHITE + ": Change le type du boss..");
+		p.sendMessage(AQUA + "/" + label + " difficulty <id> <diff>" + WHITE + ": Change la difficultée affichée.");
 		p.sendMessage(BLUE + "/" + label + " key <id> " + WHITE + ": Donne la clef d'un donjon spécifique.");
 		p.sendMessage(BLUE + "/" + label + " reload" + WHITE + ": Recharge les fichiers des donjons.");
 		p.sendMessage(BLUE + "/" + label + " ame " + WHITE + ": Donne un âme générique (portes de donjon).");

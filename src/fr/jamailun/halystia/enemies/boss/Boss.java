@@ -1,4 +1,4 @@
-package fr.jamailun.halystia.enemies.supermobs;
+package fr.jamailun.halystia.enemies.boss;
 
 import static org.bukkit.ChatColor.BLUE;
 import static org.bukkit.ChatColor.GOLD;
@@ -19,33 +19,39 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.enemies.Enemy;
 import fr.jamailun.halystia.players.PlayerData;
 
-public abstract class SuperMob implements Enemy {
+public abstract class Boss implements Enemy {
+
+	private BukkitRunnable runnable = new BukkitRunnable() {public void run() {doAction();}};
 	
-	protected final Location loc;
-	protected final double maxHealth;
-	protected double health;
-	protected Map<UUID, Double> damagers;
-	protected BossBar bar;
+	protected boolean exists = false;
+	protected double maxHealth = 100;
+	protected double health = 100;
+	protected Map<UUID, Double> damagers = new HashMap<>();
+	protected BossBar bar = Bukkit.createBossBar("unset", BarColor.WHITE, BarStyle.SOLID, BarFlag.CREATE_FOG);
 	
-	private final long respawnTime;
+	public abstract boolean canMove();
 	
-	public SuperMob(Location loc, double health, long respawnTime) {
-		this.loc = loc;
-		this.maxHealth = health;
-		this.health = health;
-		this.respawnTime = respawnTime;
-		damagers = new HashMap<>();
-		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SEGMENTED_10, BarFlag.CREATE_FOG);
-		bar.setVisible(true);
+	protected abstract void doAction();
+	
+	public boolean exists() {
+		return exists;
+	}
+	
+	protected void startActionLoop() {
+		runnable.runTaskTimer(HalystiaRPG.getInstance(), 20L, 20L);
+	}
+	
+	protected void stopLoop() {
+		runnable.cancel();
 	}
 	
 	public Map<Player, Double> getDamagers() {
@@ -65,12 +71,11 @@ public abstract class SuperMob implements Enemy {
 		}
 		health -= damages;
 		updateBar();
-		if(health <= 0 || (! isValid())) {
+		if(health <= 0 || (! exists())) {
 			if(getXp() > 0)
 				displayToDamagersBests();
 			repartLootsAndXp();
 			killed();
-			startCoolDown();
 		}
 	}
 
@@ -82,21 +87,11 @@ public abstract class SuperMob implements Enemy {
 	
 	protected abstract void killed();
 	
-	public double distance(Location loc) {
-		return this.loc.distance(loc);
-	}
-	
-	public boolean isMob(Entity entity) {
-		return entity.getUniqueId().equals(getEntityUUID()) && isValid();
-	}
+	public abstract double distance(Location loc);
 	
 	public abstract String getCustomName();
 	
-	public abstract int getMinutes();
-	
-	protected abstract UUID getEntityUUID();
-	
-	protected abstract boolean isValid();
+	protected abstract boolean isBoss(UUID uuid);
 	
 	public abstract List<ItemStack> getLoots();
 
@@ -104,18 +99,7 @@ public abstract class SuperMob implements Enemy {
 	
 	public abstract void purge();
 	
-	public abstract void spawn();
-	
-	protected void startCoolDown() {
-		bar.setVisible(false);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				spawn();
-				bar.setVisible(true);
-			}
-		}.runTaskLater(HalystiaRPG.getInstance(), respawnTime);
-	}
+	public abstract void spawn(DonjonI donjon);
 	
 	public void displayToDamagersBests() {
 		UUID[] bo = bo3();
@@ -137,7 +121,7 @@ public abstract class SuperMob implements Enemy {
 				pl.sendMessage(HalystiaRPG.PREFIX + YELLOW + "["+(i+1)+"] " + Bukkit.getOfflinePlayer(id).getName() + " : " + RED + damagers.get(id) + " hp.");
 			}
 			if(otherDmgs > 0) {
-				pl.sendMessage(HalystiaRPG.PREFIX + GOLD + "Autres dégats : " + RED + otherDmgs + " hp " + GOLD + " par " + BLUE + (damagers.size() - 3) + GOLD + " autres joueurs.");
+				pl.sendMessage(HalystiaRPG.PREFIX + GOLD + "Autres dégâts : " + RED + otherDmgs + " hp " + GOLD + " par " + BLUE + (damagers.size() - 3) + GOLD + " autres joueurs.");
 			}
 		}
 	}
@@ -184,5 +168,4 @@ public abstract class SuperMob implements Enemy {
 			result.put(entry.getKey(), entry.getValue());
 		return result;
 	}
-
 }

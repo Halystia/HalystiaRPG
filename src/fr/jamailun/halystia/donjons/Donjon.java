@@ -20,7 +20,7 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 
 	private final String configName;
 	private String name;
-	private Location entry, exit;
+	private Location entry, exit, boss;
 	private int xpReward, levelNeeded;
 	private DonjonDifficulty difficulty;
 	
@@ -38,6 +38,8 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		
 		name = config.getString("name");
 		entry = config.getLocation("entry");
+		exit = config.getLocation("exit");
+		boss = config.getLocation("boss");
 		xpReward = config.getInt("reward");
 		levelNeeded = config.getInt("level");
 		
@@ -56,6 +58,8 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 			config.set("entry", new Location(Bukkit.getWorld(HalystiaRPG.WORLD), 0, 0, 0));
 		if( ! config.contains("exit"))
 			config.set("exit", new Location(Bukkit.getWorld(HalystiaRPG.WORLD), 0, 0, 0));
+		if( ! config.contains("boss"))
+			config.set("boss", new Location(Bukkit.getWorld(HalystiaRPG.WORLD), 0, 0, 0));
 		if( ! config.contains("reward"))
 			config.set("reward", 500);
 		if( ! config.contains("level"))
@@ -77,6 +81,14 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		exit = loc.clone();
 		synchronized (file) {
 			config.set("exit", loc);
+			save();
+		}
+	}
+	
+	public void changeBossLocation(Location loc) {
+		boss = loc.clone();
+		synchronized (file) {
+			config.set("boss", loc);
 			save();
 		}
 	}
@@ -194,6 +206,11 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 			return false;
 		inside.remove(p.getUniqueId());
 		return true;
+	}
+
+	@Override
+	public Location getBossLocation() {
+		return boss;
 	}
 	
 }

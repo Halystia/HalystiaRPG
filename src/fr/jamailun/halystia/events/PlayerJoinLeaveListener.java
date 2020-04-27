@@ -44,7 +44,7 @@ public class PlayerJoinLeaveListener extends HalystiaListener {
 			return;
 		}
 		
-		if(HalystiaRPG.isRpgWorld(to)) {
+		else if(HalystiaRPG.isRpgWorld(to)) {
 			if(HalystiaRPG.isRpgWorld(e.getFrom()))
 				return;
 			joinGame(p);
@@ -62,8 +62,9 @@ public class PlayerJoinLeaveListener extends HalystiaListener {
 	}
 	
 	private void leaveGame(Player p) {
-		main.getClasseManager().playerDisconnects(p);;
+		main.getClasseManager().playerDisconnects(p);
 		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+		main.getDonjonManager().playerLeaveGame(p);
 	//	main.getNpcManager().removeFromPlayer(p);
 	}
 	

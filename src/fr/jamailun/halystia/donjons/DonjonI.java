@@ -79,4 +79,9 @@ public interface DonjonI {
 	 */
 	public boolean forcePlayerExit(Player p);
 	
+	/**
+	 * @return the location the boss have to spawn
+	 */
+	public Location getBossLocation();
+	
 }
