@@ -1,5 +1,8 @@
 package fr.jamailun.halystia.enemies.mobs;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -15,16 +18,17 @@ import fr.jamailun.halystia.utils.RandomString;
 
 public class NaturalSpawnWorld {
 
-	public final static int REMOVE_ALL_EVERY_X_TICKS = 5;
-	public final static int TRIES_PER_PLAYER = 10;
+	public final static int REMOVE_ALL_EVERY_X_TICKS = 10;
+	public final static int TRIES_PER_PLAYER = 8;
 	
-	public final static int Y_SPAWN_DISTANCE = 10;
+	public final static double Y_SPAWN_DISTANCE = 10;
 	public final static double ADD_DISTANCE = 40;
 	public final static double REMOVAL_DISTANCE = 60;
 	public final static double MINIMAL_DISTANCE = 10;
 	public final static double MAX_MOBS_AROUND = 20;
 	
 	private final World world;
+	private final List<World> duegons;
 	private final MobManager mobs;
 	private final ChunkManager chunks;
 	
@@ -32,7 +36,7 @@ public class NaturalSpawnWorld {
 		this.mobs = mobs;
 		this.chunks = chunks;
 		world = Bukkit.getWorld(worldName);
-		
+		duegons = Bukkit.getWorlds().stream().filter(w -> w.getName().contains(HalystiaRPG.DONJONS_WORLD_CONTAINS)).collect(Collectors.toList());
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -47,6 +51,7 @@ public class NaturalSpawnWorld {
 		counterRemove++;
 		if(counterRemove >= REMOVE_ALL_EVERY_X_TICKS) {
 			mobs.killNonReferedsMobs(world);
+			duegons.forEach(w -> mobs.killNonReferedsMobs(w));
 			mobs.removeTooFar(world, REMOVAL_DISTANCE);
 			counterRemove = 0;
 		}
