@@ -2,6 +2,7 @@ package fr.jamailun.halystia.spells.spellEntity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -35,7 +36,7 @@ public abstract class SpellEntity {
 	/**
 	 * The caster of this entity.
 	 */
-	protected final Player launcher;
+	protected final UUID launcher;
 	
 	/**
 	 * Life duration.
@@ -51,10 +52,10 @@ public abstract class SpellEntity {
 	
 	private final SpellEntityManager mgr;
 	
-	public SpellEntity(Location loc, Player launcher, int life) {
+	public SpellEntity(Location loc, LivingEntity launcher, int life) {
 		this.mgr = HalystiaRPG.getInstance().getSpellManager().getSpellEntityManager();
 		mgr.add(this);
-		this.launcher = launcher;
+		this.launcher = launcher.getUniqueId();
 		this.life = life;
 		this.loc = loc.clone();
 		this.direction = new Vector(0,0,0);
@@ -152,7 +153,7 @@ public abstract class SpellEntity {
 	protected List<Player> getPlayersAround(Location loc, double distance, boolean hurtHimSelf) {
 		List<Player> list = new ArrayList<>();
 		for(Player pl : loc.getWorld().getPlayers()) {
-			if(pl.getUniqueId().equals(launcher.getUniqueId()) && (!hurtHimSelf))
+			if(pl.getUniqueId().equals(launcher) && (!hurtHimSelf))
 				continue;
 			if(pl.getLocation().distance(loc) <= distance)
 				list.add(pl);
@@ -173,14 +174,14 @@ public abstract class SpellEntity {
 			if( ! (en instanceof LivingEntity))
 				continue;
 			LivingEntity entity = (LivingEntity) en;
-			if(entity.getUniqueId().equals(launcher.getUniqueId()) && (!hurtHimSelf))
+			if(entity.getUniqueId().equals(launcher) && (!hurtHimSelf))
 				continue;
 			if(entity.getLocation().add(0,1.2,0).distance(loc) <= distance) {
 				if(CitizensAPI.getNPCRegistry().isNPC(en)) {
 					if( ! CitizensAPI.getNPCRegistry().getNPC(en).hasTrait(SentinelTrait.class))
 						continue;
 					else
-						CitizensAPI.getNPCRegistry().getNPC(en).getTrait(SentinelTrait.class).targetingHelper.addTarget(launcher.getUniqueId());
+						CitizensAPI.getNPCRegistry().getNPC(en).getTrait(SentinelTrait.class).targetingHelper.addTarget(launcher);
 				}
 				list.add(entity);
 			}
@@ -192,7 +193,7 @@ public abstract class SpellEntity {
 	 * Get the Spell's caster.
 	 * @return the caster.
 	 */
-	public Player getCaster() {
+	public UUID getCaster() {
 		return launcher;
 	}
 	
