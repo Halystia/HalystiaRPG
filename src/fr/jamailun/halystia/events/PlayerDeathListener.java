@@ -30,6 +30,7 @@ public class PlayerDeathListener extends HalystiaListener {
 		if( ! HalystiaRPG.isInRpgWorld(e.getEntity()))
 			return;
 		final Player p = e.getEntity();
+		main.getDonjonManager().playerLeaveGame(p);
 		e.setDeathMessage("");
 		if(p.getGameMode() == GameMode.CREATIVE) {
 			e.setKeepInventory(true);

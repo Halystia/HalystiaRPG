@@ -163,6 +163,9 @@ commands:
   joindonjon:
     usage: §4/joinDonjon <donjon-name>
     description: Join donjon (CMD BLOCK ONLY)
+  donjonBoss:
+    usage: §4/donjonBoss <donjon-name>
+    description: Summon boss's donjon (CMD BLOCK ONLY)
 
 permissions:
   halystia.rpg.*:

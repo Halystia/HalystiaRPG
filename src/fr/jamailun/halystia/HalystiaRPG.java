@@ -47,6 +47,7 @@ import fr.jamailun.halystia.commands.ModifyOeilAntiqueCommand;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
 import fr.jamailun.halystia.custom.potions.PotionManager;
 import fr.jamailun.halystia.donjons.DonjonManager;
+import fr.jamailun.halystia.donjons.util.CommandBossDonjon;
 import fr.jamailun.halystia.donjons.util.CommandDonjonPorte;
 import fr.jamailun.halystia.donjons.util.CommandJoinDonjon;
 import fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerManager;
@@ -264,6 +265,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		
 		getCommand("joindonjon").setExecutor(new CommandJoinDonjon(this));
 		getCommand("donjonPorte").setExecutor(new CommandDonjonPorte(this));
+		getCommand("donjonBoss").setExecutor(new CommandBossDonjon(this));
 		
 		
 		if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {

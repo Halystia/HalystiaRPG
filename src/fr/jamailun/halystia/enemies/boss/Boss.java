@@ -44,6 +44,7 @@ public abstract class Boss implements Enemy, Invocator {
 	private BukkitRunnable runnable = new BukkitRunnable() {public void run() {doAction();}};
 	
 	protected List<LivingEntity> invocations = new ArrayList<>();
+	protected DonjonI donjon = null;
 	
 	protected boolean exists = false;
 	protected double maxHealth = 100;
@@ -95,17 +96,17 @@ public abstract class Boss implements Enemy, Invocator {
 	protected abstract void damageAnimation();
 	
 	public void damage(UUID p, double damages) {
-		if(p == null)
-			Bukkit.broadcastMessage("§cptn c'est null");
+		//if(p == null)
+			//Bukkit.broadcastMessage("§cptn c'est null");
 		if(Bukkit.getPlayer(p) != null) {
-			Bukkit.broadcastMessage("§aTout ok");
+			//Bukkit.broadcastMessage("§aTout ok");
 			if(damagers.containsKey(p)) {
 				damagers.replace(p, damagers.get(p) + damages);
 			} else {
 				damagers.put(p, damages);
 			}
-		} else
-			Bukkit.broadcastMessage("hit by non player");
+		} //else
+			//Bukkit.broadcastMessage("hit by non player");
 		damage(damages);
 	}
 	
@@ -227,15 +228,15 @@ public abstract class Boss implements Enemy, Invocator {
 			if(pl != null) {
 				for(ItemStack loot : getLoots()) {
 					pl.getInventory().addItem(loot);
-					pl.sendMessage(HalystiaRPG.PREFIX + GREEN + "" + BOLD + "Tu reçois " + loot.getAmount() + "x " + 
+					pl.sendMessage(HalystiaRPG.PREFIX + GREEN + "" + BOLD + "Vous recevez " + loot.getAmount() + "x " + 
 							(loot.hasItemMeta() ? loot.getItemMeta().hasDisplayName() ? loot.getItemMeta().getDisplayName() : loot.getType().toString() : loot.getType().toString().toLowerCase().replaceAll("_", " ")));
 				}
-				pl.sendMessage(HalystiaRPG.PREFIX + GOLD + "+ " + ChatColor.GREEN + getXp() + "xp" + GOLD + ".");
+				pl.sendMessage(HalystiaRPG.PREFIX + GREEN + "" + BOLD + "Vous gagnez " + ChatColor.GOLD + (int)xp + "xp" + GREEN + "" + BOLD + ".");
 				PlayerData plc = HalystiaRPG.getInstance().getClasseManager().getPlayerData(pl);
 				if(plc != null)
 					plc.addXp((int)xp);
 				else
-					pl.sendMessage(HalystiaRPG.PREFIX + RED + "Une erreur est survenue. Tu aurais dû gagner " + xp + " xp.");
+					pl.sendMessage(HalystiaRPG.PREFIX + RED + "Une erreur est survenue. Tu aurais dû gagner " + (int)xp + " xp. Signalez vite ce message.");
 			}
 		});
 	}

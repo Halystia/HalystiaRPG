@@ -243,6 +243,7 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		if( ! isPlayerInside(p))
 			return false;
 		inside.remove(p.getUniqueId());
+		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous quittez le donjon.");
 		return true;
 	}
 

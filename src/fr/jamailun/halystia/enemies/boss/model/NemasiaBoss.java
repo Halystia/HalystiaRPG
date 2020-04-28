@@ -200,6 +200,17 @@ public class NemasiaBoss extends Boss {
 			}
 		}.runTaskLater(HalystiaRPG.getInstance(), 10*10L);
 		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				for(UUID id : donjon.getJoinedPlayers()) {
+					Player pl = Bukkit.getPlayer(id);
+					if(pl != null)
+						pl.teleport(donjon.getExitOfDonjon());
+				}
+			}
+		}.runTaskLater(HalystiaRPG.getInstance(), 14*10L);
+		
 		for(final Player pl : loc.getWorld().getPlayers()) {
 			if(pl.getLocation().distance(loc) < 40) {
 				for(int i = 0; i < 10; i++) {
@@ -278,6 +289,7 @@ public class NemasiaBoss extends Boss {
 
 	@Override
 	public boolean spawn(DonjonI donjon) {
+		this.donjon = donjon;
 		this.loc = donjon.getBossLocation();
 		
 		if(giant != null || head != null)
