@@ -43,9 +43,9 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		if(main.getSuperMobManager().damageMob(e.getEntity(), e.getDamager().getUniqueId(), 0)) {
 			e.setCancelled(true);
 		}
+		
 		if( ! (e.getEntity() instanceof LivingEntity))
 			return;
-		
 		
 		// Si l'entité qui attaque est un EnemyMob
 		if(main.getMobManager().hasMob(e.getDamager().getEntityId())) {
@@ -59,6 +59,10 @@ public class EntityDamageOtherListener extends HalystiaListener {
 					target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 20*5, 1));
 				if(mob.isWitherous())
 					target.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 20*5, 1));
+			}
+			if(main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), e.getDamager().getUniqueId(), e.getDamage())) {
+				e.setCancelled(true);
+				return;
 			}
 			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() < e.getDamage()) {
 				alertDeathPlayer(e.getEntity().getName(), mob.getCustomName());
@@ -74,6 +78,11 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			double newDamages = invocs.getDamages(damager);
 			if(newDamages != -1)
 				e.setDamage(newDamages);
+			
+			if(main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), e.getDamager().getUniqueId(), e.getDamage())) {
+				e.setCancelled(true);
+				return;
+			}
 			
 			//On annule si jamais c'est le créateur !
 			if(e.getEntity() instanceof Player) {
@@ -115,11 +124,21 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		}
 		
 		
+		if(e.getDamager() instanceof Arrow) {
+			Arrow arrow = (Arrow) e.getDamager();
+			if(main.getDonjonManager().getBossManager().isBoss(e.getEntity())) {
+				if(arrow.getShooter() == null && arrow.getShooter() instanceof Player)
+					main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), ((Player)arrow.getShooter()).getUniqueId(), e.getDamage());
+				else
+					main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), null, e.getDamage());
+			}
+		}
 		
 		// Si l'entité qui attaque c'est un Player
 		if( ! (e.getDamager() instanceof Player))
 			return;
 		Player p = (Player) e.getDamager();
+		
 		if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
 			if(((LivingEntity)e.getEntity()).getHealth() < e.getDamage()) {
 				alertDeathPlayer(e.getEntity().getName(), p.getName());
@@ -141,6 +160,10 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			p.playSound(p.getLocation(), Sound.ENTITY_PARROT_IMITATE_SPIDER, 1f, .5f);
 			for(PotionEffect effect : AcierBrut.effects)
 				((LivingEntity)e.getEntity()).addPotionEffect(effect);
+		}
+		
+		if(main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), e.getDamager().getUniqueId(), e.getDamage())) {
+			e.setCancelled(true);
 		}
 		
 		if(p.getGameMode() == GameMode.CREATIVE)
@@ -170,6 +193,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		}
 		
 	}
+	
 	private final static String SKULL = new String(Character.toChars(10060));
 	
 	public static void alertDeathPlayer(String killed, String killer) {
@@ -185,6 +209,26 @@ public class EntityDamageOtherListener extends HalystiaListener {
 	public void entityDamaged(EntityDamageEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getEntity()))
 			return;
+		if(main.getDonjonManager().getBossManager().isBoss(e.getEntity())) {
+			LivingEntity en = (LivingEntity) e.getEntity();
+			e.setCancelled(true);
+			if ( e.getCause() == DamageCause.ENTITY_ATTACK || e.getCause() == DamageCause.ENTITY_SWEEP_ATTACK || e.getCause() == DamageCause.PROJECTILE ) {
+				EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) e;
+				playerDamageEntity(event);
+				if(e.getCause() == DamageCause.PROJECTILE) {
+					if(event.getDamager() instanceof Arrow)
+						event.getDamager().remove();
+				}
+			} else {
+				main.getDonjonManager().getBossManager().damageBoss(en, null, e.getFinalDamage());
+			}
+			//if(e.getCause() == DamageCause.) {
+			//(en.get) e.get
+			//}
+			Bukkit.broadcastMessage("§e->"+e.getCause() + "§a - " + (e instanceof EntityDamageByEntityEvent ? "oui" : "§cnon") + "§e - " + e.getFinalDamage());
+			e.setCancelled(true);
+			return;
+		}
 		if(main.getMobManager().hasMob(e.getEntity().getEntityId())) {
 			EnemyMob mob = main.getMobManager().getWithEntityId(e.getEntity().getEntityId());
 			if(mob.doesResistFire()) {

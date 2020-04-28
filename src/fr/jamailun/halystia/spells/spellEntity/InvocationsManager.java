@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.LivingEntity;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.spells.Invocator;
@@ -41,7 +41,7 @@ public class InvocationsManager {
 	 * @param source Invokter who check the informations between invocations & invokaters
 	 * @param damages custo amount of damage the unit will deal
 	 */
-	public synchronized void add(Entity e, Player creator, boolean canAttackCreator, Invocator source, int damages) {
+	public synchronized void add(Entity e, LivingEntity creator, boolean canAttackCreator, Invocator source, int damages) {
 		map.put(e.getUniqueId(), canAttackCreator ? null : creator.getUniqueId());
 		mapSources.put(e.getUniqueId(), source);
 		mapDamages.put(e.getUniqueId(), damages);
@@ -69,7 +69,7 @@ public class InvocationsManager {
 	 * Check if a Player controls an entity.
 	 * @return true if he does.
 	 */
-	public boolean isMasterOf(Player p, Entity e) {
+	public boolean isMasterOf(LivingEntity p, Entity e) {
 		if( ! map.containsKey(e.getUniqueId())) //pas dans la map
 			return false;
 		if(map.get(e.getUniqueId()) == null) //pas de maitre

@@ -11,10 +11,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -22,15 +27,19 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.enemies.Enemy;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.spells.Invocator;
 
-public abstract class Boss implements Enemy {
+public abstract class Boss implements Enemy, Invocator {
 
 	private BukkitRunnable runnable = new BukkitRunnable() {public void run() {doAction();}};
+	
+	protected List<UUID> invocations = new ArrayList<>();
 	
 	protected boolean exists = false;
 	protected double maxHealth = 100;
@@ -63,26 +72,69 @@ public abstract class Boss implements Enemy {
 		return map;
 	}
 	
+	protected void damage(double damages) {
+		health -= damages;
+		updateBar();
+		damageAnimation();
+		Bukkit.broadcastMessage("§cOOF§e -"+damages+"PV. §d-> " + health+"PV.");
+		if(health <= 0 || (! exists())) {
+			if(getXp() > 0)
+				displayToDamagersBests();
+			repartLootsAndXp();
+			killed();
+			exists = false;
+			stopLoop();
+		}
+	}
+	
+	protected abstract void damageAnimation();
+	
 	public void damage(UUID p, double damages) {
 		if(damagers.containsKey(p)) {
 			damagers.replace(p, damagers.get(p) + damages);
 		} else {
 			damagers.put(p, damages);
 		}
-		health -= damages;
-		updateBar();
-		if(health <= 0 || (! exists())) {
-			if(getXp() > 0)
-				displayToDamagersBests();
-			repartLootsAndXp();
-			killed();
+		damage(damages);
+	}
+	
+	protected Player getClosestPlayer(Location loc, double maxDistance, boolean wallSentitive) {
+		Player player = null;
+		double distance = maxDistance+0.1;
+		for(Player pl : loc.getWorld().getPlayers()) {
+			double dist = pl.getLocation().distance(loc);
+			if(dist < distance) {
+				if( ! wallSentitive) {
+					player = pl;
+					distance = dist;
+					continue;
+				}
+				if( ! isThereWallBetweenLocations(loc, pl.getLocation(), dist)) {
+					player = pl;
+					distance = dist;
+				}
+			}
 		}
+		return player;
+	}
+	
+	protected List<Player> getClosePlayers(Location loc, double maxDistance) {
+		return loc.getWorld().getPlayers().stream().filter(p -> p.getLocation().distance(loc) <= maxDistance).collect(Collectors.toList());
+	}
+	
+	protected void makeSound(Location loc, Sound sound, float pitch) {
+		getClosePlayers(loc, 300).forEach(pl -> pl.playSound(loc, sound, 5f, pitch));
 	}
 
 	protected void updateBar() {
 		double per = health / maxHealth;
 		if(per < 0) per = 0; if(per > 1) per = 1;
+		bar.setTitle(getCustomName()+ChatColor.RED+"  "+(int)health+"/"+(int)maxHealth);
 		bar.setProgress(per);
+	}
+
+	protected boolean isInvocation(UUID id) {
+		return invocations.contains(id);
 	}
 	
 	protected abstract void killed();
@@ -99,7 +151,36 @@ public abstract class Boss implements Enemy {
 	
 	public abstract void purge();
 	
-	public abstract void spawn(DonjonI donjon);
+	protected abstract boolean spawn(DonjonI donjon);
+	
+	public abstract UUID getMainUUID();
+	
+	public boolean spawnBoss(DonjonI donjon) {
+		if(spawn(donjon)) {
+			exists = true;
+			startActionLoop();
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isThereWallBetweenLocations(final Location from, final Location to, double maxRange) {
+		Location cl = from.clone();
+		double x = to.getX()-from.getX(), y = to.getY()-from.getY(), z = to.getZ()-from.getZ();
+		Vector direction = new Vector(x, y, z).normalize();
+		//cl = from.clone();
+		while(cl.distance(to) > 1 && cl.distance(from) < maxRange) {
+			cl = cl.add(direction);
+			Block bl = cl.getBlock();
+			if(bl.getType() == Material.AIR || bl.getType() == Material.CAVE_AIR)
+				continue;
+
+			if (cl.distance(from) > 2.1) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public void displayToDamagersBests() {
 		UUID[] bo = bo3();
@@ -167,5 +248,11 @@ public abstract class Boss implements Enemy {
 		for (Entry<K, V> entry : list)
 			result.put(entry.getKey(), entry.getValue());
 		return result;
+	}
+	
+	public boolean equals(Object o) {
+		if(o instanceof Boss)
+			((Boss)o).getMainUUID().equals(this.getMainUUID());
+		return false;
 	}
 }

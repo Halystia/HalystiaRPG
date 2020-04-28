@@ -77,6 +77,18 @@ public class TchatListener extends HalystiaListener {
 			return;
 		}
 
+		if(e.getMessage().equals("boss")) {
+			e.setCancelled(true);
+
+			p.sendMessage("bien reçu. wait 1s");
+			Bukkit.getScheduler().runTaskLater(main, new Runnable() {
+				@Override
+				public void run() {
+					p.sendMessage("k -> " + main.getDonjonManager().getDonjons().get(0).trySpawnBoss(p));
+				}
+			}, 10L);
+			return;
+		}
 		
 		PlayerData pc = main.getClasseManager().getPlayerData(p);
 		if(pc == null) {

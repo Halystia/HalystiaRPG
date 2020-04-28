@@ -15,18 +15,25 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
 import org.bukkit.entity.Player;
 
+import fr.jamailun.halystia.enemies.boss.BossManager;
 import fr.jamailun.halystia.utils.Reloadable;
 
 public class DonjonManager {
 	
-	private Set<DonjonI> donjons;
+	private final Set<DonjonI> donjons;
+	private final BossManager bosses;
 	
 	private final String path;
 	
 	public DonjonManager(String path) {
 		donjons = new HashSet<>();
 		this.path = path;
+		bosses = new BossManager();
 		loadData();
+	}
+	
+	public BossManager getBossManager() {
+		return bosses;
 	}
 	
 	public synchronized void loadData() {
@@ -34,7 +41,7 @@ public class DonjonManager {
 		try {
 			Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(f -> {
 				String name = FilenameUtils.removeExtension(f.toFile().getName());
-				donjons.add(new Donjon(path, name));
+				donjons.add(new Donjon(path, name, bosses));
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -45,7 +52,7 @@ public class DonjonManager {
 		for(DonjonI dj : donjons)
 			if(dj.getConfigName().equalsIgnoreCase(configName))
 				return false;
-		Donjon donjon = new Donjon(path, configName);
+		Donjon donjon = new Donjon(path, configName, bosses);
 		donjon.changeEntryLocation(entry);
 		donjon.changeExitLocation(entry);
 		donjon.changeDonjonDifficulty(difficulty);
@@ -114,4 +121,5 @@ public class DonjonManager {
 			}
 		return null;
 	}
+	
 }

@@ -1,7 +1,9 @@
 package fr.jamailun.halystia.spells.spellEntity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Location;
@@ -52,6 +54,8 @@ public abstract class SpellEntity {
 	
 	private final SpellEntityManager mgr;
 	
+	private Set<UUID> ignored = new HashSet<>();
+	
 	public SpellEntity(Location loc, LivingEntity launcher, int life) {
 		this.mgr = HalystiaRPG.getInstance().getSpellManager().getSpellEntityManager();
 		mgr.add(this);
@@ -86,6 +90,10 @@ public abstract class SpellEntity {
 		if(lifeTime >= life) {
 			exists = false;
 		}
+	}
+	
+	public void ignore(UUID uuid) {
+		ignored.add(uuid);
 	}
 	
 	/**
@@ -138,7 +146,7 @@ public abstract class SpellEntity {
 				for(int i = 0; i < pType.size(); i++)
 					pl.spawnParticle(pType.get(i), loc.getX(), loc.getY(), loc.getZ(), pCount.get(i), pOH.get(i), pOV.get(i), pOH.get(i), pSpeed.get(i));
 			if(doSound)
-				for(int i = 0; i < pType.size(); i++)
+				for(int i = 0; i < sSound.size(); i++)
 					pl.playSound(loc, sSound.get(i), sVolume.get(i), sPitch.get(i));
 		}
 	}
@@ -171,6 +179,8 @@ public abstract class SpellEntity {
 	protected List<LivingEntity> getEntitiesAround(Location loc, double distance, boolean hurtHimSelf) {
 		List<LivingEntity> list = new ArrayList<>();
 		for(Entity en : loc.getWorld().getEntities()) {
+			if(ignored.contains(en.getUniqueId()))
+				continue;
 			if( ! (en instanceof LivingEntity))
 				continue;
 			LivingEntity entity = (LivingEntity) en;

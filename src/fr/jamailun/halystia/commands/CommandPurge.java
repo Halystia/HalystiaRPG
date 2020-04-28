@@ -39,6 +39,7 @@ public class CommandPurge implements CommandExecutor {
 		main.getBoatManager().purge();
 		main.getSpellManager().getInvocationsManager().purge();
 		main.getSuperMobManager().purge();
+		main.getDonjonManager().getBossManager().purge();
 		sender.sendMessage(GREEN+"Purge effectuée.");
 	}
 }

@@ -12,6 +12,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.enemies.boss.Boss;
+import fr.jamailun.halystia.enemies.boss.BossManager;
+import fr.jamailun.halystia.enemies.boss.model.NemasiaBoss;
 import fr.jamailun.halystia.utils.FileDataRPG;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.Reloadable;
@@ -20,15 +23,19 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 
 	private final String configName;
 	private String name;
-	private Location entry, exit, boss;
+	private Location entry, exit, bossLocation;
 	private int xpReward, levelNeeded;
 	private DonjonDifficulty difficulty;
 	
+	private Boss boss;
+	
 	private final Set<UUID> inside;
 	
-	public Donjon(String path, String name) {
+	private final BossManager bosses;
+	public Donjon(String path, String name, BossManager bosses) {
 		super(path, name);
 		this.configName = name;
+		this.bosses = bosses;
 		inside = new HashSet<>();
 		reloadData();
 	}
@@ -39,7 +46,7 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		name = config.getString("name");
 		entry = config.getLocation("entry");
 		exit = config.getLocation("exit");
-		boss = config.getLocation("boss");
+		bossLocation = config.getLocation("boss");
 		xpReward = config.getInt("reward");
 		levelNeeded = config.getInt("level");
 		
@@ -48,6 +55,16 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		} catch (IllegalArgumentException e) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"La difficulté du donjon ("+configName+") n'est pas valide.");
 			difficulty = DonjonDifficulty.FACILE;
+		}
+		
+		try {
+			Class<?> bossClasse = Class.forName(config.getString("boss-class"));
+			if ( ! bossClasse.getSuperclass().equals(Boss.class) )
+				throw new ClassNotFoundException("The boss of donjon ("+configName+") is not correct !");
+			boss = (Boss) bossClasse.newInstance();
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			//e.printStackTrace();
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "boss not found : " + e.getMessage());
 		}
 	}
 	
@@ -66,6 +83,8 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 			config.set("level", 10);
 		if( ! config.contains("difficulty"))
 			config.set("difficulty", DonjonDifficulty.FACILE.toString());
+		if( ! config.contains("boss-class"))
+			config.set("boss-class", NemasiaBoss.class.getName());
 		save();
 	}
 	
@@ -86,11 +105,30 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 	}
 	
 	public void changeBossLocation(Location loc) {
-		boss = loc.clone();
+		bossLocation = loc.clone();
 		synchronized (file) {
 			config.set("boss", loc);
 			save();
 		}
+	}
+	
+	public boolean changeBossType(String bossClasseString) {
+		try {
+			Class<?> bossClasse = Class.forName(bossClasseString);
+			if ( ! bossClasse.getSuperclass().equals(Boss.class) )
+				throw new ClassNotFoundException("The boss of donjon ("+configName+") is not correct !");
+			boss = (Boss) bossClasse.newInstance();
+			
+			synchronized (file) {
+				config.set("boss-class", bossClasseString);
+				save();
+			}
+			return true;
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+			//e.printStackTrace();
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "boss not found : " + e.getMessage());
+		}
+		return false;
 	}
 	
 	public void changeDonjonName(String name) {
@@ -210,7 +248,18 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 
 	@Override
 	public Location getBossLocation() {
-		return boss;
+		return bossLocation;
+	}
+
+	@Override
+	public boolean trySpawnBoss(Player player) {
+		if(boss == null)
+			return false;
+		if(boss.exists())
+			return false;
+		boss.spawnBoss(this);
+		bosses.bossSpawned(boss);
+		return false;
 	}
 	
 }

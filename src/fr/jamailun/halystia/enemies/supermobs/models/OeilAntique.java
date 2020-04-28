@@ -19,6 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.Rarity;
 import fr.jamailun.halystia.enemies.supermobs.SuperMob;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.Laser;
@@ -52,7 +53,7 @@ public class OeilAntique extends SuperMob {
 	}
 	
 	public List<ItemStack> getLoots() {
-		return Arrays.asList(new ItemBuilder(Material.IRON_NUGGET).setName(ChatColor.GRAY + "" + ChatColor.BOLD + "Pépite mécanique").toItemStack());
+		return Arrays.asList(new ItemBuilder(Material.IRON_NUGGET).setName(Rarity.RARE.getColor() + "Pépite mécanique").toItemStack());
 	}
 	
 	public int getXp() {

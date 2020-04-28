@@ -189,6 +189,7 @@ public class MobManager extends FileDataRPG {
 					&& en.getType() != EntityType.DROPPED_ITEM
 					&& en.getType() != EntityType.ITEM_FRAME
 					&&  ! api.getSuperMobManager().isOne(en)
+					&&  ! api.getDonjonManager().getBossManager().isBoss(en)
 			)
 			.collect(Collectors.toSet());
 		Set<UUID> invocs = new HashSet<>(api.getSpellManager().getInvocationsManager().getList().keySet());

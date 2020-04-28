@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
 public class EffectSpellEntity extends SpellEntity {
@@ -15,7 +14,7 @@ public class EffectSpellEntity extends SpellEntity {
 	
 	private final boolean hurtHimSelf;
 	
-	public EffectSpellEntity(Location loc, Player launcher, int life, List<PotionEffect> effects, double range, boolean hurtHimSelf) {
+	public EffectSpellEntity(Location loc, LivingEntity launcher, int life, List<PotionEffect> effects, double range, boolean hurtHimSelf) {
 		super(loc, launcher, life);
 		this.effects = new ArrayList<>(effects);
 		this.range = range;

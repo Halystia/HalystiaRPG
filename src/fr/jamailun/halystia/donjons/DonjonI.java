@@ -84,4 +84,11 @@ public interface DonjonI {
 	 */
 	public Location getBossLocation();
 	
+	/**
+	 * Try to spawn the {@link fr.jamailun.halystia.enemies.boss.Boss Boss} of the donjon
+	 * @param player the Player who try to summon the Boss
+	 * @return false if the boss is already spawned.
+	 */
+	public boolean trySpawnBoss(Player player);
+	
 }

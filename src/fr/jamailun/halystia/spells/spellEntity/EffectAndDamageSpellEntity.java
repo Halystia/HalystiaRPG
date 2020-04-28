@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
@@ -32,7 +31,7 @@ public class EffectAndDamageSpellEntity extends SpellEntity {
 	 * @param upperForce : force applied to the targeted entities in the positive Y direction. 
 	 * @param oneTarget : if the spell should deseseapear after hit an Living Entity.
 	 */
-	public EffectAndDamageSpellEntity(Location loc, Player launcher, int life, List<PotionEffect> effects, double range, boolean hurtHimSelf, int fire, double damages, double upperForce, boolean oneTarget) {
+	public EffectAndDamageSpellEntity(Location loc, LivingEntity launcher, int life, List<PotionEffect> effects, double range, boolean hurtHimSelf, int fire, double damages, double upperForce, boolean oneTarget) {
 		super(loc, launcher, life);
 		this.effects = new ArrayList<>(effects);
 		this.range = range;

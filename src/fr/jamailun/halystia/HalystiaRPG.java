@@ -53,6 +53,7 @@ import fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.enemies.mobs.NaturalSpawnWorld;
 import fr.jamailun.halystia.enemies.supermobs.SuperMobManager;
+import fr.jamailun.halystia.events.BossListeners;
 import fr.jamailun.halystia.events.ConsumeItemListener;
 import fr.jamailun.halystia.events.EntityDamageOtherListener;
 import fr.jamailun.halystia.events.EntityPickupItemListener;
@@ -221,6 +222,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		new ConsumeItemListener(this);
 		
 		new MobAggroListener(this);
+		new BossListeners(this);
 		
 		new MobDeathListener(this);
 		new MobSpawnListener(this);
@@ -305,6 +307,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		mobMgr.purge();
 		spellMgr.getInvocationsManager().purge();
 		superMobMgr.purge();
+		donjonsMgr.getBossManager().purge();
 		cache.applyCache();
 		console.sendMessage(PREFIX + ChatColor.GREEN + "Désactivation terminée en " + (System.currentTimeMillis() - debut) + "ms.");
 	}
@@ -351,7 +354,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	 * @see #isInRpgWorld(Entity)
 	 */
 	public static boolean isRpgWorld(World w) {
-		return w.getName().equals(WORLD) || w.getName().startsWith(DONJONS_WORLD_CONTAINS);
+		return w.getName().equals(WORLD) || w.getName().contains(DONJONS_WORLD_CONTAINS);
 	}
 	
 	/**
