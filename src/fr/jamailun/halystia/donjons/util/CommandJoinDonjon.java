@@ -55,7 +55,7 @@ public class CommandJoinDonjon implements CommandExecutor {
 		
 		DonjonI donjon = null;
 		for(DonjonI dj : api.getDonjonManager().getDonjons())
-			if(dj.getName().replaceAll(" ", "_").equals(args[0]))
+			if(dj.getConfigName().equals(args[0]))
 				donjon = dj;
 		
 		if(donjon == null) {

@@ -35,7 +35,7 @@ public class DonjonCreator {
 		Bukkit.getScheduler().runTaskLater(HalystiaRPG.getInstance(), new Runnable() {
 			public void run() {
 				CommandBlock cmdBlockData = (CommandBlock) cmdBlock.getState();
-				cmdBlockData.setCommand("joindonjon " + donjon.getName().replaceAll(" ", "_"));
+				cmdBlockData.setCommand("joindonjon " + donjon.getConfigName());
 				cmdBlockData.update();
 			}
 		}, 20L);
