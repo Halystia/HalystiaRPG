@@ -44,7 +44,7 @@ public abstract class SuperMob implements Enemy {
 		this.health = health;
 		this.respawnTime = respawnTime;
 		damagers = new HashMap<>();
-		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SEGMENTED_10, BarFlag.CREATE_FOG);
+		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SOLID, BarFlag.CREATE_FOG);
 		bar.setVisible(true);
 	}
 	
