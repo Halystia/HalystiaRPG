@@ -79,7 +79,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			if(newDamages != -1)
 				e.setDamage(newDamages);
 			
-			if(main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), e.getDamager().getUniqueId(), e.getDamage())) {
+			if(main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), invocs.getMasterOf(damager.getUniqueId()), e.getDamage())) {
 				e.setCancelled(true);
 				return;
 			}
@@ -127,7 +127,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		if(e.getDamager() instanceof Arrow) {
 			Arrow arrow = (Arrow) e.getDamager();
 			if(main.getDonjonManager().getBossManager().isBoss(e.getEntity())) {
-				if(arrow.getShooter() == null && arrow.getShooter() instanceof Player)
+				if(arrow.getShooter() != null && arrow.getShooter() instanceof Player)
 					main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), ((Player)arrow.getShooter()).getUniqueId(), e.getDamage());
 				else
 					main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), null, e.getDamage());
@@ -215,17 +215,14 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			if ( e.getCause() == DamageCause.ENTITY_ATTACK || e.getCause() == DamageCause.ENTITY_SWEEP_ATTACK || e.getCause() == DamageCause.PROJECTILE ) {
 				EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) e;
 				playerDamageEntity(event);
-				if(e.getCause() == DamageCause.PROJECTILE) {
+				if(e.getCause() == DamageCause.PROJECTILE) { // on bute les arrow sinon c'est moche
 					if(event.getDamager() instanceof Arrow)
 						event.getDamager().remove();
 				}
 			} else {
 				main.getDonjonManager().getBossManager().damageBoss(en, null, e.getFinalDamage());
 			}
-			//if(e.getCause() == DamageCause.) {
-			//(en.get) e.get
-			//}
-			Bukkit.broadcastMessage("§e->"+e.getCause() + "§a - " + (e instanceof EntityDamageByEntityEvent ? "oui" : "§cnon") + "§e - " + e.getFinalDamage());
+			//Bukkit.broadcastMessage("§e->"+e.getCause() + "§a - " + (e instanceof EntityDamageByEntityEvent ? "oui" : "§cnon") + "§e - " + e.getFinalDamage());
 			e.setCancelled(true);
 			return;
 		}

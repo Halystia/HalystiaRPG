@@ -1,5 +1,6 @@
 package fr.jamailun.halystia.enemies.boss.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -31,6 +32,7 @@ import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.enemies.boss.Boss;
 import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
+import fr.jamailun.halystia.spells.spellEntity.EffectSpellEntity;
 import fr.jamailun.halystia.spells.spellEntity.SpellEntity;
 
 public class NemasiaBoss extends Boss {
@@ -38,7 +40,7 @@ public class NemasiaBoss extends Boss {
 	public static final int MAX_INVOCATIONS = 5;
 	public static final int HEALTH = 5000;
 	public static final int HEALTH_PER_CUBE = 200;
-	public static final int CUBES_HEALTH = 1;
+	public static final int CUBES_HEALTH = 100;
 	public static final int CUBES_DAMAGES = 5;
 	
 	private Location loc;
@@ -74,22 +76,41 @@ public class NemasiaBoss extends Boss {
 			return;
 		counter = 0 - rand.nextInt(5);
 		
+		Player closest = getClosestPlayer(loc, 20, true);
 		double random = rand.nextInt(100)+1;
+		
+		//Pas de joueur visible !
+		if(closest == null) {
+			if ( random <= 70 )				// 70%
+				lightStrike(getClosestPlayer(loc, 20, false), 1.8);
+			else if ( random <= 90 )
+				summonCubes();				// 20%
+			return;							// 10%
+		}
+		Vector look = head.getLocation().toVector().subtract(closest.getLocation().toVector()).normalize();
+		giant.teleport(giant.getLocation().setDirection(look));
+		//head.getLocation().setDirection(look);
+		double x = closest.getLocation().getX() - giant.getLocation().getX();
+		double y = closest.getLocation().getY() - giant.getLocation().getY();
+		double z = closest.getLocation().getZ() - giant.getLocation().getZ();
+
+		Vector lookDir = new Vector(x, y, z);//make a vector going from the player's location to the center point
+
+		giant.getLocation().setDirection(lookDir.normalize());
+		
 		if ( random <= 20 )
-			shotFireBall();			// 20%
+			shotFireBall(closest);			// 20%
 		else if ( random <= 50 )
-			summonCubes();			// 30%
+			summonCubes();					// 30%
 		else if ( random <= 70 )
-			lightStrike();			// 20%
+			lightStrike(closest, 1);			// 20%
 		else
-			fire();					// 30%
+			fire(closest);					// 30%
 	}
 	
-	private void shotFireBall() {
-		final Player target = getClosestPlayer(loc, 25, true);
+	private void shotFireBall(Player target) {
 		if(target == null)
 			return;
-		
 		for(int i = 1; i <= 3; i++) {
 			new BukkitRunnable() {
 				@Override
@@ -98,7 +119,8 @@ public class NemasiaBoss extends Boss {
 					direction = direction.multiply(2);
 					Fireball ball = head.launchProjectile(Fireball.class);
 					ball.setShooter(giant);
-					ball.setYield(5);
+					ball.setYield(4);
+					ball.setIsIncendiary(false);
 					ball.setDirection(direction);
 					makeSound(head.getLocation(), Sound.ENTITY_GHAST_SCREAM, .7f);
 				}
@@ -113,46 +135,44 @@ public class NemasiaBoss extends Boss {
 		if(targets.isEmpty())
 			return;
 		for(Player pl : targets) {
+			new EffectSpellEntity(pl.getLocation().add(0,1,0), head, 1, new ArrayList<>(), 1, false).addParticleEffect(Particle.DRAGON_BREATH, 100, .2, .1, .4);
 			MagmaCube cube = loc.getWorld().spawn(pl.getLocation().add(0, 10, 0), MagmaCube.class);
 			cube.setSize(2);
 			cube.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(CUBES_HEALTH);
 			cube.setHealth(CUBES_HEALTH);
 			HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(cube, giant, false, this, CUBES_DAMAGES);
-			invocations.add(cube.getUniqueId());
+			invocations.add(cube);
 		}
-		
 	}
 	
-	private void lightStrike() {
-		Player target = getClosestPlayer(loc, 10, false);
+	private void lightStrike(Player target, double multiplicator) {
 		if(target == null)
 			return;
+		final Location hitLoc = target.getLocation().clone();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				loc.getWorld().strikeLightningEffect(target.getLocation());
-				target.damage(10);
+				loc.getWorld().strikeLightningEffect(hitLoc);
+				SpellEntity spell = new EffectAndDamageSpellEntity(hitLoc, giant, 1, new ArrayList<>(), 4, false, 100, 11*multiplicator, 0.001, false);
+				spell.addParticleEffect(Particle.FLAME, 300, 1, .1, .5);
+				spell.addParticleEffect(Particle.FLASH, 2, .1, .1, 1);
 			}
 		}.runTaskLater(HalystiaRPG.getInstance(), 30L);
 		makeSound(head.getLocation(), Sound.ENTITY_GHAST_WARN, .7f);
 	}
 	
 	private final static List<PotionEffect> effects = Arrays.asList(new PotionEffect(PotionEffectType.NIGHT_VISION, 60, 0, false), new PotionEffect(PotionEffectType.SLOW, 120, 1, false));
-	private void fire() {
-		Player target = getClosestPlayer(loc, 25, true);
+	private void fire(Player target) {	
 		if(target == null)
-			return;
-		
-		SpellEntity spell = new EffectAndDamageSpellEntity(head.getLocation(), giant, 40, effects, 2, false, 100, 3.0, 0, false);
-		spell.setDirection(target.getLocation().toVector().subtract(head.getLocation().toVector()).normalize().multiply(.7));
+			return;	
+		SpellEntity spell = new EffectAndDamageSpellEntity(head.getLocation(), giant, 30, effects, 2.8, false, 100, 3.0, 0, false);
+		spell.setDirection(target.getLocation().toVector().subtract(head.getLocation().toVector()).normalize().multiply(.9));
 		spell.addSoundEffect(Sound.BLOCK_CAMPFIRE_CRACKLE, 2f, .1f);
 		spell.addParticleEffect(Particle.END_ROD, 40, 1, 1, .01);
 		spell.addParticleEffect(Particle.FLAME, 100, 1.5, 1.5, .05);
 		spell.ignore(head.getUniqueId());
 		makeSound(head.getLocation(), Sound.ENTITY_GHAST_SHOOT, .7f);
 	}
-	
-	
 	
 	@Override
 	public boolean canMove() {
@@ -163,33 +183,50 @@ public class NemasiaBoss extends Boss {
 	protected void killed() {
 		if(loc == null)
 			throw new IllegalStateException("Location is null !");
-
+		bar.setVisible(false);
 		exists = false;
-		head = null;
-		giant = null;
-		stopLoop();
+		invocations.forEach(en -> en.remove());
+		invocations.clear();
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if(head != null)
+					head.remove();
+				if(giant != null)
+					giant.remove();
+				head = null;
+				giant = null;
+			}
+		}.runTaskLater(HalystiaRPG.getInstance(), 10*10L);
 		
-		for(Player pl : loc.getWorld().getPlayers()) {
-			if(pl.getLocation().distance(loc) < 200) {
-				pl.spawnParticle(Particle.EXPLOSION_LARGE,
-						loc.getX(), loc.getY(), loc.getZ(), 
-						10,
-						.5, .5, .5,
-						.5
-				);
-				pl.spawnParticle(Particle.FLASH,
-						loc.getX(), loc.getY(), loc.getZ(), 
-						50,
-						5, 5, 5,
-						.1
-				);
-				pl.spawnParticle(Particle.DRIP_LAVA,
-						loc.getX(), loc.getY(), loc.getZ(), 
-						300,
-						.5, .5, .5,
-						1
-				);
-				pl.playSound(loc, Sound.ENTITY_WITHER_DEATH, 4f, .8f);
+		for(final Player pl : loc.getWorld().getPlayers()) {
+			if(pl.getLocation().distance(loc) < 40) {
+				for(int i = 0; i < 10; i++) {
+					final int h = i;
+					new BukkitRunnable() {
+						@Override
+						public void run() {
+							giant.teleport(loc.clone().add(0, 0.1*(double)h, 0));
+							pl.spawnParticle(Particle.EXPLOSION_LARGE,
+									loc.getX(), loc.getY(), loc.getZ(), 
+									2,
+									5, 3, 5,
+									.5
+							);
+							pl.spawnParticle(Particle.FLASH,
+									loc.getX(), loc.getY(), loc.getZ(), 
+									4,
+									5, 3, 5,
+									1
+							);
+							pl.playSound(loc, Sound.ENTITY_GENERIC_EXPLODE, 2f, 1.2f);
+						}
+					}.runTaskLater(HalystiaRPG.getInstance(), i*10L);
+					
+				}
+				
+				pl.playSound(loc, Sound.ENTITY_WITHER_DEATH, 10f, .1f);
 			}
 		}
 	}
@@ -220,7 +257,7 @@ public class NemasiaBoss extends Boss {
 
 	@Override
 	public int getXp() {
-		return 10000;
+		return 7000;
 	}
 
 	@Override
@@ -235,6 +272,8 @@ public class NemasiaBoss extends Boss {
 		giant = null;
 		stopLoop();
 		bar.setVisible(false);
+		invocations.forEach(en -> en.remove());
+		invocations.clear();
 	}
 
 	@Override
@@ -260,7 +299,9 @@ public class NemasiaBoss extends Boss {
 		
 		damagers.clear();
 		bar.setVisible(true);
-		
+
+		invocations.forEach(en -> en.remove());
+		invocations.clear();
 		updateBar();
 		
 		return true;
@@ -275,7 +316,7 @@ public class NemasiaBoss extends Boss {
 
 	@Override
 	public void oneIsDead(UUID uuid) {
-		invocations.remove(uuid);
+		invocations.removeIf(en -> en.getUniqueId().equals(uuid));
 		super.damage(HEALTH_PER_CUBE);
 		makeSound(loc, Sound.ENTITY_GHAST_HURT, .8f);
 	}

@@ -1,18 +1,21 @@
 package fr.jamailun.halystia.enemies.boss;
 
 import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.BOLD;
 import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,6 +27,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -39,7 +43,7 @@ public abstract class Boss implements Enemy, Invocator {
 
 	private BukkitRunnable runnable = new BukkitRunnable() {public void run() {doAction();}};
 	
-	protected List<UUID> invocations = new ArrayList<>();
+	protected List<LivingEntity> invocations = new ArrayList<>();
 	
 	protected boolean exists = false;
 	protected double maxHealth = 100;
@@ -56,6 +60,7 @@ public abstract class Boss implements Enemy, Invocator {
 	}
 	
 	protected void startActionLoop() {
+		runnable = new BukkitRunnable() {public void run() {doAction();}};
 		runnable.runTaskTimer(HalystiaRPG.getInstance(), 20L, 20L);
 	}
 	
@@ -76,25 +81,31 @@ public abstract class Boss implements Enemy, Invocator {
 		health -= damages;
 		updateBar();
 		damageAnimation();
-		Bukkit.broadcastMessage("§cOOF§e -"+damages+"PV. §d-> " + health+"PV.");
+		//Bukkit.broadcastMessage("§cOOF§e -"+damages+"PV. §d-> " + health+"PV.");
 		if(health <= 0 || (! exists())) {
-			if(getXp() > 0)
-				displayToDamagersBests();
-			repartLootsAndXp();
+			stopLoop();
 			killed();
 			exists = false;
-			stopLoop();
+			repartLootsAndXp();
+			if(getXp() > 0)
+				displayToDamagersBests();
 		}
 	}
 	
 	protected abstract void damageAnimation();
 	
 	public void damage(UUID p, double damages) {
-		if(damagers.containsKey(p)) {
-			damagers.replace(p, damagers.get(p) + damages);
-		} else {
-			damagers.put(p, damages);
-		}
+		if(p == null)
+			Bukkit.broadcastMessage("§cptn c'est null");
+		if(Bukkit.getPlayer(p) != null) {
+			Bukkit.broadcastMessage("§aTout ok");
+			if(damagers.containsKey(p)) {
+				damagers.replace(p, damagers.get(p) + damages);
+			} else {
+				damagers.put(p, damages);
+			}
+		} else
+			Bukkit.broadcastMessage("hit by non player");
 		damage(damages);
 	}
 	
@@ -128,13 +139,13 @@ public abstract class Boss implements Enemy, Invocator {
 
 	protected void updateBar() {
 		double per = health / maxHealth;
-		if(per < 0) per = 0; if(per > 1) per = 1;
+		if(per < 0) per = 0; else if(per > 1) per = 1;
 		bar.setTitle(getCustomName()+ChatColor.RED+"  "+(int)health+"/"+(int)maxHealth);
 		bar.setProgress(per);
 	}
 
-	protected boolean isInvocation(UUID id) {
-		return invocations.contains(id);
+	protected boolean isInvocation(LivingEntity en) {
+		return invocations.contains(en);
 	}
 	
 	protected abstract void killed();
@@ -199,28 +210,34 @@ public abstract class Boss implements Enemy, Invocator {
 			pl.sendMessage(HalystiaRPG.PREFIX + GOLD + "Un " + getCustomName() + GOLD + " a été tué ! Top des dégats :");
 			
 			for(int i = 0; i < bo.length; i++) {
-				pl.sendMessage(HalystiaRPG.PREFIX + YELLOW + "["+(i+1)+"] " + Bukkit.getOfflinePlayer(id).getName() + " : " + RED + damagers.get(id) + " hp.");
+				pl.sendMessage(HalystiaRPG.PREFIX + YELLOW + "["+(i+1)+"] " + Bukkit.getOfflinePlayer(bo[i]).getName() + " : " + RED + Math.floor( damagers.get(bo[i]) )+ " dmgs.");
 			}
 			if(otherDmgs > 0) {
-				pl.sendMessage(HalystiaRPG.PREFIX + GOLD + "Autres dégâts : " + RED + otherDmgs + " hp " + GOLD + " par " + BLUE + (damagers.size() - 3) + GOLD + " autres joueurs.");
-			}
+				pl.sendMessage(HalystiaRPG.PREFIX + GOLD + "Autres dégâts : " + RED + Math.floor(otherDmgs) + " dmgs " + GOLD + " par " + BLUE + (damagers.size() - 3) + GOLD + " autres joueurs.");
+			} 	
 		}
 	}
 	
 	public void repartLootsAndXp() {
 		final double total = totalDamages();
-		for(UUID id : damagers.keySet()) {
-			double percent = damagers.get(id) / total;
+		damagers.forEach((id, damages) -> {
+			double percent = damages / total;
 			Player pl = Bukkit.getPlayer(id);
 			double xp = ((double)getXp()) * percent;
 			if(pl != null) {
+				for(ItemStack loot : getLoots()) {
+					pl.getInventory().addItem(loot);
+					pl.sendMessage(HalystiaRPG.PREFIX + GREEN + "" + BOLD + "Tu reçois " + loot.getAmount() + "x " + 
+							(loot.hasItemMeta() ? loot.getItemMeta().hasDisplayName() ? loot.getItemMeta().getDisplayName() : loot.getType().toString() : loot.getType().toString().toLowerCase().replaceAll("_", " ")));
+				}
+				pl.sendMessage(HalystiaRPG.PREFIX + GOLD + "+ " + ChatColor.GREEN + getXp() + "xp" + GOLD + ".");
 				PlayerData plc = HalystiaRPG.getInstance().getClasseManager().getPlayerData(pl);
 				if(plc != null)
 					plc.addXp((int)xp);
 				else
 					pl.sendMessage(HalystiaRPG.PREFIX + RED + "Une erreur est survenue. Tu aurais dû gagner " + xp + " xp.");
 			}
-		}
+		});
 	}
 	
 	private double totalDamages() {
@@ -231,10 +248,12 @@ public abstract class Boss implements Enemy, Invocator {
 	}
 	
 	public UUID[] bo3() {
-		UUID[] bo = new UUID[3];
+		UUID[] bo = new UUID[damagers.size() > 3 ? 3 : damagers.size()];
 		Map<UUID, Double> map = sortByValue(damagers);
 		int i = 0;
 		for(UUID id : map.keySet()) {
+			if(i >= bo.length)
+				break;
 			bo[i] = id;
 			i++;
 		}
@@ -244,6 +263,7 @@ public abstract class Boss implements Enemy, Invocator {
 	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
 		List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
 		list.sort(Entry.comparingByValue());
+		Collections.reverse(list);
 		Map<K, V> result = new LinkedHashMap<>();
 		for (Entry<K, V> entry : list)
 			result.put(entry.getKey(), entry.getValue());

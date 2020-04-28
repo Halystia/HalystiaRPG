@@ -138,4 +138,11 @@ public class InvocationsManager {
 		main.getSpellManager().resetInvocations();
 	}
 	
+	/**
+	 * 
+	 */
+	public UUID getMasterOf(UUID unit) {
+		return map.get(unit);
+	}
+	
 }
