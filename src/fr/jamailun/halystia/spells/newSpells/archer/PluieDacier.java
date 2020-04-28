@@ -56,6 +56,7 @@ public class PluieDacier extends InvocationSpell {
 						Arrow a = loc.getWorld().spawnArrow(new Location(loc.getWorld(), loc.getX() + dx, loc.getY() + 12, loc.getZ() + dz), new Vector(0, -1, 0), 0.7f, 12);
 						
 						a.setCustomNameVisible(false);
+						a.setShooter(p);
 						
 						main.getSpellManager().getInvocationsManager().add((Entity)a, p, false, thiis, 3);
 						

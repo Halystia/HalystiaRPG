@@ -34,6 +34,7 @@ public class AcierEffrene extends InvocationSpell {
 					a.setVelocity(p.getLocation().getDirection().multiply(POWER));
 					a.setPickupStatus(PickupStatus.CREATIVE_ONLY);
 					a.setPierceLevel(5);
+					a.setShooter(p);
 					if(RandomString.randInt(1, 100) < 20)
 						a.setFireTicks(300);
 					a.setCustomNameVisible(false);

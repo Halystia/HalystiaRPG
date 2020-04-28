@@ -33,6 +33,7 @@ public class PluieAceree extends InvocationSpell {
 					a.setVelocity(p.getLocation().getDirection().multiply(POWER));
 					a.setPickupStatus(PickupStatus.CREATIVE_ONLY);
 					a.setPierceLevel(3);
+					a.setShooter(p);
 					a.setCustomNameVisible(false);
 					main.getSpellManager().getInvocationsManager().add((Entity)a, p, false, thiis, DAMAGES);
 					new BukkitRunnable() {
