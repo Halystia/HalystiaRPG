@@ -64,7 +64,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				e.setCancelled(true);
 				return;
 			}
-			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() < e.getDamage()) {
+			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() < ((EntityDamageEvent)e).getFinalDamage()) {
 				alertDeathPlayer(e.getEntity().getName(), mob.getCustomName());
 			}
 			return;
@@ -96,7 +96,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				}
 				
 				if( ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
-					if(((LivingEntity)e.getEntity()).getHealth() < e.getDamage()) {
+					if(((LivingEntity)e.getEntity()).getHealth() < ((EntityDamageEvent)e).getFinalDamage()) {
 						alertDeathPlayer(e.getEntity().getName(), damager.getCustomName() != null ? damager.getCustomName() : invocs.getCasterName(damager));
 					}
 				}
@@ -116,7 +116,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		}
 		if(CitizensAPI.getNPCRegistry().isNPC(e.getDamager())) {
 			if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
-				if(((LivingEntity)e.getEntity()).getHealth() < e.getDamage()) {
+				if(((LivingEntity)e.getEntity()).getHealth() < ((EntityDamageEvent)e).getFinalDamage()) {
 					alertDeathPlayer(e.getEntity().getName(), CitizensAPI.getNPCRegistry().getNPC(e.getDamager()).getName());
 				}
 			}
@@ -140,7 +140,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		Player p = (Player) e.getDamager();
 		
 		if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
-			if(((LivingEntity)e.getEntity()).getHealth() < e.getDamage()) {
+			if(((LivingEntity)e.getEntity()).getHealth() < ((EntityDamageEvent)e).getFinalDamage()) {
 				alertDeathPlayer(e.getEntity().getName(), p.getName());
 			}
 		}
@@ -209,6 +209,20 @@ public class EntityDamageOtherListener extends HalystiaListener {
 	public void entityDamaged(EntityDamageEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getEntity()))
 			return;
+		
+		/*if(e.getEntity() instanceof Player) {
+			Player cible = (Player) e.getEntity();
+			if(e.getFinalDamage() >= cible.getHealth()) {
+				if(e.getCause() == DamageCause.FIRE_TICK || e.getCause() == DamageCause.LAVA) {
+					alertDeathPlayer(cible.getName() );
+				}
+				
+				
+				return;
+			}
+		}*/
+		
+		
 		if(main.getDonjonManager().getBossManager().isBoss(e.getEntity())) {
 			LivingEntity en = (LivingEntity) e.getEntity();
 			e.setCancelled(true);
