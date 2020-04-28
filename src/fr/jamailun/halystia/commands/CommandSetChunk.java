@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -49,7 +50,7 @@ public class CommandSetChunk extends HalystiaCommand {
 		}
 		
 		if(args.length == 0) {
-			p.sendMessage("§c/set-chunk <§bset §e<nom> [rayon (convertit les chunks dans un carré de demi-coté égal à 'rayon')] §c| §btoggle-vision§c>");
+			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "/set-chunk <§bset §e<nom> [rayon (convertit les chunks dans un carré de demi-coté égal à 'rayon')] §c| §btoggle-vision§c>");
 			return true;
 		}
 		
@@ -60,18 +61,19 @@ public class CommandSetChunk extends HalystiaCommand {
 		
 		if(args[0].equals("reset")) {
 			main.getSpawnChunkManager().deleteValueOfChunk(p.getLocation().getChunk());
+			p.sendMessage(HalystiaRPG.PREFIX + GREEN + "Sucès. Chunk en (" + p.getLocation().getChunk().getX() + ";" + p.getLocation().getChunk().getZ() + ") reset.");
 			return true;
 		}
 		
 		if(args.length < 2) {
-			p.sendMessage("§c/set-chunk set §e<nom> §a[rayon §8(convertit les chunks dans un carré de demi-coté égal à 'rayon')§a]");
+			p.sendMessage(HalystiaRPG.PREFIX + "§c/set-chunk set §e<nom> §a[rayon §8(convertit les chunks dans un carré de demi-coté égal à 'rayon')§a]");
 			return true;
 		}
 		
 		String chunkName = args[1];
 		ChunkType type = main.getChunkCreator().getChunkType(chunkName);
 		if(type == null) {
-			p.sendMessage(RED + "Chunk value inconnue : ["+DARK_RED+chunkName+RED+"]");
+			p.sendMessage(HalystiaRPG.PREFIX + RED + "Chunk value inconnue : ["+DARK_RED+chunkName+RED+"]");
 			return true;
 		}
 		
@@ -81,7 +83,7 @@ public class CommandSetChunk extends HalystiaCommand {
 			try {
 				rayon = Integer.parseInt(args[2]);
 			} catch(NumberFormatException e) {
-				p.sendMessage(RED+"Le rayon n'est un nombre entier valide : ["+DARK_RED+args[2]+RED+"].");
+				p.sendMessage(HalystiaRPG.PREFIX + RED+"Le rayon n'est un nombre entier valide : ["+DARK_RED+args[2]+RED+"].");
 				return true;
 			}
 		}
@@ -92,9 +94,9 @@ public class CommandSetChunk extends HalystiaCommand {
 				final ChunkType old = main.getSpawnChunkManager().getValueOfChunk(cc);
 				main.getSpawnChunkManager().setValueOfChunk(cc, type);
 				if(old == null) {
-					p.sendMessage(GREEN+"Chunk en ["+cc.getX()+","+cc.getZ()+"] a la valeur " +BLUE+type.getName()+GREEN+".");
+					p.sendMessage(HalystiaRPG.PREFIX + GREEN+"Chunk en ["+cc.getX()+","+cc.getZ()+"] a la valeur " +BLUE+type.getName()+GREEN+".");
 				} else {
-					p.sendMessage(YELLOW+"Chunk en ["+cc.getX()+","+cc.getZ()+"] a la valeur " +BLUE+type.getName()+YELLOW+", son ancienne était " + RED + old.getName() + YELLOW + ".");
+					p.sendMessage(HalystiaRPG.PREFIX + YELLOW+"Chunk en ["+cc.getX()+","+cc.getZ()+"] a la valeur " +BLUE+type.getName()+YELLOW+", son ancienne était " + RED + old.getName() + YELLOW + ".");
 				}
 			}
 		}
@@ -105,19 +107,19 @@ public class CommandSetChunk extends HalystiaCommand {
 	public static void togglePlayer(Player p) {
 		if( ! editers.contains(p)) {
 			editers.add(p);
-			p.sendMessage(GREEN+"Vous avez "+YELLOW+"activé"+GREEN+" la vision des valeurs de chunk.");
+			p.sendMessage(HalystiaRPG.PREFIX + GREEN+"Vous avez "+YELLOW+"activé"+GREEN+" la vision des valeurs de chunk.");
 			sendChunkReport(p);
 			return;
 		}
 		editers.remove(p);
-		p.sendMessage(GREEN+"Vous avez "+YELLOW+"désactivé"+GREEN+" la vision des valeurs de chunk.");
+		p.sendMessage(HalystiaRPG.PREFIX + GREEN+"Vous avez "+YELLOW+"désactivé"+GREEN+" la vision des valeurs de chunk.");
 	}
 	
 	public static void sendChunkReport(Player p) {
 		Chunk c = p.getLocation().getChunk();
 		ChunkType type = HalystiaRPG.getInstance().getSpawnChunkManager().getValueOfChunk(c);
 		String value = (type == null ? GRAY+"(Aucune)" : type.getName());
-		p.sendMessage(YELLOW + "[Chunk] ("+BLUE+c.getX()+YELLOW+","+GREEN+c.getZ()+YELLOW+") : [" + RED + value + YELLOW + "]");
+		p.sendMessage(HalystiaRPG.PREFIX + YELLOW + "[Chunk] ("+BLUE+c.getX()+YELLOW+","+GREEN+c.getZ()+YELLOW+") : [" + RED + value + YELLOW + "]");
 	}
 	
 	@Override
