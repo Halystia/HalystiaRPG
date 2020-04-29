@@ -265,10 +265,9 @@ public class EnemyMob implements Enemy {
 		if( ! config.contains(name + ".drops.amount"))
 			return;
 		
-		if(isDonjon) {
+		if(isDonjon)
 			loots.add(new ItemStack(DONJON_KEY));
-			//System.out.println("added key to mob " + name);
-		}
+		
 		for(int i = 1; i <= config.getInt(name + ".drops.amount"); i++) {
 			int luck = 10000;
 			if(config.contains(name + ".drops." + i + ".chances"))
@@ -288,10 +287,6 @@ public class EnemyMob implements Enemy {
 			drop.setAmount(amount);
 			
 			loots.add(drop);
-		}
-		if(isDonjon) {
-			loots.add(new ItemStack(DONJON_KEY));
-			//System.out.println("added key to mob " + name);
 		}
 	}
 
