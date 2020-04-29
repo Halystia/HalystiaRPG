@@ -1,6 +1,5 @@
 package fr.jamailun.halystia.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,7 +40,7 @@ public class MobDeathListener extends HalystiaListener {
 		
 		e.getDrops().clear();
 		for(ItemStack drop : mob.getLoots())
-			Bukkit.getServer().getWorld(HalystiaRPG.WORLD).dropItemNaturally(e.getEntity().getLocation(), drop);
+			e.getEntity().getLocation().getWorld().dropItemNaturally(e.getEntity().getLocation(), drop);
 		
 		if(e.getEntity().getKiller() == null)
 			return;
