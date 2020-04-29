@@ -18,7 +18,7 @@ import fr.jamailun.halystia.utils.RandomString;
 
 public class NaturalSpawnWorld {
 
-	public final static int REMOVE_ALL_EVERY_X_TICKS = 10;
+	public final static int REMOVE_ALL_EVERY_X_TICKS = 8;
 	public final static int TRIES_PER_PLAYER = 8;
 	
 	public final static double Y_SPAWN_DISTANCE = 10;
@@ -51,7 +51,10 @@ public class NaturalSpawnWorld {
 		counterRemove++;
 		if(counterRemove >= REMOVE_ALL_EVERY_X_TICKS) {
 			mobs.killNonReferedsMobs(world);
-			duegons.forEach(w -> mobs.killNonReferedsMobs(w));
+			duegons.forEach(w -> {
+				mobs.killNonReferedsMobs(w);
+				mobs.removeTooFar(world, REMOVAL_DISTANCE * 2.5);
+			});
 			mobs.removeTooFar(world, REMOVAL_DISTANCE);
 			counterRemove = 0;
 		}

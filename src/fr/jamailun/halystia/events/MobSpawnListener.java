@@ -26,7 +26,6 @@ public class MobSpawnListener extends HalystiaListener {
 	
 	public MobSpawnListener(HalystiaRPG main) {
 		super(main);
-	//	allowed = 
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -43,7 +42,9 @@ public class MobSpawnListener extends HalystiaListener {
 		if( ! HalystiaRPG.isRpgWorld(world))
 			return;
 		
-		if(world.getName().contains(HalystiaRPG.DONJONS_WORLD_CONTAINS)) {
+		boolean donjonWorld = world.getName().contains(HalystiaRPG.DONJONS_WORLD_CONTAINS);
+		
+		if(donjonWorld) {
 			boolean insideDonjon = false;
 			final double x = e.getEntity().getLocation().getX();
 			final double z = e.getEntity().getLocation().getZ();
@@ -61,8 +62,11 @@ public class MobSpawnListener extends HalystiaListener {
 		}
 		
 		MobSpawner spawner = main.getMobSpawnerManager().getSpawner(e.getSpawner().getLocation());
+		//Bukkit.broadcastMessage("§adonjonWorld="+donjonWorld+", §espawner found ? " + (spawner != null));
+		if(donjonWorld && spawner == null)
+			e.setCancelled(true);
 		if(spawner != null){
-			main.getMobManager().spawnMob( spawner.getName(), e.getLocation(), world.getName().contains(HalystiaRPG.DONJONS_WORLD_CONTAINS) );
+			main.getMobManager().spawnMob( spawner.getName(), e.getLocation(), donjonWorld );
 			e.setCancelled(true);
 		}
 	}

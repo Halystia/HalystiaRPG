@@ -281,7 +281,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		
 		try {
 			for(Player player : Bukkit.getOnlinePlayers()) {
-				if(player.getWorld().getName().equals(WORLD)) {
+				if(isInRpgWorld(player)) {
 					bdd.addPlayerProfile(player);
 					classesMgr.playerConnects(player);
 				}

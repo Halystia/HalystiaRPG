@@ -124,6 +124,10 @@ public class NpcInteractionListener extends HalystiaListener {
 		
 		Player p = e.getPlayer();
 		
+		p.sendMessage("CONNU ? " + (main.getMobManager().getWithEntityId(e.getRightClicked().getEntityId())!=null) );
+		
+		
+		
 		if(actives.contains(p)) {
 			e.setCancelled(true);
 			return;

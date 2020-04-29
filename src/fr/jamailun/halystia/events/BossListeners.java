@@ -17,5 +17,4 @@ public class BossListeners extends HalystiaListener {
 			return;
 		e.blockList().clear();
 	}
-
 }

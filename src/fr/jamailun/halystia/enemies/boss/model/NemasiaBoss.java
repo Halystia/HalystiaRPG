@@ -203,13 +203,13 @@ public class NemasiaBoss extends Boss {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				for(UUID id : donjon.getJoinedPlayers()) {
-					Player pl = Bukkit.getPlayer(id);
-					if(pl != null)
-						pl.teleport(donjon.getExitOfDonjon());
-				}
+				loc.getWorld().getPlayers().stream().filter(p -> p.getLocation().distance(loc) <= 30).forEach(p -> {
+					p.teleport(donjon.getExitOfDonjon());
+					p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Vous avez été téléporté à la sortie du donjon.");
+					p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Bravo pour votre victoire.");
+				});
 			}
-		}.runTaskLater(HalystiaRPG.getInstance(), 14*10L);
+		}.runTaskLater(HalystiaRPG.getInstance(), 12*10L);
 		
 		for(final Player pl : loc.getWorld().getPlayers()) {
 			if(pl.getLocation().distance(loc) < 40) {

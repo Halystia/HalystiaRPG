@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,7 +24,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.constants.GUIEntityType;
@@ -58,13 +58,6 @@ public class MobManager extends FileDataRPG {
 		addMob(mob.getEntityId(), mob);
 		if( ! mob.isValid())
 			mob.purge();
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				if(mob.isValid())
-					mob.checkLater(config, name);
-			}
-		}.runTaskLater(api, 10L);
 	}
 	
 	public boolean hasMob(int entityId) {
@@ -158,53 +151,60 @@ public class MobManager extends FileDataRPG {
 			mobs.put(id, false);
 		final Set<Location> plrs = world.getPlayers().stream().map(p -> p.getLocation()).collect(Collectors.toSet());
 		alives.forEach((id, en) -> {
-			for(Location loc : plrs) {
-				if(loc.distance(en.getEntity().getLocation()) < distance) {
-					mobs.replace(id, true);
-					break;
+			if( ! en.getEntity().getWorld().equals(world)) {
+				mobs.replace(id, true);
+			} else {
+				for(Location loc : plrs) {
+					if(loc.distance(en.getEntity().getLocation()) < distance) {
+						mobs.replace(id, true);
+						break;
+					}
 				}
 			}
 		});
 	//	System.out.println("REMOVED " + idsToRemove.size() + " MOBS.");
 		for(int idMob : mobs.keySet()) {
-			if( ! mobs.get(idMob))
+			if( ! mobs.get(idMob)) {
+				Bukkit.broadcastMessage(idMob+" too far ("+world.getName()+")");
+				alives.get(idMob).purge();
 				removeMob(idMob);
+			}
 		}
 	}
 
+	public boolean isMobRecognized(Entity en) {
+		for(EnemyMob mob : alives.values()) {
+			if(mob.getEntity().getUniqueId().equals(en.getUniqueId())) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public int getHowManyMobsAround(Location loc, double range) {
 		return (int) alives.values().stream().filter(en -> en.getEntity().getLocation().distance(loc) < range).count();
 	}
 	
 	public void killNonReferedsMobs(World world) {
-		Set<Entity> toTest = world.getEntities().stream()
-			.filter(en -> en instanceof LivingEntity)
-			.filter(
-					en -> en.getType() != EntityType.PLAYER 
-					&& ! CitizensAPI.getNPCRegistry().isNPC(en) 
-					&& en.getType() != EntityType.VILLAGER 
-					&& en.getType() != EntityType.AREA_EFFECT_CLOUD
-					&& en.getType() != EntityType.ARMOR_STAND
-					&& en.getType() != EntityType.PAINTING
-					&& en.getType() != EntityType.DROPPED_ITEM
-					&& en.getType() != EntityType.ITEM_FRAME
-					&&  ! api.getSuperMobManager().isOne(en)
-					&&  ! api.getDonjonManager().getBossManager().isBoss(en)
-			)
-			.collect(Collectors.toSet());
 		Set<UUID> invocs = new HashSet<>(api.getSpellManager().getInvocationsManager().getList().keySet());
-		for(Entity en : toTest) {
-			boolean delete = true;
-			for(EnemyMob mob : alives.values()) {
-				if(mob.getEntity().getUniqueId().equals(en.getUniqueId())) {
-					delete = false;
-					break;
-				}
-			}
-			 
-			if(delete)
-				if( ! invocs.contains(en.getUniqueId()))
-					en.remove();
-		}
+		
+		world.getEntities().stream().filter(en -> 
+				en instanceof LivingEntity
+				&& en.getType() != EntityType.PLAYER 
+				&&  ! CitizensAPI.getNPCRegistry().isNPC(en) 
+				&& en.getType() != EntityType.VILLAGER 
+				&& en.getType() != EntityType.AREA_EFFECT_CLOUD
+				&& en.getType() != EntityType.ARMOR_STAND
+				&& en.getType() != EntityType.PAINTING
+				&& en.getType() != EntityType.DROPPED_ITEM
+				&& en.getType() != EntityType.ITEM_FRAME
+				&&  ! api.getSuperMobManager().isOne(en)
+				&&  ! api.getDonjonManager().getBossManager().isBoss(en)
+				&&  ! invocs.contains(en.getUniqueId())
+				&&  ! isMobRecognized(en)
+		).forEach(en -> {
+			Bukkit.broadcastMessage("("+en.getType()+", "+en.getEntityId()+") removed from " + world.getName());
+			en.remove();
+		});
 	}
 }
