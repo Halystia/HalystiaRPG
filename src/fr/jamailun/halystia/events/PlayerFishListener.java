@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs.fishing.Canne;
+import fr.jamailun.halystia.custom.fishing.Canne;
 
 public class PlayerFishListener extends HalystiaListener {
 	

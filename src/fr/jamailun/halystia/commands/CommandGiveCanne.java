@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs.fishing.Canne;
+import fr.jamailun.halystia.custom.fishing.Canne;
 
 public class CommandGiveCanne extends HalystiaCommand {
 

@@ -1,4 +1,4 @@
-package fr.jamailun.halystia.jobs.fishing;
+package fr.jamailun.halystia.custom.fishing;
 
 import java.util.HashMap;
 import java.util.Map;
