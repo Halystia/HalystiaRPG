@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -165,7 +164,7 @@ public class MobManager extends FileDataRPG {
 	//	System.out.println("REMOVED " + idsToRemove.size() + " MOBS.");
 		for(int idMob : mobs.keySet()) {
 			if( ! mobs.get(idMob)) {
-				Bukkit.broadcastMessage(idMob+" too far ("+world.getName()+")");
+				//Bukkit.broadcastMessage(idMob+" too far ("+world.getName()+")");
 				alives.get(idMob).purge();
 				removeMob(idMob);
 			}
@@ -203,7 +202,7 @@ public class MobManager extends FileDataRPG {
 				&&  ! invocs.contains(en.getUniqueId())
 				&&  ! isMobRecognized(en)
 		).forEach(en -> {
-			Bukkit.broadcastMessage("("+en.getType()+", "+en.getEntityId()+") removed from " + world.getName());
+			//Bukkit.broadcastMessage("("+en.getType()+", "+en.getEntityId()+") removed from " + world.getName());
 			en.remove();
 		});
 	}
