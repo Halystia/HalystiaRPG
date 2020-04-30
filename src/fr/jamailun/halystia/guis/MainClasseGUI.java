@@ -32,7 +32,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs2.JobType;
+import fr.jamailun.halystia.jobs.JobType;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.players.SoulManager;

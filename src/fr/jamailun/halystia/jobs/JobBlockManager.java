@@ -1,16 +1,14 @@
-package fr.jamailun.halystia.jobs2;
+package fr.jamailun.halystia.jobs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class JobBlockManager implements JobContent<JobBlock> {
 
-	private Set<JobBlock> blocs;
+	private List<JobBlock> blocs;
 
 	public JobBlockManager() {
-		blocs = new HashSet<>();
+		blocs = new ArrayList<>();
 	}
 	
 	@Override

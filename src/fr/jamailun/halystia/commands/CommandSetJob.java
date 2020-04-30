@@ -18,8 +18,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs2.JobType;
-import fr.jamailun.halystia.jobs2.JobsManager;
+import fr.jamailun.halystia.jobs.JobType;
+import fr.jamailun.halystia.jobs.JobsManager;
 
 public class CommandSetJob extends HalystiaCommand {
 

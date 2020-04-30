@@ -1,4 +1,4 @@
-package fr.jamailun.halystia.jobs2.system;
+package fr.jamailun.halystia.jobs.system;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;

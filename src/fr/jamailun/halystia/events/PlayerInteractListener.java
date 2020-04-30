@@ -18,7 +18,7 @@ import com.codingforcookies.armorequip.ArmorEquipEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
-import fr.jamailun.halystia.jobs2.JobsManager;
+import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.players.Classe;
 
 public class PlayerInteractListener extends HalystiaListener {
@@ -61,14 +61,13 @@ public class PlayerInteractListener extends HalystiaListener {
 			}
 		}
 		
-		if (jobs.isCraftBlock(e.getMaterial(), p) ) {
+		if(p.getGameMode() == GameMode.CREATIVE)
+			return;
+		
+		if ( jobs.isCraftBlock(e.getClickedBlock().getType(), p) ) {
 			e.setCancelled(true);
 			return;
 		}
-		
-		
-		if(p.getGameMode() == GameMode.CREATIVE)
-			return;
 		
 		if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if(e.getClickedBlock().getType() == Material.FURNACE || e.getClickedBlock().getType() == Material.SMOKER || e.getClickedBlock().getType() == Material.BLAST_FURNACE

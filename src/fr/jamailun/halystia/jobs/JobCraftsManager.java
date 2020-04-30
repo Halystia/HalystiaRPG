@@ -1,17 +1,15 @@
-package fr.jamailun.halystia.jobs2;
+package fr.jamailun.halystia.jobs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class JobCraftsManager implements JobContent<JobCraft> {
 	
-	private Set<JobCraft> crafts;
+	private List<JobCraft> crafts;
 
 	public JobCraftsManager() {
-		crafts = new HashSet<>();
+		crafts = new ArrayList<>();
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package fr.jamailun.halystia.jobs2;
+package fr.jamailun.halystia.jobs;
 
 import static org.bukkit.ChatColor.*;
 
@@ -208,6 +208,7 @@ public class JobType extends FileDataRPG {
 	}
 
 	public void openJobInventory(Player p) {
-		craftGUI.openGUItoPlayer(p);
+		if(hasJob(p))
+			craftGUI.openGUItoPlayer(p);
 	}
 }

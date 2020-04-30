@@ -1,4 +1,4 @@
-package fr.jamailun.halystia.jobs2;
+package fr.jamailun.halystia.jobs;
 
 public final class JobResult {
 

@@ -72,9 +72,9 @@ import fr.jamailun.halystia.events.PlayerJoinLeaveListener;
 import fr.jamailun.halystia.events.PlayerMovementsListener;
 import fr.jamailun.halystia.events.TchatListener;
 import fr.jamailun.halystia.guis.ChooseClasseGui;
-import fr.jamailun.halystia.jobs2.JobsManager;
-import fr.jamailun.halystia.jobs2.model.JamailunJobExtension;
-import fr.jamailun.halystia.jobs2.system.CacheMemory;
+import fr.jamailun.halystia.jobs.JobsManager;
+import fr.jamailun.halystia.jobs.model.JamailunJobExtension;
+import fr.jamailun.halystia.jobs.system.CacheMemory;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.traits.HalystiaRpgTrait;
 import fr.jamailun.halystia.players.ClasseManager;
@@ -533,7 +533,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	
 	/**
 	 * Get the Blocks cache of the server.
-	 * @return the {@link fr.jamailun.halystia.jobs2.system.CacheMemory CacheMemory} of the plugin.
+	 * @return the {@link fr.jamailun.halystia.jobs.system.CacheMemory CacheMemory} of the plugin.
 	 */
 	public CacheMemory getCache() {
 		return cache;

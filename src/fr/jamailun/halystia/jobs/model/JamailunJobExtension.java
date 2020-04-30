@@ -1,21 +1,23 @@
-package fr.jamailun.halystia.jobs2.model;
+package fr.jamailun.halystia.jobs.model;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.constants.Rarity;
-import fr.jamailun.halystia.jobs2.JobBlock;
-import fr.jamailun.halystia.jobs2.JobBlockManager;
-import fr.jamailun.halystia.jobs2.JobCategory;
-import fr.jamailun.halystia.jobs2.JobCraft;
-import fr.jamailun.halystia.jobs2.JobCraftGUI;
-import fr.jamailun.halystia.jobs2.JobCraftsManager;
-import fr.jamailun.halystia.jobs2.JobType;
-import fr.jamailun.halystia.jobs2.JobsManager;
+import fr.jamailun.halystia.jobs.JobBlock;
+import fr.jamailun.halystia.jobs.JobBlockManager;
+import fr.jamailun.halystia.jobs.JobCategory;
+import fr.jamailun.halystia.jobs.JobCraft;
+import fr.jamailun.halystia.jobs.JobCraftGUI;
+import fr.jamailun.halystia.jobs.JobCraftsManager;
+import fr.jamailun.halystia.jobs.JobType;
+import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.utils.ItemBuilder;
 
 public class JamailunJobExtension {
@@ -53,7 +55,7 @@ public class JamailunJobExtension {
 		items.put("jungle", new ItemBuilder(Material.ACACIA_LOG).setName(c() + "Bois sacré").toItemStack());
 		//RESSOURCES DIVERSES
 		items.put("stick", new ItemBuilder(Material.STICK).setName(c()+"Baton").toItemStack());
-		items.put("water", new ItemBuilder(Material.POTION).setName(c()+"Eau pure").toItemStack());
+		items.put("water", new ItemBuilder(Material.POTION).addItemFlag(ItemFlag.HIDE_POTION_EFFECTS).setPotionColor(Color.BLUE).setName(c()+"Eau pure").toItemStack());
 		items.put("lava", new ItemBuilder(Material.LAVA_BUCKET).setName(c()+"Lave").toItemStack());
 		
 		//CRAFTS MINEUR

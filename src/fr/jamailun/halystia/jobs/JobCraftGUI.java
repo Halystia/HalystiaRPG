@@ -1,14 +1,14 @@
-package fr.jamailun.halystia.jobs2;
+package fr.jamailun.halystia.jobs;
 
 import static org.bukkit.ChatColor.BOLD;
-import static org.bukkit.ChatColor.DARK_PURPLE;
+import static org.bukkit.ChatColor.DARK_BLUE;
 import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.LIGHT_PURPLE;
-import static org.bukkit.ChatColor.DARK_BLUE;
 import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.GRAY;
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.WHITE;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class JobCraftGUI {
 		};
 		
 		for(int i = size; i < gui.getSize(); i++)
-			gui.addOption(new ItemBuilder(Material.BROWN_STAINED_GLASS_PANE).setName("").toItemStack(), i);
+			gui.addOption(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(WHITE+"").toItemStack(), i);
 		for(int i = 0; i < size; i++) {
 			JobCraft craft = crafts.get(i);
 			gui.addOption(new ItemBuilder(craft.getObtained()).addLoreLine(GRAY+"Niveau " +GOLD+craft.getLevel()).toItemStack(), i);
@@ -87,21 +87,21 @@ public class JobCraftGUI {
 		};
 		
 		for(int i = 0; i < gui.getSize(); i++)
-			gui.addOption(new ItemBuilder(Material.BROWN_STAINED_GLASS_PANE).setName("").toItemStack(), i);
+			gui.addOption(new ItemBuilder(Material.BROWN_STAINED_GLASS_PANE).setName(WHITE+"").toItemStack(), i);
 		for(int i = 9*3; i < 9*5; i++)
-			gui.addOption(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName("").toItemStack(), i);
+			gui.addOption(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(WHITE+"").toItemStack(), i);
 		for(int i = 10; i <= 16; i++) {
 			if(i >= craft.getRessources().size() + 10)
 				gui.addOption(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(WHITE+"").toItemStack(), i);
 			else
-				gui.addOption(new ItemBuilder(craft.getRessources().get(i-10)).addLoreLine(DARK_PURPLE + "" + BOLD + "Ressource consommée").toItemStack(), i);
+				gui.addOption(new ItemBuilder(craft.getRessources().get(i-10)).addLoreLine(GOLD + "" + BOLD + "Ressource consommée").toItemStack(), i);
 		}
 		gui.addOption(new ItemBuilder(craft.getObtained()).addLoreLine(LIGHT_PURPLE + "" + BOLD + "Item que vous craftez.").toItemStack(), 31);
 		
 		if( canTrade ) 
-			gui.addOption(new ItemBuilder(Material.EMERALD_BLOCK).setName(GREEN+"Crafter").toItemStack(), 34);
+			gui.addOption(new ItemBuilder(Material.EMERALD_BLOCK).setName(GREEN+"Crafter").toItemStack(), 34+9);
 		else
-			gui.addOption(new ItemBuilder(Material.BARRIER).setName(DARK_RED+"Vous n'avez pas tous les items requis !").addLoreLine(RED+"Vérifier votre inventaire !").toItemStack(), 34);
+			gui.addOption(new ItemBuilder(Material.BARRIER).setName(DARK_RED+"Vous n'avez pas tous les items requis !").addLoreLine(RED+"Vérifier votre inventaire !").toItemStack(), 34+9);
 		
 		gui.addOption(new ItemBuilder(Material.REDSTONE_BLOCK).setName(RED+"Retour").toItemStack(), gui.getSize()-1);
 		

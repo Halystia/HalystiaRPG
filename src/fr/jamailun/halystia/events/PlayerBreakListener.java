@@ -14,8 +14,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs2.JobResult;
-import fr.jamailun.halystia.jobs2.JobsManager;
+import fr.jamailun.halystia.jobs.JobResult;
+import fr.jamailun.halystia.jobs.JobsManager;
 
 public class PlayerBreakListener extends HalystiaListener {
 

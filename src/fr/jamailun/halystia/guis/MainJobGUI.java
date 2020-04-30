@@ -7,9 +7,9 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs2.JobCraft;
-import fr.jamailun.halystia.jobs2.JobType;
-import fr.jamailun.halystia.jobs2.JobsManager;
+import fr.jamailun.halystia.jobs.JobCraft;
+import fr.jamailun.halystia.jobs.JobType;
+import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.MenuGUI;
 

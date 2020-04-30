@@ -279,4 +279,10 @@ public class ItemBuilder {
     	is.setItemMeta(im);
     	return this;
     }
+	public ItemBuilder setPotionColor(Color color) {
+		PotionMeta meta = (PotionMeta) is.getItemMeta();
+    	meta.setColor(color);
+    	is.setItemMeta(meta);
+		return this;
+	}
 }
