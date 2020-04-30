@@ -1,22 +1,25 @@
-package fr.jamailun.halystia.jobs2;
+package fr.jamailun.halystia.jobs;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import fr.jamailun.halystia.jobs2.JobResult.Type;
+import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.jobs.JobResult.Type;
 
 public final class JobsManager {
 	
-	private Set<JobType> jobs;
+	private List<JobType> jobs;
 	private final JobBlockManager blocs;
 	private final JobCraftsManager crafts;
 	
 	public JobsManager() {
+		jobs = new ArrayList<>();
 		this.blocs = new JobBlockManager();
 		this.crafts = new JobCraftsManager();
 	}
@@ -56,7 +59,11 @@ public final class JobsManager {
 	public boolean isCraftBlock(Material type, Player p) {
 		for ( JobType job : jobs ) {
 			if ( job.getCraftBlock() == type ) {
-				job.openJobInventory(p);
+				if( ! job.hasJob(p)) {
+					p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous n'avez pas le bon métier. Il faut être " + ChatColor.GOLD + job.getJobName() + ChatColor.RED + ".");
+					return false;
+				}
+				job.getCraftGUI().openGUItoPlayer(p);
 				return true;
 			}
 		}
