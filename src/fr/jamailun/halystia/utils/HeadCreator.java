@@ -1,4 +1,4 @@
-package fr.jamailun.halystia.jobs.system;
+package fr.jamailun.halystia.utils;
 
 import java.lang.reflect.Field;
 import java.util.UUID;

@@ -19,7 +19,7 @@ public abstract class FileDataRPG {
 		File dir = new File(path);
 		if(!dir.exists())
 			dir.mkdirs();
-		file = new File(path + "/" + name + ".yml");
+		file = new File(path + "/" + name.replace(" ", "_") + ".yml");
 		if(!file.exists())
 			try {file.createNewFile();} catch (IOException e) {e.printStackTrace();}
 		config = YamlConfiguration.loadConfiguration(file);

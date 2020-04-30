@@ -1,6 +1,11 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,17 +18,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs.JobHandler;
-import fr.jamailun.halystia.jobs.JobManager;
-import fr.jamailun.halystia.jobs.JobName;
+import fr.jamailun.halystia.jobs2.JobType;
+import fr.jamailun.halystia.jobs2.JobsManager;
 
 public class CommandSetJob extends HalystiaCommand {
 
 	public static final List<String> list = Arrays.asList("add", "remove", "list", "xp");
 	
-	private final JobManager jobs;
+	private final JobsManager jobs;
 	
-	public CommandSetJob(HalystiaRPG main, JobManager jobs) {
+	public CommandSetJob(HalystiaRPG main, JobsManager jobs) {
 		super(main, "set-job");
 		this.jobs = jobs;
 	}
@@ -49,15 +53,15 @@ public class CommandSetJob extends HalystiaCommand {
 		}
 		
 		if(args[1].equals("list")) {
-			JobHandler[] jobA = jobs.getJobs(cible);
-			if(jobA.length == 0) {
+			List<JobType> jobA = jobs.getJobsOfPlayer(cible);
+			if(jobA.isEmpty()) {
 				sender.sendMessage(BLUE + "Le joueur " + cible.getName()+ " n'a aucun métier.");
 				return true;
 			}
 			sender.sendMessage(BLUE + "Métiers de " + cible.getName() + " :");
-			for(JobHandler job : jobA)
+			for(JobType job : jobA)
 				if(job != null)
-					sender.sendMessage(BLUE + "-" + job.getJobName() + " ("+job.getPlayerExp(cible) + ")");
+					sender.sendMessage(BLUE + "-" + job.getJobName() + " : "+job.getPlayerLevel(cible)+" ("+job.getPlayerExp(cible) + ")");
 			sender.sendMessage(BLUE + "----------------------------");
 			return true;
 		}
@@ -67,39 +71,44 @@ public class CommandSetJob extends HalystiaCommand {
 			return true;
 		}
 		
-		JobName job = null;
-		try {
-			job = JobName.valueOf(args[2]);
-		} catch (IllegalArgumentException e) {
+		JobType job = jobs.getJobWithString(args[2]);
+		if(job == null) {
 			sender.sendMessage(HalystiaRPG.PREFIX + RED + "Le métier ["+args[2]+"] n'existe pas.");
 			return true;
 		}
 		
 		if(args[1].equals("add")) {
-			if(jobs.addJob(cible, job))
-				sender.sendMessage(GREEN + "Succès de la requête.");
-			else
+			if(jobs.getJobsOfPlayer(cible).size() >= 2) {
 				sender.sendMessage(RED + "Impossible : ce joueur a trop de métiers.");
+				return true;
+			}
+			if(job.hasJob(cible)) {
+				sender.sendMessage(RED + "Impossible : ce joueur a déjà ce métier.");
+				return true;
+			}
+			job.registerPlayer(cible);
+			sender.sendMessage(GREEN + "Succès de la requête.");
 			return true;
 		}
 		
 		if(args[1].equals("remove")) {
-			if(jobs.removeJob(cible, job))
-				sender.sendMessage(GREEN + "Succès de la requête.");
-			else
+			if( ! job.hasJob(cible)) {
 				sender.sendMessage(RED + "Impossible : ce joueur n'a pas ce métier.");
+				return true;
+			}
+			job.unregisterPlayer(cible);
+			sender.sendMessage(GREEN + "Succès de la requête.");
 			return true;
 		}
 		
 		if(args[1].equals("xp")) {
-			JobHandler handler = jobs.getPlayerJobHandler(cible, job);
-			if(handler == null) {
+			if( ! job.hasJob(cible)) {
 				sender.sendMessage(RED + "Ce joueur n'a pas ce métier.");
 				return true;
 			}
 			if(args.length == 3) {
-				int exp = handler.getPlayerExp(cible);
-				sender.sendMessage(GREEN + "Joueur " + GOLD + cible.getName() + GREEN + " - " + BLUE + job.toString() + GREEN + " : Niveau " + YELLOW + exp + GREEN + "xp, level " + GOLD + handler.getLevel(exp)+GREEN+".");
+				int exp = job.getPlayerExp(cible);
+				sender.sendMessage(GREEN + "Joueur " + GOLD + cible.getName() + GREEN + " - " + BLUE + job.toString() + GREEN + " : Niveau " + YELLOW + exp + GREEN + "xp, level " + GOLD + job.getLevel(exp)+GREEN+".");
 				return true;
 			}
 			int xp = -1;
@@ -107,16 +116,16 @@ public class CommandSetJob extends HalystiaCommand {
 				xp = Integer.parseInt(args[3]);
 				if(xp < 0)
 					xp = 0;
-				final int expMax = handler.getXpRequired(15);
+				final int expMax = job.getXpRequired(5);
 				if ( xp > expMax )
 					xp = expMax;
 			} catch (NumberFormatException e) {
 				sender.sendMessage(RED + "Format du nombre invalide.");
 				return true;
 			};
-			handler.forceExp(cible, xp);
-			sender.sendMessage(GREEN + "Exp validé ! Le joueur est désormais niveau " + GOLD + handler.getLevel(xp) + GREEN + ".");
-			cible.sendMessage(RED + "Attention ! " + GRAY + "Un administrateur a fixé ton exp de " + job + " à " + GOLD + xp+"xp"+GRAY+". Vous êtes désormais niveau " + GOLD + handler.getLevel(xp) + GRAY +".");
+			job.forceExp(cible, xp);
+			sender.sendMessage(GREEN + "Exp validé ! Le joueur est désormais niveau " + GOLD + job.getLevel(xp) + GREEN + ".");
+			cible.sendMessage(RED + "Attention ! " + GRAY + "Un administrateur a fixé ton exp de " + job + " à " + GOLD + xp+"xp"+GRAY+". Vous êtes désormais niveau " + GOLD + job.getLevel(xp) + GRAY +".");
 			return true;
 		}
 		
@@ -136,9 +145,9 @@ public class CommandSetJob extends HalystiaCommand {
 			if(cible == null)
 				return new ArrayList<>();
 			if(args[1].equals("remove"))
-				return Arrays.asList(jobs.getJobs(cible)).stream().map(j -> j.getJobName().toString()).filter(s -> s.startsWith(args[2])).collect(Collectors.toList());
+				return jobs.getJobsOfPlayer(cible).stream().map(j -> j.getJobName().toString()).filter(s -> s.startsWith(args[2])).collect(Collectors.toList());
 			if(args[1].equals("add"))
-				return Arrays.asList(JobName.values()).stream().map(e -> e.toString()).filter(s -> s.startsWith(args[2])).collect(Collectors.toList());
+				return jobs.getAllJobTypesNames().stream().filter(s -> s.startsWith(args[2])).collect(Collectors.toList());
 		}
 		return new ArrayList<>();
 	}

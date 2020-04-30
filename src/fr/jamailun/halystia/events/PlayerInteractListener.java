@@ -18,12 +18,16 @@ import com.codingforcookies.armorequip.ArmorEquipEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
+import fr.jamailun.halystia.jobs2.JobsManager;
 import fr.jamailun.halystia.players.Classe;
 
 public class PlayerInteractListener extends HalystiaListener {
 
-	public PlayerInteractListener(HalystiaRPG main) {
+	private final JobsManager jobs;
+	
+	public PlayerInteractListener(HalystiaRPG main, JobsManager jobs) {
 		super(main);
+		this.jobs = jobs;
 	}
 	
 	private long lastBoat = System.currentTimeMillis();
@@ -56,11 +60,19 @@ public class PlayerInteractListener extends HalystiaListener {
 				return;
 			}
 		}
+		
+		if (jobs.isCraftBlock(e.getMaterial(), p) ) {
+			e.setCancelled(true);
+			return;
+		}
+		
+		
 		if(p.getGameMode() == GameMode.CREATIVE)
 			return;
 		
 		if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if(e.getClickedBlock().getType() == Material.FURNACE || e.getClickedBlock().getType() == Material.SMOKER || e.getClickedBlock().getType() == Material.BLAST_FURNACE
+					|| e.getClickedBlock().getType() == Material.STONECUTTER || e.getClickedBlock().getType() == Material.CARTOGRAPHY_TABLE || e.getClickedBlock().getType() == Material.LOOM
 					|| e.getClickedBlock().getType() == Material.ENCHANTING_TABLE || e.getClickedBlock().getType() == Material.ANVIL || e.getClickedBlock().getType() == Material.CHIPPED_ANVIL
 					|| e.getClickedBlock().getType() == Material.DAMAGED_ANVIL || e.getClickedBlock().getType() == Material.BREWING_STAND || e.getClickedBlock().getType() == Material.GRINDSTONE
 			) {

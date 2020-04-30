@@ -3,7 +3,11 @@ package fr.jamailun.halystia.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class ItemBuilder {
     private ItemStack is;
@@ -82,6 +87,15 @@ public class ItemBuilder {
         is.setDurability(dur);
         return this;
     }
+    
+    public ItemBuilder addAttribute(Attribute attribute, double amount, Operation op, EquipmentSlot slot) {
+    	ItemMeta im = is.getItemMeta();
+    	im.addAttributeModifier(attribute, new AttributeModifier(UUID.randomUUID(), attribute.toString(), amount, op, slot));
+    	is.setItemMeta(im);
+    	return this;
+    }
+    
+    
     /**
      * Set the displayname of the item.
      * @param name The name to change it to.

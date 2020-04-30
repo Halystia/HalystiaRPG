@@ -32,8 +32,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs.JobHandler;
-import fr.jamailun.halystia.jobs.JobName;
+import fr.jamailun.halystia.jobs2.JobType;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.players.SoulManager;
@@ -52,7 +51,7 @@ public class MainClasseGUI extends MenuGUI {
 
 	public final static int SLOT_JOBS1 = 15;
 	
-	private JobName j1 = JobName.EMPTY, j2 = JobName.EMPTY;
+	private JobType j1 = null, j2 = null;
 	private Classe classe;
 	private Player p;
 	
@@ -122,25 +121,16 @@ public class MainClasseGUI extends MenuGUI {
 		
 		//JOBS
 		int jobSlot = SLOT_JOBS1;
-		for(JobHandler job : HalystiaRPG.getInstance().getJobManager().getJobs(p)) {
+		for(JobType job : HalystiaRPG.getInstance().getJobManager().getJobsOfPlayer(p)) {
 			if(job == null)
 				continue;
-			int xp = job.getPlayerExp(p);
-			int level = job.getLevel(xp);
 			
-			ItemBuilder builder = new ItemBuilder(job.getJobName().getIcon(level));
-			builder.setName(ChatColor.BLUE + job.getJobName().getName());
-			builder.setLore(ChatColor.GRAY + "Niveau "+level);
-			builder.addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
-			if(level == 15) builder.shine();
-			builder.addLoreLine(job.getPercentBar(job.getPlayerExp(p), level));
-			builder.addLoreLine(xp+"/"+job.getXpRequired(level+1)+" xp");
+			addOption(job.getIcon(p), jobSlot);
 			
-			addOption(builder.toItemStack(), jobSlot);
 			if(jobSlot == SLOT_JOBS1)
-				j1 = job.getJobName();
+				j1 = job;
 			else if(jobSlot == SLOT_JOBS1 + 1)
-					j2 = job.getJobName();
+					j2 = job;
 			jobSlot++;
 		}
 		
@@ -220,9 +210,9 @@ public class MainClasseGUI extends MenuGUI {
 			new MainQuestsGUI(p);
 		else if(e.getSlot() == SLOT_TITLES)
 			new MainTitlesGUI(p);
-		else if(e.getSlot() == SLOT_JOBS1 && j1 != JobName.EMPTY)
+		else if(e.getSlot() == SLOT_JOBS1 && j1 != null )
 			new MainJobGUI(p, j1, HalystiaRPG.getInstance().getJobManager());
-		else if(e.getSlot() == SLOT_JOBS1 + 1 && j2 != JobName.EMPTY)
+		else if(e.getSlot() == SLOT_JOBS1 + 1 && j2 != null )
 			new MainJobGUI(p, j2, HalystiaRPG.getInstance().getJobManager());
 	}
 	
