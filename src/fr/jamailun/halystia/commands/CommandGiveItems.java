@@ -41,7 +41,7 @@ public class CommandGiveItems extends HalystiaCommand {
 			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Item '"+args[0]+"' non reconnu.");
 			return true;
 		}
-
+		p.getInventory().addItem(item);
 		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "Succès de la requête.");
 		return true;
 	}
