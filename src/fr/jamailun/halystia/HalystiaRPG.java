@@ -28,6 +28,7 @@ import fr.jamailun.halystia.commands.CommandEditNPC;
 import fr.jamailun.halystia.commands.CommandEditQuests;
 import fr.jamailun.halystia.commands.CommandEditTitles;
 import fr.jamailun.halystia.commands.CommandGiveCanne;
+import fr.jamailun.halystia.commands.CommandGiveItems;
 import fr.jamailun.halystia.commands.CommandGivePotion;
 import fr.jamailun.halystia.commands.CommandGiveSpell;
 import fr.jamailun.halystia.commands.CommandIS;
@@ -264,6 +265,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		getCommand("give-potion").setExecutor(new CommandGivePotion(this));
 		new CommandSummonMob(this, mobMgr);
 		new CommandGiveCanne(this);
+		new CommandGiveItems(this, jobs);
 		
 		getCommand("joindonjon").setExecutor(new CommandJoinDonjon(this));
 		getCommand("donjonPorte").setExecutor(new CommandDonjonPorte(this));

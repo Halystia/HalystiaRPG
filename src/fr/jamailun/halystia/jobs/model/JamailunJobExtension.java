@@ -79,6 +79,8 @@ public class JamailunJobExtension {
 		items.put("diams2", new ItemBuilder(Material.DIAMOND_BLOCK).setName(c() + "Diamant taillée").toItemStack());
 		items.put("tasei", new ItemBuilder(Material.BLUE_GLAZED_TERRACOTTA).shine().setName(r() + "Taseigaru").toItemStack());
 		
+		jobs.getItemManager().addAllContent(items);
+		
 		return items;
 	}
 	

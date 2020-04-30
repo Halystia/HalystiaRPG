@@ -17,11 +17,13 @@ public final class JobsManager {
 	private List<JobType> jobs;
 	private final JobBlockManager blocs;
 	private final JobCraftsManager crafts;
+	private final JobsItemManager items;
 	
 	public JobsManager() {
 		jobs = new ArrayList<>();
 		this.blocs = new JobBlockManager();
 		this.crafts = new JobCraftsManager();
+		this.items = new JobsItemManager();
 	}
 
 	public JobCraftsManager getCraftsManager() {
@@ -30,6 +32,10 @@ public final class JobsManager {
 
 	public JobBlockManager getBlocsManager() {
 		return blocs;
+	}
+	
+	public JobsItemManager getItemManager() {
+		return items;
 	}
 	
 	public void registerJob(JobType job) {

@@ -46,5 +46,4 @@ public class MainJobGUI extends MenuGUI {
 		if(e.getSlot() == SIZE-1)
 			new MainClasseGUI(p);
 	}
-
 }
