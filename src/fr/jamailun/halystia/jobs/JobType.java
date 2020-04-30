@@ -144,7 +144,7 @@ public class JobType extends FileDataRPG {
 			xp.replace(p.getUniqueId(), exp + currentXp);
 			new PlayerUtils(p).sendActionBar(
 					GOLD + "" + DARK_GREEN + "+"+exp+"xp"
-					+ BLUE + " |  "+category.getColor()+nameUp+"  |  "
+					+ BLUE + " |  "+getJobNameMajor()+"  |  "
 					+ YELLOW + "("+(exp+currentXp)+" / " + getXpRequired(getLevel(currentXp+exp)+1) + ")"
 			);
 		}
@@ -178,7 +178,7 @@ public class JobType extends FileDataRPG {
 		ItemBuilder builder = new ItemBuilder(icons[idLevel]);
 		
 		
-		builder.setName(BLUE + nameUp);
+		builder.setName(getJobNameMajor());
 		builder.setLore(GRAY + "Niveau "+level);
 		builder.addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 		builder.addLoreLine(getPercentBar(xp, level));
@@ -189,6 +189,10 @@ public class JobType extends FileDataRPG {
 		return builder.toItemStack();
 	}
 
+	public String getJobNameMajor() {
+		return category.getColor() + nameUp;
+	}
+	
 	public void forceExp(Player p, int exp) {
 		if(hasJob(p)) {
 			xp.replace(p.getUniqueId(), exp);

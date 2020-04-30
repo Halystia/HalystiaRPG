@@ -28,7 +28,7 @@ public class MainJobGUI extends MenuGUI {
 		}
 		
 		for(JobCraft craft : jobs.getCraftsManager().getCrafts(job)) {
-			addOption(craft.getObtained());
+			addOption(new ItemBuilder(craft.getObtained()).addLoreLine("Niveau "+ChatColor.GOLD+craft.getLevel()).toItemStack());
 		}
 		
 		addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE+"Retour").toItemStack(), SIZE-1);

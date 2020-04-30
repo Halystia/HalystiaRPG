@@ -56,7 +56,7 @@ public final class JobsManager {
 		jobs.forEach(j -> j.saveData());
 	}
 
-	public boolean isCraftBlock(Material type, Player p) {
+	public synchronized boolean isCraftBlock(Material type, Player p) {
 		for ( JobType job : jobs ) {
 			if ( job.getCraftBlock() == type ) {
 				if( ! job.hasJob(p)) {

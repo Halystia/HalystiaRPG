@@ -64,12 +64,12 @@ public class PlayerInteractListener extends HalystiaListener {
 		if(p.getGameMode() == GameMode.CREATIVE)
 			return;
 		
-		if ( jobs.isCraftBlock(e.getClickedBlock().getType(), p) ) {
-			e.setCancelled(true);
-			return;
-		}
-		
 		if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if ( jobs.isCraftBlock(e.getClickedBlock().getType(), p) ) {
+				e.setCancelled(true);
+				return;
+			}
+			
 			if(e.getClickedBlock().getType() == Material.FURNACE || e.getClickedBlock().getType() == Material.SMOKER || e.getClickedBlock().getType() == Material.BLAST_FURNACE
 					|| e.getClickedBlock().getType() == Material.STONECUTTER || e.getClickedBlock().getType() == Material.CARTOGRAPHY_TABLE || e.getClickedBlock().getType() == Material.LOOM
 					|| e.getClickedBlock().getType() == Material.ENCHANTING_TABLE || e.getClickedBlock().getType() == Material.ANVIL || e.getClickedBlock().getType() == Material.CHIPPED_ANVIL

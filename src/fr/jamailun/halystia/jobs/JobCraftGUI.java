@@ -34,7 +34,11 @@ public class JobCraftGUI {
 		final List<JobCraft> crafts = job.getCrafts(p);
 		final int size = crafts.size();
 		int lines = size / 9 + 1;
-		MenuGUI gui = new MenuGUI(job.getJobName(), lines*9, HalystiaRPG.getInstance()) {
+		if(lines < 2)
+			lines = 2;
+		if(lines > 6)
+			lines = 6;
+		MenuGUI gui = new MenuGUI(job.getJobNameMajor(), lines*9, HalystiaRPG.getInstance()) {
 			@Override
 			public void onClose(InventoryCloseEvent e) {
 				removeFromList();
@@ -56,6 +60,7 @@ public class JobCraftGUI {
 			JobCraft craft = crafts.get(i);
 			gui.addOption(new ItemBuilder(craft.getObtained()).addLoreLine(GRAY+"Niveau " +GOLD+craft.getLevel()).toItemStack(), i);
 		}
+		gui.addOption(new ItemBuilder(Material.BARRIER).setName(RED+"Retour").toItemStack(),gui.getSize()-1);
 		gui.show(p);
 	}
 	
@@ -94,16 +99,16 @@ public class JobCraftGUI {
 			if(i >= craft.getRessources().size() + 10)
 				gui.addOption(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(WHITE+"").toItemStack(), i);
 			else
-				gui.addOption(new ItemBuilder(craft.getRessources().get(i-10)).addLoreLine(GOLD + "" + BOLD + "Ressource consommée").toItemStack(), i);
+				gui.addOption(new ItemBuilder(craft.getRessources().get(i-10)).addLoreLine(GOLD + "" + BOLD + "(Ressource consommée)").toItemStack(), i);
 		}
-		gui.addOption(new ItemBuilder(craft.getObtained()).addLoreLine(LIGHT_PURPLE + "" + BOLD + "Item que vous craftez.").toItemStack(), 31);
+		gui.addOption(new ItemBuilder(craft.getObtained()).addLoreLine(LIGHT_PURPLE + "" + BOLD + "(Item que vous craftez)").toItemStack(), 31);
 		
 		if( canTrade ) 
-			gui.addOption(new ItemBuilder(Material.EMERALD_BLOCK).setName(GREEN+"Crafter").toItemStack(), 34+9);
+			gui.addOption(new ItemBuilder(Material.EMERALD_BLOCK).setName(GREEN+"-> ["+BOLD+"Crafter"+GREEN+"] <-").toItemStack(), 34+9);
 		else
 			gui.addOption(new ItemBuilder(Material.BARRIER).setName(DARK_RED+"Vous n'avez pas tous les items requis !").addLoreLine(RED+"Vérifier votre inventaire !").toItemStack(), 34+9);
 		
-		gui.addOption(new ItemBuilder(Material.REDSTONE_BLOCK).setName(RED+"Retour").toItemStack(), gui.getSize()-1);
+		gui.addOption(new ItemBuilder(Material.ARROW).setName(RED+"Retour").toItemStack(), gui.getSize()-1);
 		
 		gui.show(p);
 	}
