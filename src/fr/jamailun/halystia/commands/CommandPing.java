@@ -1,17 +1,24 @@
 package fr.jamailun.halystia.commands;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.bukkit.ChatColor.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CommandPing implements CommandExecutor {
+import fr.jamailun.halystia.HalystiaRPG;
+
+public class CommandPing extends HalystiaCommand {
 	
+	public CommandPing(HalystiaRPG main) {
+		super(main, "ping");
+	}
+
 	private final static String BASE_MSG = GRAY + "Ping : ";
 	
 	@Override
@@ -67,6 +74,11 @@ public class CommandPing implements CommandExecutor {
 	private Class<?> getCraftBukkitClass(String name) throws ClassNotFoundException {
 		String base = Bukkit.getServer().getClass().getPackage().getName();
 		return Class.forName(base + "." + name);
+	}
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args) {
+		return new ArrayList<>();
 	}
 	
 }

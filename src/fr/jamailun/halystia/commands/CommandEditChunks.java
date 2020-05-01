@@ -1,27 +1,34 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.BLACK;
+import static org.bukkit.ChatColor.DARK_BLUE;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.DARK_PURPLE;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.WHITE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.chunks.ChunkType;
 import fr.jamailun.halystia.guis.EditChunkGUI;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.MenuGUI;
 
-public class CommandEditChunks implements CommandExecutor {
+public class CommandEditChunks extends HalystiaCommand {
 	
-	private final HalystiaRPG main;
 	public CommandEditChunks(HalystiaRPG main) {
-		this.main = main;
+		super(main, "edit-chunks");
 	}
 	
 	@Override
@@ -100,4 +107,8 @@ public class CommandEditChunks implements CommandExecutor {
 		gui.show(p);
 	}
 	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args) {
+		return new ArrayList<>();
+	}
 }

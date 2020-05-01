@@ -1,37 +1,29 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.BOLD;
+import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.UNDERLINE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.TabCompleteEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.royaumes.Royaume;
 
-public class CommandSetRoi implements CommandExecutor, Listener {
-	
-	private final HalystiaRPG main;
-	
-	private List<String> royaumes;
+public class CommandSetRoi extends HalystiaCommand {
 	
 	public CommandSetRoi(HalystiaRPG main) {
-		this.main = main;
-		Bukkit.getPluginManager().registerEvents(this, main);
-		royaumes = new ArrayList<>();
-		for(Royaume r : Royaume.values()) {
-			if(r != Royaume.NEUTRE)
-				royaumes.add(r.toString().toLowerCase());
-		}
+		super(main, "set-roi");
 	}
 	
 	@Override
@@ -82,14 +74,13 @@ public class CommandSetRoi implements CommandExecutor, Listener {
 		return true;
 	}
 	
-	@EventHandler
-	public void playerCompletion(TabCompleteEvent e) {
-		String data[] = e.getBuffer().split(" ");
-		if(data[0].equals("/set-roi") && e.getSender().isOp()) {
-			if(data.length == 1) {
-				e.setCompletions(royaumes);
-			}
-		}
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args) {
+		if(args.length <= 1)
+			return Arrays.asList(Royaume.values()).stream().filter(r -> r != Royaume.NEUTRE).map(r -> r.toString().toLowerCase()).filter(s -> s.startsWith(args[0])).collect(Collectors.toList());
+		if(args.length <= 2)
+			return Bukkit.getOnlinePlayers().stream().map(p -> p.getName()).filter(s -> s.startsWith(args[0])).collect(Collectors.toList());
+		return new ArrayList<>();
 	}
 	
 }

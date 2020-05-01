@@ -21,7 +21,8 @@ public class PotionManager {
 	public ItemStack generateManaBottle(int power) {
 		ItemBuilder builder = new ItemBuilder(Material.POTION);
 		builder.setName(ChatColor.AQUA + "Potion de mana (" + ChatColor.DARK_AQUA + "+" + power + ChatColor.AQUA + ")");
-		builder.addLoreLine(ChatColor.LIGHT_PURPLE + "Buvez cette potion pour regagner quelques points de mana !");
+		builder.addLoreLine(ChatColor.LIGHT_PURPLE + "Buvez cette potion pour regagner");
+		builder.addLoreLine(ChatColor.LIGHT_PURPLE + "quelques points de mana !");
 		builder.addLoreLine("Mana :" + ChatColor.AQUA + " " + power + " " + ChatColor.GRAY + "points.");
 		builder.addLoreLine(ChatColor.BLACK + SIGNATURE + "_"+ power);
 		builder.addItemFlag(ItemFlag.HIDE_POTION_EFFECTS);

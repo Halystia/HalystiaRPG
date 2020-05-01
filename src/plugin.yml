@@ -1,5 +1,5 @@
 name: HalystiaRPG
-version: 4.0.3
+version: 4.1.0
 main: fr.jamailun.halystia.HalystiaRPG
 authors: [jamailun]
 depend: [Citizens, Sentinel]
@@ -135,11 +135,6 @@ commands:
     permission: halystia.rpg.master
     permission-message: §cIl faut que tu sois un maître du jeu du RPG.
     description: Obtenir une canne
-  is:
-    usage: /is <material> <title> ; <lore 1>, <lore 2>, ... , <lore n>
-    permission: halystia.rpg.master
-    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
-    description: Créer un item custom.
   give-potion:
     usage: /give-potion <mana>
     permission: halystia.rpg.master

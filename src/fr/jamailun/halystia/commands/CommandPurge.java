@@ -1,19 +1,21 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 import fr.jamailun.halystia.HalystiaRPG;
 
-public class CommandPurge implements CommandExecutor {
-	
-	private final HalystiaRPG main;
+public class CommandPurge extends HalystiaCommand {
 	
 	public CommandPurge(HalystiaRPG main) {
-		this.main = main;
+		super(main, "purge");
 	}
 	
 	@Override
@@ -41,5 +43,10 @@ public class CommandPurge implements CommandExecutor {
 		main.getSuperMobManager().purge();
 		main.getDonjonManager().getBossManager().purge();
 		sender.sendMessage(GREEN+"Purge effectuée.");
+	}
+	
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args) {
+		return new ArrayList<>();
 	}
 }

@@ -1,35 +1,23 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.server.TabCompleteEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.spells.Spell;
 
-public class CommandGiveSpell implements CommandExecutor, Listener {
-	
-	private final HalystiaRPG main;
-	
-	private List<String> spells;
+public class CommandGiveSpell extends HalystiaCommand {
 	
 	public CommandGiveSpell(HalystiaRPG main) {
-		this.main = main;
-		Bukkit.getPluginManager().registerEvents(this, main);
-		spells = new ArrayList<>();
-		for(String spell : main.getSpellManager().getAllSpellsName()) {
-			spells.add(spell);
-		}
+		super(main, "give-spell");
 	}
 	
 	@Override
@@ -62,23 +50,10 @@ public class CommandGiveSpell implements CommandExecutor, Listener {
 		return true;
 	}
 	
-	@EventHandler
-	public void playerCompletion(TabCompleteEvent e) {
-		String data[] = e.getBuffer().split(" ");
-		if(data[0].equals("/give-spell") && e.getSender().isOp()) {
-			if(data.length == 1) {
-				e.setCompletions(spells);
-				return;
-			}
-			if(data.length == 2) {
-				List<String> goods = new ArrayList<>();
-				//spells.stream().findAny().filter(s -> s.startsWith(data[1])).orElse("");
-				for(String spell : spells)
-					if(spell.startsWith(data[1]))
-						goods.add(spell);
-				e.setCompletions(goods);
-			}
-		}
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args) {
+		if(args.length <= 1)
+			return main.getSpellManager().getAllSpellsName().stream().filter(s -> s.startsWith(args[0])).collect(Collectors.toList());
+		return new ArrayList<>();
 	}
-	
 }

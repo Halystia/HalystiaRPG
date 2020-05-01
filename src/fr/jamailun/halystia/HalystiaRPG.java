@@ -14,64 +14,16 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.codingforcookies.armorequip.ArmorListener;
-
 import fr.jamailun.halystia.bank.Banque;
 import fr.jamailun.halystia.chunks.ChunkCreator;
 import fr.jamailun.halystia.chunks.ChunkManager;
-import fr.jamailun.halystia.commands.CommandClasse;
-import fr.jamailun.halystia.commands.CommandCreateShop;
-import fr.jamailun.halystia.commands.CommandEditChunks;
-import fr.jamailun.halystia.commands.CommandEditDonjons;
-import fr.jamailun.halystia.commands.CommandEditMobs;
-import fr.jamailun.halystia.commands.CommandEditNPC;
-import fr.jamailun.halystia.commands.CommandEditQuests;
-import fr.jamailun.halystia.commands.CommandEditTitles;
-import fr.jamailun.halystia.commands.CommandGiveCanne;
-import fr.jamailun.halystia.commands.CommandGiveItems;
-import fr.jamailun.halystia.commands.CommandGivePotion;
-import fr.jamailun.halystia.commands.CommandGiveSpell;
-import fr.jamailun.halystia.commands.CommandIS;
-import fr.jamailun.halystia.commands.CommandPing;
-import fr.jamailun.halystia.commands.CommandPurge;
-import fr.jamailun.halystia.commands.CommandQuests;
-import fr.jamailun.halystia.commands.CommandReloadShops;
-import fr.jamailun.halystia.commands.CommandSetChunk;
-import fr.jamailun.halystia.commands.CommandSetJob;
-import fr.jamailun.halystia.commands.CommandSetRoi;
-import fr.jamailun.halystia.commands.CommandSetSpawner;
-import fr.jamailun.halystia.commands.CommandSetTag;
-import fr.jamailun.halystia.commands.CommandSetXp;
-import fr.jamailun.halystia.commands.CommandSummonMob;
-import fr.jamailun.halystia.commands.CommandTitle;
-import fr.jamailun.halystia.commands.ModifyOeilAntiqueCommand;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
 import fr.jamailun.halystia.custom.potions.PotionManager;
 import fr.jamailun.halystia.donjons.DonjonManager;
-import fr.jamailun.halystia.donjons.util.CommandBossDonjon;
-import fr.jamailun.halystia.donjons.util.CommandDonjonPorte;
-import fr.jamailun.halystia.donjons.util.CommandJoinDonjon;
 import fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.enemies.mobs.NaturalSpawnWorld;
 import fr.jamailun.halystia.enemies.supermobs.SuperMobManager;
-import fr.jamailun.halystia.events.BossListeners;
-import fr.jamailun.halystia.events.ConsumeItemListener;
-import fr.jamailun.halystia.events.EntityDamageOtherListener;
-import fr.jamailun.halystia.events.EntityPickupItemListener;
-import fr.jamailun.halystia.events.GUIListener;
-import fr.jamailun.halystia.events.MobAggroListener;
-import fr.jamailun.halystia.events.MobDeathListener;
-import fr.jamailun.halystia.events.MobSpawnListener;
-import fr.jamailun.halystia.events.NpcInteractionListener;
-import fr.jamailun.halystia.events.PlayerBreakListener;
-import fr.jamailun.halystia.events.PlayerDeathListener;
-import fr.jamailun.halystia.events.PlayerDropItemListener;
-import fr.jamailun.halystia.events.PlayerFishListener;
-import fr.jamailun.halystia.events.PlayerInteractListener;
-import fr.jamailun.halystia.events.PlayerJoinLeaveListener;
-import fr.jamailun.halystia.events.PlayerMovementsListener;
-import fr.jamailun.halystia.events.TchatListener;
 import fr.jamailun.halystia.guis.ChooseClasseGui;
 import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.jobs.model.JamailunJobExtension;
@@ -167,7 +119,7 @@ public final class HalystiaRPG extends JavaPlugin {
 			return;
 		}
 		
-		
+		// REHGISTER RPG TRAIT IN CITIZENS
 		try {
 			CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(HalystiaRpgTrait.class));
 		} catch(IllegalArgumentException e) {
@@ -212,77 +164,22 @@ public final class HalystiaRPG extends JavaPlugin {
 		new NaturalSpawnWorld(this, mobMgr, mobsChunksMgr, WORLD);
 		
 		//EVENTS
-		Bukkit.getPluginManager().registerEvents(new ArmorListener(), this); //génère des ArmorEquiEvent !
-		new PlayerJoinLeaveListener(this);
-		new PlayerDropItemListener(this);
-		new GUIListener(this);
-		new NpcInteractionListener(this);
-		new TchatListener(this);
-		new PlayerMovementsListener(this);
-		new PlayerDeathListener(this);
-		new PlayerInteractListener(this, jobs);
-		new PlayerBreakListener(this, jobs);
-		new EntityDamageOtherListener(this);
-		new ConsumeItemListener(this);
-		
-		new MobAggroListener(this);
-		new BossListeners(this);
-		
-		new MobDeathListener(this);
-		new MobSpawnListener(this);
-		new EntityPickupItemListener(this);
-		new PlayerFishListener(this);
+		new EventsManager(this, jobs);
 		
 		//GUIS
 		classeGui = new ChooseClasseGui(this);
 		
 		//COMMANDS
-		getCommand("classe").setExecutor(new CommandClasse());
-		getCommand("quests").setExecutor(new CommandQuests());
-		getCommand("titles").setExecutor(new CommandTitle());
-		getCommand("ping").setExecutor(new CommandPing());
+		new CommandsManager(this, bdd, jobs, titleMgr, donjonsMgr, npcMgr, questsMgr, mobMgr, spawnerMgr);
 		
-		getCommand("create-shop-classe").setExecutor(new CommandCreateShop(this));
-		getCommand("reload-shop-classe").setExecutor(new CommandReloadShops(this));
-		getCommand("is").setExecutor(new CommandIS(this));
-		getCommand("purge").setExecutor(new CommandPurge(this));
-		
-		getCommand("edit-mobs").setExecutor(new CommandEditMobs(this));
-		getCommand("edit-chunks").setExecutor(new CommandEditChunks(this));
-		new CommandEditNPC(this, npcMgr);
-		new CommandEditQuests(this, npcMgr, questsMgr, mobMgr);
-		new CommandEditTitles(this, titleMgr);
-		new CommandEditDonjons(this, donjonsMgr);
-		
-		getCommand("set-roi").setExecutor(new CommandSetRoi(this));
-		new CommandSetXp(this);
-		new CommandSetTag(this, bdd);
-		new CommandSetChunk(this);
-		new CommandSetSpawner(this, mobMgr, spawnerMgr);
-		new CommandSetJob(this, jobs);
-		
-		getCommand("give-spell").setExecutor(new CommandGiveSpell(this));
-		getCommand("give-potion").setExecutor(new CommandGivePotion(this));
-		new CommandSummonMob(this, mobMgr);
-		new CommandGiveCanne(this);
-		new CommandGiveItems(this, jobs);
-		
-		getCommand("joindonjon").setExecutor(new CommandJoinDonjon(this));
-		getCommand("donjonPorte").setExecutor(new CommandDonjonPorte(this));
-		getCommand("donjonBoss").setExecutor(new CommandBossDonjon(this));
-		
-		
+		//PLACEHOLDERAPI
 		if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			PlaceholderAPI.registerExpansion(new TitleHolder(titleMgr, bdd, classesMgr));
 		} else {
 			getLogger().log(Level.WARNING, "PlaceHolderAPI not found or not enabled");
 		}
 		
-		
-		ModifyOeilAntiqueCommand moaCmd = new ModifyOeilAntiqueCommand(this);
-		getCommand("set-oeil-antique").setExecutor(moaCmd);
-		getCommand("remove-oeil-antique").setExecutor(moaCmd);
-		
+		// RELOAD FUNCTION
 		try {
 			for(Player player : Bukkit.getOnlinePlayers()) {
 				if(isInRpgWorld(player)) {
@@ -294,6 +191,7 @@ public final class HalystiaRPG extends JavaPlugin {
 			Bukkit.getLogger().warning("Error during online players initialisation.");
 		}
 		
+		// CLOCKS FUNCTIONS
 		soulMgr.startClock();
 		superMobMgr.initAllSuperMobs();
 		

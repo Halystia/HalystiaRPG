@@ -1,23 +1,23 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.server.TabCompleteEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
 
-public class CommandGivePotion implements CommandExecutor {
-	
-	private final HalystiaRPG main;
+public class CommandGivePotion extends HalystiaCommand {
 	
 	public CommandGivePotion(HalystiaRPG main) {
-		this.main = main;
+		super(main, "give-potion");
 	}
 	
 	@Override
@@ -51,13 +51,10 @@ public class CommandGivePotion implements CommandExecutor {
 		
 		return true;
 	}
-	
-	@EventHandler
-	public void playerCompletion(TabCompleteEvent e) {
-		String data[] = e.getBuffer().split(" ");
-		if(data[0].equals("/give-spell") && e.getSender().isOp()) {
-			e.setCompletions(new ArrayList<>());
-		}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args) {
+		return new ArrayList<>();
 	}
 	
 }

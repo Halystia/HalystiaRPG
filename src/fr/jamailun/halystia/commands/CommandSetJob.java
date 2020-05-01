@@ -125,7 +125,7 @@ public class CommandSetJob extends HalystiaCommand {
 			};
 			job.forceExp(cible, xp);
 			sender.sendMessage(GREEN + "Exp validé ! Le joueur est désormais niveau " + GOLD + job.getLevel(xp) + GREEN + ".");
-			cible.sendMessage(RED + "Attention ! " + GRAY + "Un administrateur a fixé ton exp de " + job + " à " + GOLD + xp+"xp"+GRAY+". Vous êtes désormais niveau " + GOLD + job.getLevel(xp) + GRAY +".");
+			cible.sendMessage(RED + "Attention ! " + GRAY + "Un administrateur a fixé ton exp de "+GOLD + job.getJobName()+GRAY + " à " + GOLD + xp+"xp"+GRAY+". Vous êtes désormais niveau " + GOLD + job.getLevel(xp) + GRAY +".");
 			return true;
 		}
 		
@@ -140,11 +140,11 @@ public class CommandSetJob extends HalystiaCommand {
 			return Bukkit.getOnlinePlayers().stream().filter(p -> HalystiaRPG.isInRpgWorld(p) && p.getName().startsWith(args[0])).map(p -> p.getName()).collect(Collectors.toList());
 		if(args.length <= 2)
 			return list.stream().filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
-		if(args.length <= 3 && (args[1].equals("remove") || args[1].equals("add"))) {
+		if(args.length <= 3 && ( ! args[1].equals("list"))) {
 			Player cible = Bukkit.getPlayer(args[0]);
 			if(cible == null)
 				return new ArrayList<>();
-			if(args[1].equals("remove"))
+			if(args[1].equals("remove") || args[1].equals("xp"))
 				return jobs.getJobsOfPlayer(cible).stream().map(j -> j.getJobName().toString()).filter(s -> s.startsWith(args[2])).collect(Collectors.toList());
 			if(args[1].equals("add"))
 				return jobs.getAllJobTypesNames().stream().filter(s -> s.startsWith(args[2])).collect(Collectors.toList());
