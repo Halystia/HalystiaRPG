@@ -1,6 +1,6 @@
 package fr.jamailun.halystia.jobs;
 
-import static org.bukkit.ChatColor.BOLD;
+import static org.bukkit.ChatColor.*;
 import static org.bukkit.ChatColor.DARK_BLUE;
 import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.GOLD;
@@ -38,7 +38,7 @@ public class JobCraftGUI {
 			lines = 2;
 		if(lines > 6)
 			lines = 6;
-		MenuGUI gui = new MenuGUI(job.getJobNameMajor(), lines*9, HalystiaRPG.getInstance()) {
+		MenuGUI gui = new MenuGUI(job.getJobNameMajor() + DARK_BLUE + " - Liste des crafts", lines*9, HalystiaRPG.getInstance()) {
 			@Override
 			public void onClose(InventoryCloseEvent e) {
 				removeFromList();
@@ -69,7 +69,7 @@ public class JobCraftGUI {
 		Trade trade = new Trade(craft.getObtained(), craft.getRessources());
 		boolean canTrade = trade.canAfford(p);
 		
-		MenuGUI gui = new MenuGUI(job.getJobName() + DARK_BLUE + " - Craft " + craft.getObtained().getItemMeta().getDisplayName(), 9*5, HalystiaRPG.getInstance()) {
+		MenuGUI gui = new MenuGUI(job.getJobNameMajor() + DARK_BLUE + " - " + craft.getObtained().getItemMeta().getDisplayName(), 9*5, HalystiaRPG.getInstance()) {
 			
 			@Override
 			public void onClose(InventoryCloseEvent e) {
@@ -82,10 +82,14 @@ public class JobCraftGUI {
 					openGUItoPlayer(p);
 					return;
 				}
-				if(e.getSlot() == 34 && canTrade) {
+				if(e.getSlot() == (34+9) && canTrade) {
 					//boolean success = 
-					if ( trade.trade(p) )
+					if ( trade.trade(p, true) ) {
+						p.sendMessage(HalystiaRPG.PREFIX + GREEN + "Vous avez crafté ("+craft.getObtained().getItemMeta().getDisplayName()+GREEN+"). "+YELLOW+"+"+craft.getXp()+"xp.");
 						craft.getJob().addExp(craft.getXp(), p);
+					} else {
+						p.sendMessage(HalystiaRPG.PREFIX + RED+"Une erreur est survenue.");
+					}
 					playerClickedCraft(craft, p);
 				}
 			}

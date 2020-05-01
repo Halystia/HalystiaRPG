@@ -58,17 +58,15 @@ public class Trade implements Comparable<Trade> {
 	
 	/**
 	 * Construct a new Trade. Contructor used in {@link Shop shops}.
-	 * @param key optional : key to save the trade if needed (Serialization in the {@linkplain TradeManager}.
-	 * @param classe Classe required for a Player to do the trade. NONE will be ok for everyone.
-	 * @param toSell ItemStack that will be given to the Player.
+	 * @param key nulleable : key to save the trade if needed (Serialization in the {@linkplain TradeManager}.
+	 * @param classe {@link fr.jamailun.halystia.players.Classe Classe} required for a Player to do the trade. NONE will be ok for everyone.
+	 * @param toSell nulleable : ItemStack that will be given to the Player.
 	 * @param toTrade List<ItemStack> that will wbe required then taken away from the Player in order to proceed the trade.
 	 * @param levelRequired level in the class required do to the trade
 	 */
 	public Trade(String key, Classe classe, ItemStack toSell, List<ItemStack> toTrade, int levelRequired) {
-		if(toSell == null)
-			this.toSell = null;
-		else
-			toSell = new ItemStack(toSell);
+		if(toSell != null)
+			this.toSell = new ItemStack(toSell);
 		this.classe = classe;
 		this.key = key;
 		this.toTrade = new ArrayList<>(toTrade);
@@ -88,7 +86,7 @@ public class Trade implements Comparable<Trade> {
 	}
 	
 	/**
-	 * Do the trade with a player. Use the unsilent way.
+	 * Do the trade with a player. Use the non-silent way.
 	 * @see #trade(Player, boolean)
 	 */
 	public boolean trade(Player p) {
