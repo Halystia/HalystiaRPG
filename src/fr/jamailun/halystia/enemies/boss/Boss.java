@@ -79,14 +79,16 @@ public abstract class Boss implements Enemy, Invocator {
 	}
 	
 	protected void damage(double damages) {
+		if(!exists)
+			return;
 		health -= damages;
 		updateBar();
 		damageAnimation();
 		//Bukkit.broadcastMessage("§cOOF§e -"+damages+"PV. §d-> " + health+"PV.");
 		if(health <= 0 || (! exists())) {
+			exists = false;
 			stopLoop();
 			killed();
-			exists = false;
 			repartLootsAndXp();
 			if(getXp() > 0)
 				displayToDamagersBests();
@@ -96,6 +98,8 @@ public abstract class Boss implements Enemy, Invocator {
 	protected abstract void damageAnimation();
 	
 	public void damage(UUID p, double damages) {
+		if(!exists)
+			return;
 		//if(p == null)
 			//Bukkit.broadcastMessage("§cptn c'est null");
 		if(Bukkit.getPlayer(p) != null) {
@@ -217,6 +221,14 @@ public abstract class Boss implements Enemy, Invocator {
 				pl.sendMessage(HalystiaRPG.PREFIX + GOLD + "Autres dégâts : " + RED + Math.floor(otherDmgs) + " dmgs " + GOLD + " par " + BLUE + (damagers.size() - 3) + GOLD + " autres joueurs.");
 			} 	
 		}
+	}
+	
+	protected int MAX_INVOCATIONS = 0;
+	@Override
+	public boolean canInvoke(UUID uuid, int howMany) {
+		if(invocations.size() + howMany >= MAX_INVOCATIONS)
+			return false;
+		return true;
 	}
 	
 	public void repartLootsAndXp() {

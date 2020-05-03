@@ -37,7 +37,6 @@ import fr.jamailun.halystia.spells.spellEntity.SpellEntity;
 
 public class NemasiaBoss extends Boss {
 
-	public static final int MAX_INVOCATIONS = 5;
 	public static final int HEALTH = 5000;
 	public static final int HEALTH_PER_CUBE = 200;
 	public static final int CUBES_HEALTH = 100;
@@ -51,6 +50,7 @@ public class NemasiaBoss extends Boss {
 	private final Random rand = new Random();
 	
 	public NemasiaBoss() {
+		MAX_INVOCATIONS = 5;
 		maxHealth = health = HEALTH;
 		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SOLID, BarFlag.DARKEN_SKY);
 		bar.setVisible(true);
@@ -76,7 +76,7 @@ public class NemasiaBoss extends Boss {
 			return;
 		counter = 0 - rand.nextInt(5);
 		
-		Player closest = getClosestPlayer(loc, 20, true);
+		Player closest = getClosestPlayer(head.getEyeLocation(), 20, true);
 		double random = rand.nextInt(100)+1;
 		
 		//Pas de joueur visible !
@@ -90,13 +90,14 @@ public class NemasiaBoss extends Boss {
 		Vector look = head.getLocation().toVector().subtract(closest.getLocation().toVector()).normalize();
 		giant.teleport(giant.getLocation().setDirection(look));
 		//head.getLocation().setDirection(look);
-		double x = closest.getLocation().getX() - giant.getLocation().getX();
-		double y = closest.getLocation().getY() - giant.getLocation().getY();
-		double z = closest.getLocation().getZ() - giant.getLocation().getZ();
+		double x = closest.getLocation().getX() - head.getEyeLocation().getX();
+		double y = closest.getLocation().getY() - head.getEyeLocation().getY();
+		double z = closest.getLocation().getZ() - head.getEyeLocation().getZ();
 
 		Vector lookDir = new Vector(x, y, z);//make a vector going from the player's location to the center point
 
 		giant.getLocation().setDirection(lookDir.normalize());
+		head.getLocation().setDirection(lookDir.normalize());
 		
 		if ( random <= 20 )
 			shotFireBall(closest);			// 20%
@@ -318,14 +319,7 @@ public class NemasiaBoss extends Boss {
 		
 		return true;
 	}
-
-	@Override
-	public boolean canInvoke(UUID uuid, int howMany) {
-		if(invocations.size() + howMany >= MAX_INVOCATIONS)
-			return false;
-		return true;
-	}
-
+	
 	@Override
 	public void oneIsDead(UUID uuid) {
 		invocations.removeIf(en -> en.getUniqueId().equals(uuid));
