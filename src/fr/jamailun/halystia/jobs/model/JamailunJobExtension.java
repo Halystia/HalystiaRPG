@@ -1,6 +1,5 @@
 package fr.jamailun.halystia.jobs.model;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +31,15 @@ public class JamailunJobExtension {
 		this.path = path;
 		
 		items = registerItems();
-		registerMineur();
-		registerBucheron();
-		registerFogeron();
-		
+		try {
+			registerMineur();
+			registerBucheron();
+			registerFogeron();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+
+		jobs.getItemManager().addAllContent(items);
 	}
 	
 	private Map<String, ItemStack> registerItems() {
@@ -52,34 +56,41 @@ public class JamailunJobExtension {
 		items.put("birch", new ItemBuilder(Material.BIRCH_LOG).setName(c() + "Bois de boulot").toItemStack());
 		items.put("spruce", new ItemBuilder(Material.SPRUCE_LOG).setName(c() + "Bois de sapin").toItemStack());
 		items.put("dark", new ItemBuilder(Material.DARK_OAK_LOG).setName(c() + "Bois maudit").toItemStack());
-		items.put("jungle", new ItemBuilder(Material.ACACIA_LOG).setName(c() + "Bois sacré").toItemStack());
+		items.put("acacia", new ItemBuilder(Material.ACACIA_LOG).setName(c() + "Bois sacré").toItemStack());
 		//RESSOURCES DIVERSES
 		items.put("stick", new ItemBuilder(Material.STICK).setName(c()+"Baton").toItemStack());
+		items.put("string", new ItemBuilder(Material.STRING).setName(c()+"Corde").toItemStack());
 		items.put("water", new ItemBuilder(Material.POTION).addItemFlag(ItemFlag.HIDE_POTION_EFFECTS).setPotionColor(Color.BLUE).setName(c()+"Eau pure").toItemStack());
 		items.put("lava", new ItemBuilder(Material.LAVA_BUCKET).setName(c()+"Lave").toItemStack());
 		
 		//CRAFTS MINEUR
 		items.put("stone", new ItemBuilder(Material.STONE).setName(c() + "Pierre lisse").toItemStack());
 		items.put("silex", new ItemBuilder(Material.FLINT).setName(c() + "Silex").toItemStack());
-		items.put("stone2", new ItemBuilder(Material.SMOOTH_STONE).setName(c() + "Pierre condensée").toItemStack());
-		
-		items.put("coal2", new ItemBuilder(Material.COAL).setName(c() + "Charbon épuré").toItemStack());
-		items.put("coal3", new ItemBuilder(Material.COAL).shine().setName(c() + "Charbon rafilé").toItemStack());
-		items.put("silex2", new ItemBuilder(Material.SMOOTH_STONE).setName(c() + "Silex enchanté").toItemStack());
-		
-		items.put("iron1", new ItemBuilder(Material.IRON_INGOT).setName(c() + "Fer").toItemStack());
+		items.put("stone1", new ItemBuilder(Material.SMOOTH_STONE).setName(c() + "Pierre condensée").toItemStack());
+		items.put("coal1", new ItemBuilder(Material.COAL).setName(c() + "Charbon épuré").toItemStack());
+		items.put("coal2", new ItemBuilder(Material.COAL).shine().setName(c() + "Charbon raffiné").toItemStack());
+		items.put("silex1", new ItemBuilder(Material.FLINT).shine().setName(c() + "Silex enchanté").toItemStack());
+		items.put("iron1", new ItemBuilder(Material.IRON_INGOT).setName(c() + "Lingot de fer").toItemStack());
 		items.put("iron2", new ItemBuilder(Material.IRON_BLOCK).setName(c() + "Fer condensé").toItemStack());
-		items.put("stone3", new ItemBuilder(Material.WHITE_TERRACOTTA).shine().setName(c() + "Roche enchantée").toItemStack());
-		
+		items.put("stone2", new ItemBuilder(Material.DEAD_BRAIN_CORAL_BLOCK).shine().setName(c() + "Roche enchantée").toItemStack());
 		items.put("gold1", new ItemBuilder(Material.GOLD_INGOT).setName(c() + "Lingot d'or").toItemStack());
 		items.put("gold2", new ItemBuilder(Material.GOLD_BLOCK).setName(c() + "Or condensé").toItemStack());
-		items.put("acier", new ItemBuilder(Material.IRON_INGOT).shine().setName(r() + "Acier").toItemStack());
-		
+		items.put("acier", new ItemBuilder(Material.IRON_INGOT).shine().setName(r() + "Barre d'acier").toItemStack());
 		items.put("diams1", new ItemBuilder(Material.DIAMOND).setName(c() + "Diamant brut").toItemStack());
 		items.put("diams2", new ItemBuilder(Material.DIAMOND_BLOCK).setName(c() + "Diamant taillée").toItemStack());
 		items.put("tasei", new ItemBuilder(Material.BLUE_GLAZED_TERRACOTTA).shine().setName(r() + "Taseigaru").toItemStack());
 		
-		jobs.getItemManager().addAllContent(items);
+		//CRAFTS BUCHERON
+		items.put("oak1", new ItemBuilder(Material.OAK_PLANKS).setName(c() + "Planches de chêne").toItemStack());
+		items.put("oak2", new ItemBuilder(Material.STRIPPED_OAK_WOOD).setName(c() + "Essence de chêne").toItemStack());
+		items.put("birch1", new ItemBuilder(Material.BIRCH_PLANKS).setName(c() + "Planches de boulot").toItemStack());
+		items.put("birch2", new ItemBuilder(Material.STRIPPED_BIRCH_WOOD).setName(c() + "Essence de boulot").toItemStack());
+		items.put("spruce1", new ItemBuilder(Material.SPRUCE_PLANKS).setName(c() + "Planches de sapin").toItemStack());
+		items.put("spruce2", new ItemBuilder(Material.STRIPPED_SPRUCE_WOOD).setName(c() + "Essence de sapin").toItemStack());
+		items.put("dark1", new ItemBuilder(Material.DARK_OAK_PLANKS).setName(c() + "Planches de bois maudit").toItemStack());
+		items.put("dark2", new ItemBuilder(Material.STRIPPED_DARK_OAK_WOOD).setName(c() + "Essence de bois maudit").toItemStack());
+		items.put("acacia1", new ItemBuilder(Material.ACACIA_PLANKS).setName(c() + "Planches de bois sacré").toItemStack());
+		items.put("acacia2", new ItemBuilder(Material.STRIPPED_ACACIA_WOOD).setName(c() + "Essence de bois sacré").toItemStack());
 		
 		return items;
 	}
@@ -110,17 +121,21 @@ public class JamailunJobExtension {
 		blocs.registerContent(new JobBlock(mineur, 5, Material.DIAMOND_ORE, item("diams"), 100, 300));
 		
 		JobCraftsManager crafts = jobs.getCraftsManager();
-		crafts.registerContent(new JobCraft(mineur, 1, item("stone", 4), 1, Arrays.asList(item("cobble", 5), item("water"))));
-		crafts.registerContent(new JobCraft(mineur, 1, item("silex", 1), 4, Arrays.asList(item("gravel", 3), item("water"))));
-		crafts.registerContent(new JobCraft(mineur, 1, item("stone2", 4), 5, Arrays.asList(item("stone", 5), item("water"), item("silex"))));
-
-		crafts.registerContent(new JobCraft(mineur, 2, item("coal2", 4), 2, Arrays.asList(item("coal", 3), item("water"))));
-		crafts.registerContent(new JobCraft(mineur, 2, item("coal3", 1), 10, Arrays.asList(item("coal2", 10), item("silex"))));
-		crafts.registerContent(new JobCraft(mineur, 2, item("silex2", 1), 13, Arrays.asList(item("coal2", 2), item("silex", 3), item("stone2", 2))));
-		
-		crafts.registerContent(new JobCraft(mineur, 3, item("iron1", 2), 3, Arrays.asList(item("iron", 2), item("coal"))));
-		crafts.registerContent(new JobCraft(mineur, 3, item("iron2", 1), 10, Arrays.asList(item("iron1", 10), item("coal2", 2))));
-		crafts.registerContent(new JobCraft(mineur, 3, item("stone3", 1), 13, Arrays.asList(item("coal3", 3), item("silex2", 3), item("iron2", 2))));
+		crafts.registerContent(new JobCraft(mineur, 1, item("stone", 4), 1, 	item("cobble", 5), item("water")));
+		crafts.registerContent(new JobCraft(mineur, 1, item("silex", 1), 4, 	item("gravel", 3), item("water")));
+		crafts.registerContent(new JobCraft(mineur, 1, item("stone1", 4), 5, 	item("stone", 5), item("water"), item("silex")));
+		crafts.registerContent(new JobCraft(mineur, 2, item("coal1", 4), 2, 	item("coal", 3), item("water")));
+		crafts.registerContent(new JobCraft(mineur, 2, item("coal2", 1), 10, 	item("coal1", 10), item("silex")));
+		crafts.registerContent(new JobCraft(mineur, 2, item("silex1", 1), 13, 	item("coal1", 2), item("silex", 3), item("stone1", 2)));
+		crafts.registerContent(new JobCraft(mineur, 3, item("iron1", 2), 3, 	item("iron", 2), item("coal1")));
+		crafts.registerContent(new JobCraft(mineur, 3, item("iron2", 1), 10, 	item("iron1", 12), item("coal1", 5)));
+		crafts.registerContent(new JobCraft(mineur, 3, item("stone2", 1), 13, 	item("stone1", 64), item("silex1", 3), item("iron2"), item("coal2", 3)));
+		crafts.registerContent(new JobCraft(mineur, 4, item("gold1", 2), 4, 	item("gold", 3), item("coal1", 3)));
+		crafts.registerContent(new JobCraft(mineur, 4, item("gold2", 1), 12, 	item("gold1", 12), item("coal2", 3)));
+		crafts.registerContent(new JobCraft(mineur, 4, item("acier", 2), 10, 	item("iron2", 1), item("gold1", 3), item("lava", 1)));
+		crafts.registerContent(new JobCraft(mineur, 5, item("diams1", 2), 4, 	item("diams", 3), item("coal2", 2)));
+		crafts.registerContent(new JobCraft(mineur, 5, item("diams2", 1), 12, 	item("diams1", 12), item("coal2", 6), item("lava", 2)));
+		crafts.registerContent(new JobCraft(mineur, 5, item("tasei", 1), 100, 	item("diams2", 2), item("acier", 2), item("stone2", 5), item("lava", 4)));
 		
 		mineur.changeCraftGUI(Material.BLAST_FURNACE, new JobCraftGUI(mineur));
 	}
@@ -139,7 +154,22 @@ public class JamailunJobExtension {
 		blocs.registerContent(new JobBlock(bucheron, 2, Material.BIRCH_LOG, item("birch"), 10, 90));
 		blocs.registerContent(new JobBlock(bucheron, 3, Material.SPRUCE_LOG, item("spruce"), 30, 180));
 		blocs.registerContent(new JobBlock(bucheron, 4, Material.DARK_OAK_LOG, item("dark"), 50, 230));
-		blocs.registerContent(new JobBlock(bucheron, 5, Material.ACACIA_LOG, item("jungle"), 100, 300));
+		blocs.registerContent(new JobBlock(bucheron, 5, Material.ACACIA_LOG, item("acacia"), 100, 300));
+		
+		JobCraftsManager crafts = jobs.getCraftsManager();
+		crafts.registerContent(new JobCraft(bucheron, 1, item("oak1", 5), 1, 		item("oak", 5), item("water")));
+		crafts.registerContent(new JobCraft(bucheron, 1, item("stick", 5), 1, 		item("oak1", 2)));
+		crafts.registerContent(new JobCraft(bucheron, 1, item("oak2", 1), 1, 		item("oak1", 10), item("oak",10), item("water", 2)));
+		crafts.registerContent(new JobCraft(bucheron, 2, item("birch1", 4), 1, 		item("birch", 5), item("water")));
+		crafts.registerContent(new JobCraft(bucheron, 2, item("string", 2), 1, 		item("birch1", 3)));
+		crafts.registerContent(new JobCraft(bucheron, 2, item("birch2", 1), 1, 		item("birch1", 10), item("birch",10), item("water", 2)));
+		crafts.registerContent(new JobCraft(bucheron, 3, item("spruce1", 3), 1, 	item("spruce", 5), item("water")));
+		crafts.registerContent(new JobCraft(bucheron, 3, item("spruce2", 1), 1, 	item("spruce1", 10), item("spruce", 10), item("water", 2), item("silex")));
+		crafts.registerContent(new JobCraft(bucheron, 4, item("dark1", 2), 1, 		item("dark", 5), item("water")));
+		crafts.registerContent(new JobCraft(bucheron, 4, item("dark2", 1), 1, 		item("dark1", 10), item("dark", 10), item("water", 2), item("silex1")));
+		crafts.registerContent(new JobCraft(bucheron, 5, item("acacia1", 1), 1, 	item("acacia", 5), item("water"), item("silex1")));
+		crafts.registerContent(new JobCraft(bucheron, 5, item("acacia2", 1), 1, 	item("acacia1", 10), item("acacia", 10), item("water", 3), item("silex1", 2), item("stone2")));
+		
 		
 		bucheron.changeCraftGUI(Material.STONECUTTER, new JobCraftGUI(bucheron));
 	}
