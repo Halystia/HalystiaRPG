@@ -181,11 +181,12 @@ public class JobType extends FileDataRPG {
 		builder.setName(getJobNameMajor());
 		builder.setLore(GRAY + "Niveau "+level);
 		builder.addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
-		builder.addLoreLine(getPercentBar(xp, level));
-		if(level == MAX_LEVEL)
+		if(level == MAX_LEVEL) {
 			builder.shine();
-		else
+		} else {
+			builder.addLoreLine(getPercentBar(xp, level));
 			builder.addLoreLine(xp+"/"+getXpRequired(level+1)+" xp");
+		}
 		return builder.toItemStack();
 	}
 
