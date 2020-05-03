@@ -1,6 +1,7 @@
 package fr.jamailun.halystia.jobs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -12,6 +13,10 @@ public class JobCraft {
 	private final ItemStack obtained;
 	private final List<ItemStack> ressources;
 	private final int level, xp;
+	
+	public JobCraft(JobType job, int level, ItemStack obtained, int xp, ItemStack... ressources) {
+		this(job, level, obtained, xp, Arrays.asList(ressources));
+	}
 	
 	public JobCraft(JobType job, int level, ItemStack obtained, int xp, Collection<ItemStack> ressources) {
 		this.job = job;

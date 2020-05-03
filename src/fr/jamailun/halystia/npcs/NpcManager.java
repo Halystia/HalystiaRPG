@@ -56,7 +56,12 @@ public final class NpcManager {
 			@Override
 			public void run() {
 				for (NPC npc : CitizensAPI.getNPCRegistry().sorted()) {
-		            npc.spawn(npc.getStoredLocation(), SpawnReason.CREATE);
+					try {
+						npc.spawn(npc.getStoredLocation(), SpawnReason.CREATE);
+					} catch (NullPointerException ee) {
+						main.getConsole().sendMessage(ChatColor.RED+"Impossible de spawner le npc id="+npc.getId()+".");
+						continue;
+					}
 		            RpgNpc rpg = getNpc(npc);
 		            if(rpg != null)
 		            	if(rpg instanceof CitizenNpc2 && rpg.getEntityId() == npc.getId())

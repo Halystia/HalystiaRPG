@@ -1,12 +1,12 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.BLUE;
 import static org.bukkit.ChatColor.AQUA;
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.BOLD;
 import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.YELLOW;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
-import static org.bukkit.ChatColor.BOLD;
+import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -236,9 +236,17 @@ public class CommandEditDonjons extends HalystiaCommand {
 				p.sendMessage(RED + "Il faut préciser le type du boss.");
 				return true;
 			}
-			//TODO bossType
-			p.sendMessage("Non développé.");
-			//p.sendMessage(GREEN + "Difficultée changeé avec succès. Attention, pensez à refaire les portes.");
+			
+			try {
+				Class.forName(args[2]);
+			} catch (ClassNotFoundException e) {
+				p.sendMessage(RED+"Classe introuvable.");
+				return true;
+			}
+			if(donjon.changeBossType(args[2]))
+				p.sendMessage(GREEN+"Succès. Boss modifié.");
+			else
+				p.sendMessage(RED+"Erreur avec cette classe.");
 			return true;
 		}
 		p.sendMessage(RED + "Commande ["+args[0] +"] autorisée mais non paramétrée...");
