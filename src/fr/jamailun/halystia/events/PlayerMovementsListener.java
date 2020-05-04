@@ -36,17 +36,17 @@ public class PlayerMovementsListener extends HalystiaListener {
 		
 		if( ! players.containsKey(p)) {
 			players.put(p, p.getLocation().getChunk());
-			chunks.title(p, current);
+			chunks.title(p, null, current);
 			return;
 		}
 		
-		
-		if(players.get(p).equals(current))
+		Chunk old = players.get(p);
+		if(old.equals(current))
 			return;
 		
-		players.replace(p, current);
-		chunks.title(p, current);
+		chunks.title(p, old, current);
 
+		players.replace(p, current);
 		if( ! CommandSetChunk.isObservingChunkValues(p))
 			return;
 		CommandSetChunk.sendChunkReport(p);

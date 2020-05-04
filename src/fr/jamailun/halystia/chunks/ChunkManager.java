@@ -113,10 +113,16 @@ public class ChunkManager {
 		try {config.save(file);} catch (IOException e) {e.printStackTrace();}
 	}
 
-	public void title(Player p, Chunk chunk) {
-		ChunkType type = getValueOfChunk(chunk);
-		if(type != null)
-			type.sendTitleToPlayer(p);
+	public void title(Player p, Chunk old, Chunk current) {
+		ChunkType typeCurrent = getValueOfChunk(current);
+		if(typeCurrent == null)
+			return;
+		ChunkType typeOld = getValueOfChunk(old);
+		if(typeOld == null)
+			return;
+		if(typeOld.getName().equals(typeCurrent.getName()))
+			return;
+		typeCurrent.sendTitleToPlayer(p);
 	}
 	
 }

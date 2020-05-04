@@ -142,6 +142,6 @@ public class ChunkType {
 	}
 	
 	public void sendTitleToPlayer(Player p) {
-		new PlayerUtils(p).sendTitle(10, 40, 10, haveTitle() ? title : "", haveSubTitle() ? subtitle : "");
+		new PlayerUtils(p).sendTitle(10, 40, 10, haveTitle() ? ChatColor.translateAlternateColorCodes('&', title) : "", haveSubTitle() ? ChatColor.translateAlternateColorCodes('&', subtitle) : "");
 	}
 }
