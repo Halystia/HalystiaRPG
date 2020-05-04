@@ -67,6 +67,23 @@ public class TchatListener extends HalystiaListener {
 			return;
 		}
 		
+		if(EditChunkGUI.editorsMD.containsKey(p)) {
+			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
+				@Override
+				public void run() {
+					try {
+						String[] msg = e.getMessage().split(" ", 2);
+						if(e.getMessage().contains("="))
+							msg = e.getMessage().split("=", 2);
+						EditChunkGUI.editorsMD.get(p).reopenWithMetaData(msg[0], msg[1]);
+					} catch (IndexOutOfBoundsException ee) {
+						EditChunkGUI.editorsMD.get(p).reopenWithMetaData(e.getMessage(), "");
+					}
+				}
+			},5L);
+			return;
+		}
+		
 		if(EditChunkGUI.editors.containsKey(p)) {
 			Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
 				@Override

@@ -7,19 +7,45 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import fr.jamailun.halystia.enemies.tags.MetaTag;
+import fr.jamailun.halystia.enemies.tags.MetaTag.Type;
 import fr.jamailun.halystia.utils.ItemBuilder;
+import fr.jamailun.halystia.utils.PlayerUtils;
 import fr.jamailun.halystia.utils.RandomPick;
 
 public class ChunkType {
 	
 	public final static List<String> tags = Arrays.asList("spawn-limit");
 	
-	Material icon;
-	String name;
-	HashMap<String, Integer> possiblesSpawns;
-	int limitSpawns = 5;
+	public static final List<MetaTag> metaDatas = Arrays.asList(
+			 new MetaTag("collectable", Type.BOOLEAN)	// if players can collect ressources.
+			,new MetaTag("title", Type.STRING)			// title displayed
+			,new MetaTag("subtitle", Type.STRING)			// title displayed
+	);
+		
+	public static MetaTag getTag(String name) {
+		for(MetaTag tag : metaDatas)
+			if(tag.getName().equalsIgnoreCase(name))
+				return tag;
+		return null;
+	}
+		
+	public static String getAllTags() {
+		StringBuilder b = new StringBuilder();
+		metaDatas.forEach(g -> b.append(g.getType() == Type.BOOLEAN ? ChatColor.AQUA : ChatColor.YELLOW).append(g.getName() + " "));
+		return b.toString();
+	}
+	
+	protected Material icon;
+	protected String name;
+	protected HashMap<String, Integer> possiblesSpawns;
+	private String title, subtitle;
+	
+	private boolean collectable;
 	/**
 	 * Create new ChunkType in config.
 	 */
@@ -28,7 +54,6 @@ public class ChunkType {
 		this.possiblesSpawns = new HashMap<>(possiblesSpawns);
 		FileConfiguration config = creator.getConfig();
 		this.icon = icon;
-		this.limitSpawns = 5;
 		config.set(name+".icon", icon.toString());
 		config.set(name+".spawn-limit", 5);
 		int i = 0;
@@ -59,11 +84,15 @@ public class ChunkType {
 			possiblesSpawns.put(mob, chances);
 			i++;
 		}
-		if( ! config.contains(name+".spawn-limit")) {
-			config.set(name+".spawn-limit", 5);
-			creator.saveConfig();
+		if( config.contains(name+".collectable") ) {
+			collectable = config.getString(name+".collectable") == "true" || config.getString(name+".collectable") == "1";
 		}
-		limitSpawns = config.getInt(name+".spawn-limit");
+		if( config.contains(name+".title") ) {
+			title = config.getString(name+".title");
+		}
+		if( config.contains(name+".title") ) {
+			subtitle = config.getString(name+".subtitle");
+		}
 		
 	}
 	
@@ -93,21 +122,26 @@ public class ChunkType {
 	}
 	
 	public ItemStack getIcone() {
-		return new ItemBuilder(icon).setName(ChatColor.BLUE + name).toItemStack();
+		return new ItemBuilder(icon).setName(ChatColor.BLUE + name).addItemFlag(ItemFlag.HIDE_ATTRIBUTES).toItemStack();
 	}
 	
 	public HashMap<String, Integer> getSpawnPossibilities() {
 		return new HashMap<>(possiblesSpawns);
 	}
 	
-	public int getSpawnLimit() {
-		return limitSpawns;
+	public boolean isHarvestable() {
+		return collectable;
 	}
 	
-	public void changeSpawnLimit(int limit, ChunkCreator creator) {
-		this.limitSpawns = limit;
-		creator.getConfig().set("spawn-limit", 5);
-		creator.saveConfig();
+	public boolean haveTitle() {
+		return title != null;
 	}
 	
+	public boolean haveSubTitle() {
+		return subtitle != null;
+	}
+	
+	public void sendTitleToPlayer(Player p) {
+		new PlayerUtils(p).sendTitle(10, 40, 10, haveTitle() ? title : "", haveSubTitle() ? subtitle : "");
+	}
 }

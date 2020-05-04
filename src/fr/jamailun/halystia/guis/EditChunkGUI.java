@@ -1,13 +1,30 @@
 package fr.jamailun.halystia.guis;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.BLACK;
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.DARK_AQUA;
+import static org.bukkit.ChatColor.DARK_BLUE;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.DARK_GREEN;
+import static org.bukkit.ChatColor.DARK_PURPLE;
+import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.RESET;
+import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.ChatColor.YELLOW;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -19,6 +36,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.chunks.ChunkType;
 import fr.jamailun.halystia.commands.CommandEditChunks;
+import fr.jamailun.halystia.enemies.tags.MetaTag;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.MenuGUI;
 import fr.jamailun.halystia.utils.RandomString;
@@ -32,10 +50,13 @@ public class EditChunkGUI extends MenuGUI {
 	private int[] chancesSpawns;
 	private String[] mobRefs;
 	private String name;
+
+	private Map<MetaTag, String> metadata;
 	
 	private final DecimalFormat decimalFormat;
 	
 	public static HashMap<Player, EditChunkGUI> editors = new HashMap<>();
+	public static HashMap<Player, EditChunkGUI> editorsMD = new HashMap<>();
 	
 	public EditChunkGUI(Player p) {
 		this(p, null);
@@ -46,10 +67,15 @@ public class EditChunkGUI extends MenuGUI {
 		this.p = p;
 		decimalFormat = new DecimalFormat("#.##");
 		decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
+		metadata = new HashMap<>();
 		
 		if(editors.containsKey(p)) {
 			p.sendMessage(HalystiaRPG.PREFIX + RED + "Vous n'avez pas mis à jour le nom du chunk. L'ancienne fenetre a été reset.");
 			editors.remove(p);
+		}
+		if(editorsMD.containsKey(p)) {
+			p.sendMessage(HalystiaRPG.PREFIX + RED + "Vous n'avez pas mis à les métadata du chunk. L'ancienne fenetre a été reset.");
+			editorsMD.remove(p);
 		}
 		
 		for(int i=0;i<getSize();i++)
@@ -76,6 +102,7 @@ public class EditChunkGUI extends MenuGUI {
 		
 		updateName();
 		updateAllChances();
+		displayMetaData();
 		
 		show(p);
 	}
@@ -129,6 +156,13 @@ public class EditChunkGUI extends MenuGUI {
 					close();
 				}
 				return;
+			case 6:
+				editorsMD.put(p, this);
+				closeToSetName = true;
+				p.closeInventory();
+				p.sendMessage(HalystiaRPG.PREFIX + BLUE + "Edition de metaData. <meta> <data>. data=0 pour effacer.");
+				p.sendMessage(HalystiaRPG.PREFIX + DARK_AQUA + ChunkType.getAllTags());
+				return;
 			case 8:
 				export();
 				playSound(Sound.ENTITY_VILLAGER_TRADE);
@@ -160,10 +194,11 @@ public class EditChunkGUI extends MenuGUI {
 					spawns.put(mobRefs[i], chancesSpawns[i]);
 		}
 		if(originalName != null) {
-			HalystiaRPG.getInstance().getChunkCreator().updateChunkType(originalName, name, getInventory().getItem(0).getType(), spawns);
+			HalystiaRPG.getInstance().getChunkCreator().updateChunkType(originalName, name, getInventory().getItem(0).getType(), spawns, metadata);
 			return;
 		}
-		HalystiaRPG.getInstance().getChunkCreator().createChunkType(name, getInventory().getItem(0).getType(), spawns);
+		HalystiaRPG.getInstance().getChunkCreator().createChunkType(name, getInventory().getItem(0).getType(), spawns, metadata);
+		
 	}
 	
 	private String originalName = null;
@@ -178,6 +213,14 @@ public class EditChunkGUI extends MenuGUI {
 			updateMob(i, mobRef);
 			i++;
 		}
+		FileConfiguration config = HalystiaRPG.getInstance().getChunkCreator().getConfig();
+		for(MetaTag meta : ChunkType.metaDatas) {
+			//System.out.println(type.getName() + "." + meta.getName()+" -> " + config.getString(type.getName() + "." + meta.getName()));
+			if(config.contains(type.getName() + "." + meta.getName())) {
+				metadata.put(meta, config.getString(type.getName() + "." + meta.getName()));
+			}
+		}
+		displayMetaData();
 		addOption(new ItemBuilder(Material.TNT).setName(DARK_RED+"Détruire le chunk").setLore(RED+""+ITALIC+"(Définitif !)").toItemStack(), 5);
 	}
 	
@@ -348,4 +391,49 @@ public class EditChunkGUI extends MenuGUI {
 		p.playSound(p.getLocation(), sound, 1.4f, .8f);
 	}
 
+	private void updateMetaData(String meta, String data) {
+		MetaTag tag = ChunkType.getTag(meta);
+		if( tag == null) {
+			p.sendMessage(ChatColor.RED + "Le nom de metadata [" + meta + "] n'existe pas.");
+			return;
+		}
+		if( ! metadata.containsKey(tag)) {
+			metadata.put(tag, data);
+			p.sendMessage(ChatColor.AQUA + "MetaData [" + ChatColor.GOLD + meta + ChatColor.AQUA + "] set à [" + ChatColor.GREEN + data + ChatColor.AQUA + "].");
+			return;
+		}
+		if(data == "null" || data.isEmpty()) {
+			metadata.remove(tag);
+			p.sendMessage(ChatColor.AQUA + "MetaData [" + ChatColor.GOLD + meta + ChatColor.AQUA + "] supprimée.");
+			return;
+		}
+		metadata.replace(tag, data);
+		p.sendMessage(ChatColor.AQUA + "MetaData [" + ChatColor.GOLD + meta + ChatColor.AQUA + "] mise à jour à [" + ChatColor.GREEN + data + ChatColor.AQUA + "].");
+	}
+	
+	private void displayMetaData() {
+		ItemBuilder builder = new ItemBuilder(Material.PAPER).setName(ChatColor.GOLD + "MetaData");
+		if( ! metadata.isEmpty()) {
+			for(MetaTag meta : metadata.keySet())
+				builder.addLoreLine(ChatColor.AQUA + "[" + meta.getName() + "] = [" + ChatColor.GOLD + meta.getValue(metadata.get(meta)) + ChatColor.AQUA + "]");
+		} else {
+			builder.setLore("(Aucune)");
+		}
+		builder.addLoreLine(" ").addLoreLine(ChatColor.WHITE + "Cliquez pour modifier !");
+		addOption(builder.toItemStack(), 6);
+	}
+
+	public void reopenWithMetaData(String meta, String string) {
+		closeToSetName = false;
+		editorsMD.remove(p);
+		if(string.isEmpty())
+			string = "null";
+		else if(string.equals("1"))
+			string = "true";
+		else if(string.equals("0"))
+			string = "false";
+		updateMetaData(meta, string);
+		displayMetaData();
+		show(p);
+	}
 }

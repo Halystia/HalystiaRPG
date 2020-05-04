@@ -3,11 +3,13 @@ package fr.jamailun.halystia.chunks;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.enemies.tags.MetaTag;
 import fr.jamailun.halystia.utils.FileDataRPG;
 
 public class ChunkCreator extends FileDataRPG {
@@ -23,19 +25,31 @@ public class ChunkCreator extends FileDataRPG {
 		}
 	}
 	
-	public void updateChunkType(final String oldName, String name, Material icon, HashMap<String, Integer> spawnsChances) {
+	public void updateChunkType(final String oldName, String name, Material icon, HashMap<String, Integer> spawnsChances, Map<MetaTag, String> metadata) {
 		ChunkType type = getChunkType(oldName);
 		config.set(oldName, null);
 		type.name = name;
 		type.icon = icon;
 		type.possiblesSpawns = new HashMap<>(spawnsChances);
+		
+		for(MetaTag meta : ChunkType.metaDatas)
+			config.set(name+"."+meta.getName(), null);
+		for(MetaTag meta : metadata.keySet()) {
+			config.set(name+"."+meta.getName(), metadata.get(meta));
+		}
 		type.update(this);
 		HalystiaRPG.getInstance().getSpawnChunkManager().replaceValues(oldName, name);
 	}
 	
-	public void createChunkType(String name, Material icon, HashMap<String, Integer> spawnsChances) {
+	public void createChunkType(String name, Material icon, HashMap<String, Integer> spawnsChances, Map<MetaTag, String> metadata) {
 		ChunkType type = new ChunkType(name, spawnsChances, icon, this);
 		types.add(type);
+		for(MetaTag meta : ChunkType.metaDatas)
+			config.set(name+"."+meta.getName(), null);
+		for(MetaTag meta : metadata.keySet()) {
+			config.set(name+"."+meta.getName(), metadata.get(meta));
+		}
+		saveConfig();
 	}
 	
 	public List<ChunkType> getChunkTypeList() {
@@ -65,7 +79,7 @@ public class ChunkCreator extends FileDataRPG {
 		save();
 	}
 	
-	FileConfiguration getConfig() {
+	public FileConfiguration getConfig() {
 		return config;
 	}
 	

@@ -100,8 +100,6 @@ public class EditMobGUI extends MenuGUI {
 		show(p);
 	}
 	
-	
-	
 	private void updateName() {
 		addOption(new ItemBuilder(Material.NAME_TAG).setName(GREEN+"Changer le nom").setLore(GRAY+"Actuel : [" + RESET+ name + GRAY + "]").toItemStack(), 1);
 	}

@@ -1,5 +1,7 @@
 package fr.jamailun.halystia.enemies.tags;
 
+import org.bukkit.ChatColor;
+
 public class MetaTag {
 	
 	private final String name;
@@ -24,7 +26,15 @@ public class MetaTag {
 				return "true";
 			return "false";
 		}
+		if(type == Type.STRING)
+			return ""+value;
 		return ""+value;
+	}
+	
+	public String getValue(String value) {
+		if(type == Type.STRING)
+			return ChatColor.translateAlternateColorCodes('&', value);
+		return value;
 	}
 	
 	public boolean equals(Object o) {
@@ -38,7 +48,7 @@ public class MetaTag {
 	}
 	
 	public enum Type {
-		BOOLEAN, DOUBLE;
+		BOOLEAN, DOUBLE, STRING;
 	}
 	
 }
