@@ -1,14 +1,14 @@
 package fr.jamailun.halystia.jobs;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.BOLD;
 import static org.bukkit.ChatColor.DARK_BLUE;
 import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.LIGHT_PURPLE;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class JobCraftGUI {
 			gui.addOption(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(WHITE+"").toItemStack(), i);
 		for(int i = 0; i < size; i++) {
 			JobCraft craft = crafts.get(i);
-			gui.addOption(new ItemBuilder(craft.getObtained()).addLoreLine(GRAY+"Niveau " +GOLD+craft.getLevel()).toItemStack(), i);
+			gui.addOption(new ItemBuilder(craft.getObtained()).addLoreLine(WHITE+"Niveau : " +GOLD+craft.getLevel()).addLoreLine(WHITE+"Expérience : "+GOLD+craft.getXp()).toItemStack(), i);
 		}
 		gui.addOption(new ItemBuilder(Material.BARRIER).setName(RED+"Retour").toItemStack(),gui.getSize()-1);
 		gui.show(p);

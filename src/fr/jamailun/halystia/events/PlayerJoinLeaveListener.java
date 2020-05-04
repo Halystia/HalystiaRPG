@@ -1,5 +1,7 @@
 package fr.jamailun.halystia.events;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -22,6 +24,7 @@ public class PlayerJoinLeaveListener extends HalystiaListener {
 		Player player = e.getPlayer();
 		if( ! HalystiaRPG.isInRpgWorld(player))
 			return;
+		e.setJoinMessage("");
 		joinGame(player);
 	}
 	
@@ -30,6 +33,7 @@ public class PlayerJoinLeaveListener extends HalystiaListener {
 		if(HalystiaRPG.isInRpgWorld(e.getPlayer())) {
 			main.getBanque().close(e.getPlayer().getUniqueId());
 			leaveGame(e.getPlayer());
+			e.setQuitMessage("");
 		}
 	}
 	
@@ -58,6 +62,7 @@ public class PlayerJoinLeaveListener extends HalystiaListener {
 		main.getSoulManager().tryRefreshSoul(p);
 		bdd.addPlayerProfile(p);
 		main.getClasseManager().playerConnects(p);
+		Bukkit.broadcastMessage(ChatColor.GRAY+"["+ChatColor.GREEN+"+"+ChatColor.GRAY+"] " + p.getName());
 	///	main.getNpcManager().refreshPlayer(p);
 	}
 	
@@ -65,6 +70,7 @@ public class PlayerJoinLeaveListener extends HalystiaListener {
 		main.getClasseManager().playerDisconnects(p);
 		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
 		main.getDonjonManager().playerLeaveGame(p);
+		Bukkit.broadcastMessage(ChatColor.GRAY+"["+ChatColor.RED+"-"+ChatColor.GRAY+"] " + p.getName());
 	//	main.getNpcManager().removeFromPlayer(p);
 	}
 	

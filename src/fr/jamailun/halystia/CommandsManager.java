@@ -25,6 +25,7 @@ import fr.jamailun.halystia.commands.CommandSetXp;
 import fr.jamailun.halystia.commands.CommandSummonMob;
 import fr.jamailun.halystia.commands.CommandTitle;
 import fr.jamailun.halystia.commands.ModifyOeilAntiqueCommand;
+import fr.jamailun.halystia.commands.SystemCommand;
 import fr.jamailun.halystia.donjons.DonjonManager;
 import fr.jamailun.halystia.donjons.util.CommandBossDonjon;
 import fr.jamailun.halystia.donjons.util.CommandDonjonPorte;
@@ -76,6 +77,9 @@ public class CommandsManager {
 		ModifyOeilAntiqueCommand moaCmd = new ModifyOeilAntiqueCommand(main);
 		main.getCommand("set-oeil-antique").setExecutor(moaCmd);
 		main.getCommand("remove-oeil-antique").setExecutor(moaCmd);
+		
+
+		main.getCommand("systemctl").setExecutor(new SystemCommand(main));
 	}
 	
 }

@@ -13,17 +13,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.jobs.JobType;
 import fr.jamailun.halystia.jobs.JobsManager;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 public class CommandSetJob extends HalystiaCommand {
 
-	public static final List<String> list = Arrays.asList("add", "remove", "list", "xp");
+	public static final List<String> list = Arrays.asList("add", "remove", "list", "xp", "item");
 	
 	private final JobsManager jobs;
 	
@@ -43,6 +52,22 @@ public class CommandSetJob extends HalystiaCommand {
 		
 		if(args.length < 2) {
 			sender.sendMessage(HalystiaRPG.PREFIX + RED + "/"+arg1+" <joueur> <commande>");
+			return true;
+		}
+		
+		if(args[0].equals("item")) {
+			if( ! (sender instanceof Player)) {
+				sender.sendMessage(HalystiaRPG.PREFIX + RED + "Il faut être un joueur pour récupérer l'item de métier.");
+				return true;
+			}
+			JobType job = jobs.getJobWithString(args[1]);
+			if(job == null) {
+				sender.sendMessage(HalystiaRPG.PREFIX + RED + "Le métier ["+args[1]+"] n'existe pas.");
+				return true;
+			}
+			ItemStack book = generateBook(job);
+			((Player)sender).getInventory().addItem(book);
+			sender.sendMessage(GREEN + "Item de métier obtenu.");
 			return true;
 		}
 		
@@ -134,12 +159,40 @@ public class CommandSetJob extends HalystiaCommand {
 		return true;
 	}
 
+	private ItemStack generateBook(JobType job) {
+		ItemStack book = new ItemStack(Material.WRITTEN_BOOK);
+		BookMeta bookMeta = (BookMeta) book.getItemMeta();
+		
+		BaseComponent[] page = new ComponentBuilder("")
+		        .append(new TextComponent("* * * * * * * * * * * * * *"))
+		        .append(new TextComponent("\n*  "+ChatColor.DARK_BLUE+""+ChatColor.BOLD+"APPRENTISSAGE"+ChatColor.BLACK+" *"))
+		        .append(new TextComponent("\n*                         *"))
+		        .append(new TextComponent("\n* * * * * * * * * * * * * *"))
+		        .append(new TextComponent("\n\nPour devenir " + job.getJobName() + " c'est très simple ! Il suffit de ne pas avoir déjà 2 métiers."))
+		        .append(new TextComponent("\n\n    "))
+				.append(new ComponentBuilder(ChatColor.GOLD + "" + ChatColor.BOLD + "> " + ChatColor.UNDERLINE + "APPRENDRE"+ChatColor.GOLD+""+ChatColor.BOLD+" <")
+						.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/systemctl learn__job " + job.getJobName()))
+				        .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(ChatColor.WHITE + "Apprendre le métier de "+ChatColor.GOLD+job.getJobNameMajor()).create()))
+						.create()
+				)
+		        .create();
+		
+		bookMeta.spigot().addPage(page);
+		bookMeta.setTitle("Apprentissage");
+		bookMeta.setAuthor("jamailun");
+		book.setItemMeta(bookMeta);
+		return book;
+	}
+
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args) {
 		if(args.length <= 1)
 			return Bukkit.getOnlinePlayers().stream().filter(p -> HalystiaRPG.isInRpgWorld(p) && p.getName().startsWith(args[0])).map(p -> p.getName()).collect(Collectors.toList());
 		if(args.length <= 2)
-			return list.stream().filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
+			if(args[0].equals("item"))
+				return jobs.getAllJobTypesNames().stream().filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
+			else
+				return list.stream().filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
 		if(args.length <= 3 && ( ! args[1].equals("list"))) {
 			Player cible = Bukkit.getPlayer(args[0]);
 			if(cible == null)

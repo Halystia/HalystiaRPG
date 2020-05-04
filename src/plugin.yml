@@ -1,5 +1,5 @@
 name: HalystiaRPG
-version: 4.1.0
+version: 4.1.1
 main: fr.jamailun.halystia.HalystiaRPG
 authors: [jamailun]
 depend: [Citizens, Sentinel]
@@ -11,6 +11,7 @@ api-version: 1.15
 
 commands:
   #> COMMANDES DE BASE <#
+  systemctl:
   classe:
     usage: /classe
     permission: halystia.rpg.player

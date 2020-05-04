@@ -34,12 +34,12 @@ public class ExuvationComplexe extends Spell {
 
 	@Override
 	public String getName() {
-		return "Exuvation simple";
+		return "Exuvation complexe";
 	}
 
 	@Override
 	public ChatColor getColor() {
-		return ChatColor.GREEN;
+		return ChatColor.YELLOW;
 	}
 
 	@Override
