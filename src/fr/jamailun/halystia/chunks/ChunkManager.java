@@ -118,10 +118,10 @@ public class ChunkManager {
 		if(typeCurrent == null)
 			return;
 		ChunkType typeOld = getValueOfChunk(old);
-		if(typeOld == null)
-			return;
-		if(typeOld.getName().equals(typeCurrent.getName()))
-			return;
+		if(typeOld != null)
+			if(typeOld.getName().equals(typeCurrent.getName()))
+				return;
+		
 		typeCurrent.sendTitleToPlayer(p);
 	}
 	

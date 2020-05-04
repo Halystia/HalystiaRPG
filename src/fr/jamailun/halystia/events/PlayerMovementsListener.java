@@ -31,7 +31,7 @@ public class PlayerMovementsListener extends HalystiaListener {
 		if( ! HalystiaRPG.isInRpgWorld(e.getPlayer()))
 			return;
 		Player p = e.getPlayer();
-
+		
 		Chunk current = p.getLocation().getChunk();
 		
 		if( ! players.containsKey(p)) {
@@ -47,9 +47,8 @@ public class PlayerMovementsListener extends HalystiaListener {
 		chunks.title(p, old, current);
 
 		players.replace(p, current);
-		if( ! CommandSetChunk.isObservingChunkValues(p))
-			return;
-		CommandSetChunk.sendChunkReport(p);
+		if(CommandSetChunk.isObservingChunkValues(p))
+			CommandSetChunk.sendChunkReport(p);
 	}
 
 }
