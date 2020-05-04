@@ -10,17 +10,20 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.chunks.ChunkManager;
 import fr.jamailun.halystia.commands.CommandSetChunk;
 
 public class PlayerMovementsListener extends HalystiaListener {
 	
 	private HashMap<Player, Chunk> players;
+	private final ChunkManager chunks;
 	
-	public PlayerMovementsListener(HalystiaRPG main) {
+	public PlayerMovementsListener(HalystiaRPG main, ChunkManager chunks) {
 		super(main);
 		players = new HashMap<>();
 		for(Player p : Bukkit.getOnlinePlayers())
 			players.put(p, p.getLocation().getChunk());
+		this.chunks = chunks;
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -28,21 +31,24 @@ public class PlayerMovementsListener extends HalystiaListener {
 		if( ! HalystiaRPG.isInRpgWorld(e.getPlayer()))
 			return;
 		Player p = e.getPlayer();
-		
-		if( ! CommandSetChunk.isObservingChunkValues(p))
-			return;
+
+		Chunk current = p.getLocation().getChunk();
 		
 		if( ! players.containsKey(p)) {
 			players.put(p, p.getLocation().getChunk());
+			chunks.title(p, current);
 			return;
 		}
 		
-		Chunk current = p.getLocation().getChunk();
 		
 		if(players.get(p).equals(current))
 			return;
 		
 		players.replace(p, current);
+		chunks.title(p, current);
+
+		if( ! CommandSetChunk.isObservingChunkValues(p))
+			return;
 		CommandSetChunk.sendChunkReport(p);
 	}
 

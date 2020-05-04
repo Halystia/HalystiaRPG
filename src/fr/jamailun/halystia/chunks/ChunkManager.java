@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import org.bukkit.Chunk;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
 
@@ -111,6 +112,11 @@ public class ChunkManager {
 		}
 		try {config.save(file);} catch (IOException e) {e.printStackTrace();}
 	}
-	
+
+	public void title(Player p, Chunk chunk) {
+		ChunkType type = getValueOfChunk(chunk);
+		if(type != null)
+			type.sendTitleToPlayer(p);
+	}
 	
 }

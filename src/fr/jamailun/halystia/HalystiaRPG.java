@@ -164,7 +164,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		new NaturalSpawnWorld(this, mobMgr, mobsChunksMgr, WORLD);
 		
 		//EVENTS
-		new EventsManager(this, jobs);
+		new EventsManager(this, jobs, mobsChunksMgr);
 		
 		//GUIS
 		classeGui = new ChooseClasseGui(this);
