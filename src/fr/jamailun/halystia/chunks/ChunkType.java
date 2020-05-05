@@ -23,6 +23,7 @@ public class ChunkType {
 	
 	public static final List<MetaTag> metaDatas = Arrays.asList(
 			 new MetaTag("collectable", Type.BOOLEAN)	// if players can collect ressources.
+			,new MetaTag("safe", Type.BOOLEAN)	// if players can take damages.
 			,new MetaTag("title", Type.STRING)			// title displayed
 			,new MetaTag("subtitle", Type.STRING)			// title displayed
 	);
@@ -45,7 +46,7 @@ public class ChunkType {
 	protected HashMap<String, Integer> possiblesSpawns;
 	private String title, subtitle;
 	
-	private boolean collectable;
+	private boolean collectable, safe;
 	/**
 	 * Create new ChunkType in config.
 	 */
@@ -86,6 +87,9 @@ public class ChunkType {
 		}
 		if( config.contains(name+".collectable") ) {
 			collectable = config.getString(name+".collectable") == "true" || config.getString(name+".collectable") == "1";
+		}
+		if( config.contains(name+".safe") ) {
+			collectable = config.getString(name+".safe") == "true" || config.getString(name+".safe") == "1";
 		}
 		if( config.contains(name+".title") ) {
 			title = config.getString(name+".title");
@@ -143,5 +147,9 @@ public class ChunkType {
 	
 	public void sendTitleToPlayer(Player p) {
 		new PlayerUtils(p).sendTitle(10, 40, 10, haveTitle() ? ChatColor.translateAlternateColorCodes('&', title) : "", haveSubTitle() ? ChatColor.translateAlternateColorCodes('&', subtitle) : "");
+	}
+
+	public boolean isSafe() {
+		return safe;
 	}
 }

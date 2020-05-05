@@ -210,6 +210,12 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		if( ! HalystiaRPG.isInRpgWorld(e.getEntity()))
 			return;
 		
+		if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
+			if(main.getChunkManager().isSafe(e.getEntity().getLocation())) {
+				e.setCancelled(true);
+				return;
+			}
+		}
 		/*if(e.getEntity() instanceof Player) {
 			Player cible = (Player) e.getEntity();
 			if(e.getFinalDamage() >= cible.getHealth()) {

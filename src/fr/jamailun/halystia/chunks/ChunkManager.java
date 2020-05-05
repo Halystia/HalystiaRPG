@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -131,6 +132,13 @@ public class ChunkManager {
 		if(type == null)
 			return false;
 		return type.isHarvestable();
+	}
+
+	public boolean isSafe(Location location) {
+		ChunkType type = getValueOfChunk(location.getChunk());
+		if(type == null)
+			return false;
+		return type.isSafe();
 	}
 	
 }
