@@ -60,7 +60,7 @@ public class CommandSetChunk extends HalystiaCommand {
 		}
 		
 		if(args[0].equals("reset")) {
-			main.getSpawnChunkManager().deleteValueOfChunk(p.getLocation().getChunk());
+			main.getChunkManager().deleteValueOfChunk(p.getLocation().getChunk());
 			p.sendMessage(HalystiaRPG.PREFIX + GREEN + "Sucès. Chunk en (" + p.getLocation().getChunk().getX() + ";" + p.getLocation().getChunk().getZ() + ") reset.");
 			return true;
 		}
@@ -91,8 +91,8 @@ public class CommandSetChunk extends HalystiaCommand {
 		for(int x = c.getX() - rayon; x <= c.getX() + rayon; x++) {
 			for(int z = c.getZ() - rayon; z <= c.getZ() + rayon; z++) {
 				Chunk cc = p.getWorld().getChunkAt(x, z);
-				final ChunkType old = main.getSpawnChunkManager().getValueOfChunk(cc);
-				main.getSpawnChunkManager().setValueOfChunk(cc, type);
+				final ChunkType old = main.getChunkManager().getValueOfChunk(cc);
+				main.getChunkManager().setValueOfChunk(cc, type);
 				if(old == null) {
 					p.sendMessage(HalystiaRPG.PREFIX + GREEN+"Chunk en ["+cc.getX()+","+cc.getZ()+"] a la valeur " +BLUE+type.getName()+GREEN+".");
 				} else {
@@ -117,7 +117,7 @@ public class CommandSetChunk extends HalystiaCommand {
 	
 	public static void sendChunkReport(Player p) {
 		Chunk c = p.getLocation().getChunk();
-		ChunkType type = HalystiaRPG.getInstance().getSpawnChunkManager().getValueOfChunk(c);
+		ChunkType type = HalystiaRPG.getInstance().getChunkManager().getValueOfChunk(c);
 		String value = (type == null ? GRAY+"(Aucune)" : type.getName());
 		p.sendMessage(HalystiaRPG.PREFIX + YELLOW + "[Chunk] ("+BLUE+c.getX()+YELLOW+","+GREEN+c.getZ()+YELLOW+") : [" + RED + value + YELLOW + "]");
 	}

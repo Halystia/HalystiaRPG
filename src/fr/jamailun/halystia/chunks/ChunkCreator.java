@@ -38,7 +38,7 @@ public class ChunkCreator extends FileDataRPG {
 			config.set(name+"."+meta.getName(), metadata.get(meta));
 		}
 		type.update(this);
-		HalystiaRPG.getInstance().getSpawnChunkManager().replaceValues(oldName, name);
+		HalystiaRPG.getInstance().getChunkManager().replaceValues(oldName, name);
 	}
 	
 	public void createChunkType(String name, Material icon, HashMap<String, Integer> spawnsChances, Map<MetaTag, String> metadata) {

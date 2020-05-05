@@ -23,6 +23,6 @@ public final class JobResult {
 	}
 
 	public enum Type {
-		NO_LEVEL, NO_JOB, NO_BLOCK, SUCCESS
+		NO_LEVEL, NO_JOB, NO_BLOCK, NOT_HARVESTABLE, SUCCESS
 	}
 }

@@ -387,7 +387,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	 * Get the chunks manager of the server.
 	 * @return the {@link fr.jamailun.halystia.chunks.ChunkManager ChunkManager} of the plugin.
 	 */
-	public ChunkManager getSpawnChunkManager() {
+	public ChunkManager getChunkManager() {
 		return mobsChunksMgr;
 	}
 	

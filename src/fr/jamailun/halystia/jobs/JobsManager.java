@@ -85,6 +85,8 @@ public final class JobsManager {
 				return new JobResult(Type.NO_JOB);
 			if(bloc.getLevel() > job.getPlayerLevel(p))
 				return new JobResult(Type.NO_LEVEL);
+			if( ! HalystiaRPG.getInstance().getChunkManager().isHarvestable(b))
+				return new JobResult(Type.NOT_HARVESTABLE);
 			job.addExp(bloc.getXp(), p);
 			return new JobResult(Type.SUCCESS, bloc);
 		}

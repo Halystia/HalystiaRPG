@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.bukkit.Chunk;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -123,6 +124,13 @@ public class ChunkManager {
 				return;
 		
 		typeCurrent.sendTitleToPlayer(p);
+	}
+
+	public boolean isHarvestable(Block b) {
+		ChunkType type = getValueOfChunk(b.getChunk());
+		if(type == null)
+			return false;
+		return type.isHarvestable();
 	}
 	
 }
