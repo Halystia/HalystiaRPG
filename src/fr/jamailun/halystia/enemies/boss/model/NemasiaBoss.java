@@ -205,9 +205,7 @@ public class NemasiaBoss extends Boss {
 			@Override
 			public void run() {
 				loc.getWorld().getPlayers().stream().filter(p -> p.getLocation().distance(loc) <= 30).forEach(p -> {
-					p.teleport(donjon.getExitOfDonjon());
-					p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Vous avez été téléporté à la sortie du donjon.");
-					p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Bravo pour votre victoire.");
+					safeExit(donjon, p);
 				});
 			}
 		}.runTaskLater(HalystiaRPG.getInstance(), 12*10L);

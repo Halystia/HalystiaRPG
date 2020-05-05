@@ -8,6 +8,7 @@ import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,6 +30,7 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -67,6 +69,25 @@ public abstract class Boss implements Enemy, Invocator {
 	
 	protected void stopLoop() {
 		runnable.cancel();
+	}
+	
+	protected void safeExit(DonjonI donjon, Player p) {
+		final ItemStack[] inv = Arrays.copyOf(p.getInventory().getContents(), p.getInventory().getContents().length);
+		p.teleport(donjon.getExitOfDonjon(), TeleportCause.PLUGIN);
+		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Vous avez été téléporté à la sortie du donjon.");
+		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Bravo pour votre victoire.");
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				p.getInventory().clear();
+			}
+		}.runTaskLater(HalystiaRPG.getInstance(), 5L);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				p.getInventory().setContents(inv);
+			}
+		}.runTaskLater(HalystiaRPG.getInstance(), 60L);
 	}
 	
 	public Map<Player, Double> getDamagers() {

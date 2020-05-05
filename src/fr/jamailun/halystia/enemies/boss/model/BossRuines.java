@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.EntityEffect;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -44,8 +45,8 @@ public class BossRuines extends Boss {
 	
 	public BossRuines() {
 		maxHealth = health = HEALTH;
-		MAX_INVOCATIONS = 6;
-		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SOLID, BarFlag.DARKEN_SKY);
+		MAX_INVOCATIONS = 3;
+		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SOLID, BarFlag.CREATE_FOG);
 		bar.setVisible(true);
 	}
 
@@ -73,10 +74,10 @@ public class BossRuines extends Boss {
 		if(closest == null)
 			return;
 		
-		//mob.setTarget(closest);
-		if(Math.random() < .6) {
-			if(canInvoke(getMainUUID(), 1))
-				invoke();
+		if(closest.getGameMode() != GameMode.CREATIVE && closest.getGameMode() != GameMode.SPECTATOR)
+			mob.setTarget(closest);
+		if(Math.random() < .6 && canInvoke(getMainUUID(), 1)) {
+			invoke();
 		} else {
 			flame(closest);
 		}
@@ -153,9 +154,7 @@ public class BossRuines extends Boss {
 			@Override
 			public void run() {
 				loc.getWorld().getPlayers().stream().filter(p -> p.getLocation().distance(loc) <= 30).forEach(p -> {
-					p.teleport(donjon.getExitOfDonjon());
-					p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Vous avez été téléporté à la sortie du donjon.");
-					p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Bravo pour votre victoire.");
+					safeExit(donjon, p);
 				});
 			}
 		}.runTaskLater(HalystiaRPG.getInstance(), 12*10L);
@@ -246,8 +245,8 @@ public class BossRuines extends Boss {
 			return false;
 		
 		mob = loc.getWorld().spawn(loc, Zombie.class);
-		mob.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.3);
-		mob.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(0.1);
+		mob.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.25);
+		mob.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(0.01);
 		mob.getEquipment().setChestplate(new ItemBuilder(Material.DIAMOND_CHESTPLATE).shine().toItemStack());
 		mob.getEquipment().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
 		mob.getEquipment().setBoots(new ItemStack(Material.IRON_BOOTS));
