@@ -49,7 +49,7 @@ public class BossRuines extends Boss {
 		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SOLID, BarFlag.CREATE_FOG);
 		bar.setVisible(true);
 	}
-
+	private int noPlayers = 0;
 	private int counter = 0;
 	private final static int ACTION_EVERY_SECONDS = 7;
 	@Override
@@ -71,8 +71,13 @@ public class BossRuines extends Boss {
 		counter = 0 - new Random().nextInt(2);
 		
 		Player closest = getClosestPlayer(mob.getEyeLocation(), 30, false);
-		if(closest == null)
+		if(closest == null) {
+			noPlayers++;
+			if(noPlayers >= 100)
+				purge();
 			return;
+		}
+		noPlayers = 0;
 		
 		if(closest.getGameMode() != GameMode.CREATIVE && closest.getGameMode() != GameMode.SPECTATOR)
 			mob.setTarget(closest);

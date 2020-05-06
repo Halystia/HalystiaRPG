@@ -56,6 +56,7 @@ public class NemasiaBoss extends Boss {
 		bar.setVisible(true);
 	}
 	
+	private int noPlayers = 0;
 	private int counter = 0;
 	private final static int ACTION_EVERY_SECONDS = 5;
 	@Override
@@ -81,12 +82,18 @@ public class NemasiaBoss extends Boss {
 		
 		//Pas de joueur visible !
 		if(closest == null) {
+			noPlayers++;
+			if(noPlayers >= 200) {
+				purge();
+				return;
+			}
 			if ( random <= 70 )				// 70%
 				lightStrike(getClosestPlayer(loc, 20, false), 1.8);
 			else if ( random <= 90 )
 				summonCubes();				// 20%
 			return;							// 10%
 		}
+		noPlayers = 0;
 		Vector look = head.getLocation().toVector().subtract(closest.getLocation().toVector()).normalize();
 		giant.teleport(giant.getLocation().setDirection(look));
 		//head.getLocation().setDirection(look);
