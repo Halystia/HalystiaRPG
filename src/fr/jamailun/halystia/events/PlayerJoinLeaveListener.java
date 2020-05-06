@@ -48,7 +48,7 @@ public class PlayerJoinLeaveListener extends HalystiaListener {
 			return;
 		}
 		
-		else if(HalystiaRPG.isRpgWorld(to)) {
+		if(HalystiaRPG.isRpgWorld(to)) {
 			if(HalystiaRPG.isRpgWorld(e.getFrom()))
 				return;
 			joinGame(p);
@@ -63,6 +63,7 @@ public class PlayerJoinLeaveListener extends HalystiaListener {
 		bdd.addPlayerProfile(p);
 		main.getClasseManager().playerConnects(p);
 		Bukkit.broadcastMessage(ChatColor.GRAY+"["+ChatColor.GREEN+"+"+ChatColor.GRAY+"] " + p.getName());
+		
 	///	main.getNpcManager().refreshPlayer(p);
 	}
 	

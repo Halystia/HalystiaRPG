@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.shops.Trade;
 import fr.jamailun.halystia.utils.RandomString;
 
@@ -30,7 +31,6 @@ public class PlayerDeathListener extends HalystiaListener {
 		if( ! HalystiaRPG.isInRpgWorld(e.getEntity()))
 			return;
 		final Player p = e.getEntity();
-		main.getDonjonManager().playerLeaveGame(p);
 		e.setDeathMessage("");
 		if(p.getGameMode() == GameMode.CREATIVE) {
 			e.setKeepInventory(true);
@@ -39,6 +39,9 @@ public class PlayerDeathListener extends HalystiaListener {
 		
 		e.setKeepInventory(true);
 		e.setKeepLevel(false);
+		
+		if(main.getDonjonManager().getContainerDonjon(p) != null)
+			return;
 		
 		List<ItemStack> items = new ArrayList<>();
 		
@@ -96,9 +99,11 @@ public class PlayerDeathListener extends HalystiaListener {
 	public void playerRespawnEvent(PlayerRespawnEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getPlayer()))
 			return;
-		
-		if(e.getPlayer().getGameMode() != GameMode.CREATIVE)
-			main.getSoulManager().tryRefreshSoul(e.getPlayer());
-	}
-	
+		DonjonI donjon = main.getDonjonManager().getContainerDonjon(e.getPlayer());
+		if(donjon != null) {
+			e.setRespawnLocation(donjon.respawn(e.getPlayer()));
+			return;
+		}
+		e.setRespawnLocation(main.getDataBase().getSpawnLocation(e.getPlayer()));
+	}	
 }

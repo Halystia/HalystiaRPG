@@ -90,5 +90,7 @@ public interface DonjonI {
 	 * @return false if the boss is already spawned.
 	 */
 	public boolean trySpawnBoss(Player player);
+
+	public Location respawn(Player player);
 	
 }

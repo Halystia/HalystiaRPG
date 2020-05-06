@@ -1,6 +1,8 @@
 package fr.jamailun.halystia.donjons;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,14 +31,14 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 	
 	private Boss boss;
 	
-	private final Set<UUID> inside;
+	private final Map<UUID, Integer> inside;
 	
 	private final BossManager bosses;
 	public Donjon(String path, String name, BossManager bosses) {
 		super(path, name);
 		this.configName = name;
 		this.bosses = bosses;
-		inside = new HashSet<>();
+		inside = new HashMap<>();
 		reloadData();
 	}
 	
@@ -222,19 +224,19 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 
 	@Override
 	public Set<UUID> getJoinedPlayers() {
-		return new HashSet<>(inside);
+		return new HashSet<>(inside.keySet());
 	}
 
 	@Override
 	public boolean isPlayerInside(Player p) {
-		return inside.contains(p.getUniqueId());
+		return inside.containsKey(p.getUniqueId());
 	}
 
 	@Override
 	public boolean playerEnterDonjon(Player p) {
 		if(isPlayerInside(p))
 			return false;
-		inside.add(p.getUniqueId());
+		inside.put(p.getUniqueId(), 3);
 		return true;
 	}
 
@@ -261,6 +263,24 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		boss.spawnBoss(this);
 		bosses.bossSpawned(boss);
 		return false;
+	}
+
+	@Override
+	public Location respawn(Player player) {
+		int remaining = inside.get(player.getUniqueId()) - 1;
+		if(remaining > 1) {
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Il ne vous reste plus que " + ChatColor.DARK_RED + remaining + ChatColor.RED + " vies.");
+			inside.replace(player.getUniqueId(), remaining);
+			return entry;
+		}
+		if(remaining == 0) {
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Si vous mourrez à nouveau, vous serez jetté en dehors du donjon.");
+			inside.replace(player.getUniqueId(), -1);
+			return entry;
+		}
+		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Vous avez été téléporté en dehors du donjon.");
+		inside.remove(player.getUniqueId());
+		return exit;
 	}
 	
 }

@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.players.Classe;
@@ -28,13 +29,16 @@ public interface Saver {
 	
 	public void saveAll(Collection<PlayerData> players);
 	
+	public Location getSpawnLocation(Player player);
+	
+	public void updateSpawnLocation(Player player, Location location);
+	
 	/**
 	 * @return Le royaume dont le joueur est ROI.
 	 */
 	public Royaume getKingdom(Player p);
 	
 	public boolean setRoi(Royaume r, Player p);
-	
 	
 	/**
 	 * @return le temps écoulé depuis le dernier refresh EN SECONDES

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
+import fr.jamailun.halystia.npcs.traits.AubergisteTrait;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.quests.Quest;
@@ -35,6 +37,13 @@ public class NpcInteractionListener extends HalystiaListener {
 	
 	@EventHandler
 	public void citizenInteract(NPCRightClickEvent e) {
+		
+		if(e.getNPC().hasTrait(AubergisteTrait.class)) {
+			main.getDataBase().updateSpawnLocation(e.getClicker(), e.getClicker().getLocation());
+			e.getClicker().sendMessage(HalystiaRPG.PREFIX+ChatColor.GOLD+"Votre position a été sauvegardée. C4est ici que vous réapparaitrez désormais.");
+			return;
+		}
+		
 		RpgNpc npc = main.getNpcManager().getNpc(e.getNPC());
 		Player p = e.getClicker();
 		if(npc == null) {

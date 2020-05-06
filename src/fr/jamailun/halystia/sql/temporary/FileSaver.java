@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
@@ -27,6 +29,7 @@ public class FileSaver extends FileDataRPG implements Saver {
 	private final static String QUESTS = ".quests";
 	private final static String TAGS = ".tags";
 	private final static String TITLE = ".title";
+	private final static String SPAWN = ".spawn";
 	
 	public FileSaver(String path, String fileName) {
 		super(path, fileName);
@@ -298,6 +301,23 @@ public class FileSaver extends FileDataRPG implements Saver {
 	public void setCurrentTitleOfPlayer(Player p, Title title) {
 		synchronized (file) {
 			config.set(p.getUniqueId().toString() + TITLE, title.getTag());
+			save();
+		}
+	}
+
+	@Override
+	public Location getSpawnLocation(Player player) {
+		synchronized (file) {
+			if( ! config.contains(player.getUniqueId().toString() + SPAWN) )
+				return Bukkit.getWorld(HalystiaRPG.WORLD).getSpawnLocation();
+			return config.getLocation(player.getUniqueId().toString() + SPAWN);
+		}
+	}
+
+	@Override
+	public void updateSpawnLocation(Player player, Location location) {
+		synchronized (file) {
+			config.set(player.getUniqueId().toString() + SPAWN, location);
 			save();
 		}
 	}

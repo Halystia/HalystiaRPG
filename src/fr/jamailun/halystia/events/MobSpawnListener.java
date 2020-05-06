@@ -66,7 +66,7 @@ public class MobSpawnListener extends HalystiaListener {
 		if(donjonWorld && spawner == null)
 			e.setCancelled(true);
 		if(spawner != null){
-			if( e.getSpawner().getBlock().getWorld().getEntities().stream().filter(en -> en.getLocation().distance(e.getSpawner().getBlock().getLocation()) < 20).count() < 10)
+			if( e.getSpawner().getBlock().getWorld().getEntities().stream().filter(en -> en.getLocation().distance(e.getSpawner().getBlock().getLocation()) < 20).count() > 10 )
 				main.getMobManager().spawnMob( spawner.getName(), e.getLocation(), donjonWorld );
 			e.setCancelled(true);
 		}

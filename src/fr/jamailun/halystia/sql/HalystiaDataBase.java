@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
@@ -324,6 +325,18 @@ public class HalystiaDataBase extends DataBase implements Saver {
 
 	@Override
 	public void saveAll(Collection<PlayerData> players) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Location getSpawnLocation(Player player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateSpawnLocation(Player player, Location location) {
 		// TODO Auto-generated method stub
 		
 	}
