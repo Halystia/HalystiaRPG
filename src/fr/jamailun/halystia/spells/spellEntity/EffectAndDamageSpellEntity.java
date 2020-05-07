@@ -31,12 +31,13 @@ public class EffectAndDamageSpellEntity extends SpellEntity {
 	 * @param upperForce : force applied to the targeted entities in the positive Y direction. 
 	 * @param oneTarget : if the spell should deseseapear after hit an Living Entity.
 	 */
+	private final LivingEntity launcherEntity;
 	public EffectAndDamageSpellEntity(Location loc, LivingEntity launcher, int life, List<PotionEffect> effects, double range, boolean hurtHimSelf, int fire, double damages, double upperForce, boolean oneTarget) {
 		super(loc, launcher, life);
 		this.effects = new ArrayList<>(effects);
 		this.range = range;
 		this.hurtHimSelf = hurtHimSelf;
-		
+		launcherEntity = launcher;
 		this.fire = fire;
 		this.damages = damages;
 		
@@ -52,7 +53,7 @@ public class EffectAndDamageSpellEntity extends SpellEntity {
 			if(fire > 0)
 				en.setFireTicks(RandomString.randInt(fire/2, fire + (fire/2)));
 			if(damages > 0)
-				en.damage(damages);
+				en.damage(damages, launcherEntity);
 			if(upperForce > 0)
 				en.setVelocity(en.getVelocity().add(new Vector(0, upperForce, 0)));
 			if(oneTarget) {
