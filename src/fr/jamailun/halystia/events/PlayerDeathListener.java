@@ -101,6 +101,7 @@ public class PlayerDeathListener extends HalystiaListener {
 			return;
 		DonjonI donjon = main.getDonjonManager().getContainerDonjon(e.getPlayer());
 		if(donjon != null) {
+			donjon.hideBossBar(e.getPlayer());
 			e.setRespawnLocation(donjon.respawn(e.getPlayer()));
 			return;
 		}

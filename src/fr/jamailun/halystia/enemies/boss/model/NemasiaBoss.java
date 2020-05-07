@@ -83,9 +83,11 @@ public class NemasiaBoss extends Boss {
 		//Pas de joueur visible !
 		if(closest == null) {
 			noPlayers++;
-			if(noPlayers >= 200) {
-				purge();
-				return;
+			if(noPlayers >= 30) {
+				noPlayers = 20;
+				health += 100;
+				if(maxHealth < health)
+					health = maxHealth;
 			}
 			if ( random <= 70 )				// 70%
 				lightStrike(getClosestPlayer(loc, 20, false), 1.8);

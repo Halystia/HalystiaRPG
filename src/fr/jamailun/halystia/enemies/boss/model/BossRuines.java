@@ -73,8 +73,12 @@ public class BossRuines extends Boss {
 		Player closest = getClosestPlayer(mob.getEyeLocation(), 30, false);
 		if(closest == null) {
 			noPlayers++;
-			if(noPlayers >= 100)
-				purge();
+			if(noPlayers >= 30) {
+				noPlayers = 20;
+				health += 100;
+				if(maxHealth < health)
+					health = maxHealth;
+			}
 			return;
 		}
 		noPlayers = 0;

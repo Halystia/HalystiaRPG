@@ -309,4 +309,9 @@ public abstract class Boss implements Enemy, Invocator {
 			((Boss)o).getMainUUID().equals(this.getMainUUID());
 		return false;
 	}
+
+	public void hideBar(Player player) {
+		if(bar != null && player != null && player.isOnline())
+			bar.removePlayer(player);
+	}
 }

@@ -284,20 +284,23 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 	@Override
 	public Location respawn(Player player) {
 		int remaining = inside.get(player.getUniqueId()) - 1;
-		if(remaining > 1) {
-			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Il ne vous reste plus que " + ChatColor.DARK_RED + remaining + ChatColor.RED + " vies.");
+		if(remaining >= 1) {
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Il ne vous reste plus que " + ChatColor.DARK_RED + remaining + ChatColor.RED + " vie"+(remaining>1?"s":"")+".");
+			if(remaining == 1)
+				player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Si vous mourrez à nouveau, vous serez jetté en dehors du donjon.");
+				
 			inside.replace(player.getUniqueId(), remaining);
 			return insideBoss.get(player.getUniqueId()) ? bossEntry : entry;
 		}
-		if(remaining == 0) {
-			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Si vous mourrez à nouveau, vous serez jetté en dehors du donjon.");
-			inside.replace(player.getUniqueId(), -1);
-			return insideBoss.get(player.getUniqueId()) ? bossEntry : entry;
-		}
-		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Vous avez été téléporté en dehors du donjon.");
+		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort 3 fois. Vous avez été téléporté en dehors du donjon.");
 		inside.remove(player.getUniqueId());
 		insideBoss.remove(player.getUniqueId());
 		return exit;
+	}
+
+	@Override
+	public void hideBossBar(Player player) {
+		boss.hideBar(player);
 	}
 	
 }

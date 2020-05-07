@@ -92,5 +92,7 @@ public interface DonjonI {
 	public boolean trySpawnBoss(Player player);
 
 	public Location respawn(Player player);
+
+	public void hideBossBar(Player player);
 	
 }
