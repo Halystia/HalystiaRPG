@@ -25,13 +25,14 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 
 	private final String configName;
 	private String name;
-	private Location entry, exit, bossLocation;
+	private Location entry, exit, bossLocation, bossEntry;
 	private int xpReward, levelNeeded;
 	private DonjonDifficulty difficulty;
 	
 	private Boss boss;
 	
 	private final Map<UUID, Integer> inside;
+	private final Map<UUID, Boolean> insideBoss;
 	
 	private final BossManager bosses;
 	public Donjon(String path, String name, BossManager bosses) {
@@ -39,6 +40,7 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		this.configName = name;
 		this.bosses = bosses;
 		inside = new HashMap<>();
+		insideBoss = new HashMap<>();
 		reloadData();
 	}
 	
@@ -49,6 +51,7 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		entry = config.getLocation("entry");
 		exit = config.getLocation("exit");
 		bossLocation = config.getLocation("boss");
+		bossEntry = config.getLocation("bossroom");
 		xpReward = config.getInt("reward");
 		levelNeeded = config.getInt("level");
 		
@@ -79,6 +82,8 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 			config.set("exit", new Location(Bukkit.getWorld(HalystiaRPG.WORLD), 0, 0, 0));
 		if( ! config.contains("boss"))
 			config.set("boss", new Location(Bukkit.getWorld(HalystiaRPG.WORLD), 0, 0, 0));
+		if( ! config.contains("bossroom"))
+			config.set("bossroom", new Location(Bukkit.getWorld(HalystiaRPG.WORLD), 0, 0, 0));
 		if( ! config.contains("reward"))
 			config.set("reward", 500);
 		if( ! config.contains("level"))
@@ -110,6 +115,14 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		bossLocation = loc.clone();
 		synchronized (file) {
 			config.set("boss", loc);
+			save();
+		}
+	}
+	
+	public void changeBossRoomLocation(Location loc) {
+		bossEntry = loc.clone();
+		synchronized (file) {
+			config.set("bossroom", loc);
 			save();
 		}
 	}
@@ -237,6 +250,7 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		if(isPlayerInside(p))
 			return false;
 		inside.put(p.getUniqueId(), 3);
+		insideBoss.put(p.getUniqueId(), false);
 		return true;
 	}
 
@@ -245,6 +259,7 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		if( ! isPlayerInside(p))
 			return false;
 		inside.remove(p.getUniqueId());
+		insideBoss.remove(p.getUniqueId());
 		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous quittez le donjon.");
 		return true;
 	}
@@ -258,6 +273,7 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 	public boolean trySpawnBoss(Player player) {
 		if(boss == null)
 			return false;
+		insideBoss.put(player.getUniqueId(), true);
 		if(boss.exists())
 			return false;
 		boss.spawnBoss(this);
@@ -271,15 +287,16 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		if(remaining > 1) {
 			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Il ne vous reste plus que " + ChatColor.DARK_RED + remaining + ChatColor.RED + " vies.");
 			inside.replace(player.getUniqueId(), remaining);
-			return entry;
+			return insideBoss.get(player.getUniqueId()) ? bossEntry : entry;
 		}
 		if(remaining == 0) {
 			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Si vous mourrez à nouveau, vous serez jetté en dehors du donjon.");
 			inside.replace(player.getUniqueId(), -1);
-			return entry;
+			return insideBoss.get(player.getUniqueId()) ? bossEntry : entry;
 		}
 		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort. Vous avez été téléporté en dehors du donjon.");
 		inside.remove(player.getUniqueId());
+		insideBoss.remove(player.getUniqueId());
 		return exit;
 	}
 	
