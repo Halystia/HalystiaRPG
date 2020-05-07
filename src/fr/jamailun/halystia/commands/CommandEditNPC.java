@@ -26,11 +26,12 @@ import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.NpcMode;
 import fr.jamailun.halystia.npcs.RpgNpc;
 import fr.jamailun.halystia.npcs.Texture;
+import fr.jamailun.halystia.npcs.traits.AubergisteTrait;
 import net.citizensnpcs.api.trait.trait.Equipment.EquipmentSlot;
 
 public class CommandEditNPC extends HalystiaCommand {
 
-	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "tphere", "rename", "dialog", "goto", "list", "equipment", "reload", "texture", "mode"));
+	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "tphere", "rename", "dialog", "goto", "list", "equipment", "reload", "texture", "mode", "aubergiste"));
 	private static final Set<String> dialogs = new HashSet<>(Arrays.asList("clear", "see", "add", "remove", "set", "insert"));
 	//private static final Set<String> slots = new HashSet<>(Arrays.asList("head", "chest", "legs", "feet", "mainhand", "offhand")); 
 	private final static String NULL_ITEM = "#none";
@@ -110,6 +111,18 @@ public class CommandEditNPC extends HalystiaCommand {
 			p.teleport(npc.getNPC().getStoredLocation(), TeleportCause.PLUGIN);
 			p.playSound(p.getLocation(), Sound.ITEM_CHORUS_FRUIT_TELEPORT, 5f, .8f);
 			p.sendMessage(GREEN + "Vous avez été téléporté au NPC.");
+			return true;
+		}
+		
+		if(args[0].equals("aubergiste")) {
+			if(npc.getNPC().hasTrait(AubergisteTrait.class)) {
+				npc.getNPC().removeTrait(AubergisteTrait.class);
+				p.sendMessage(RED + "Ce NPC n'est désormais plus un aubergiste !");
+			} else {
+				npc.getNPC().addTrait(AubergisteTrait.class);
+				p.sendMessage(GREEN + "Ce NPC est désormais un aubergiste !");
+			}
+			p.playSound(p.getLocation(), Sound.ITEM_FLINTANDSTEEL_USE, 5f, .8f);
 			return true;
 		}
 		
@@ -311,6 +324,7 @@ public class CommandEditNPC extends HalystiaCommand {
 		p.sendMessage(BLUE + "/" + label + " create <id> " + WHITE + ": Créer un nouveau npc.");
 		p.sendMessage(BLUE + "/" + label + " remove <id> " + WHITE + ": Supprime un npc.");
 		p.sendMessage(BLUE + "/" + label + " list " + WHITE + ": Liste les npcs existants.");
+		p.sendMessage(BLUE + "/" + label + " aubergiste <id> " + WHITE + ": Toggle le mode aubergiste d'un NPC.");
 		p.sendMessage(BLUE + "/" + label + " tphere <id> " + WHITE + ": Téléporte un npc à votre position.");
 		p.sendMessage(BLUE + "/" + label + " goto <id> " + WHITE + ": Vous téléporte à un npc.");
 		p.sendMessage(BLUE + "/" + label + " rename <id> <nom>" + WHITE + ": Renommme un npc. Couleurs.");
