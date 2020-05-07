@@ -40,7 +40,7 @@ public class NpcInteractionListener extends HalystiaListener {
 		
 		if(e.getNPC().hasTrait(AubergisteTrait.class)) {
 			main.getDataBase().updateSpawnLocation(e.getClicker(), e.getClicker().getLocation());
-			e.getClicker().sendMessage(HalystiaRPG.PREFIX+ChatColor.GOLD+"Votre position a été sauvegardée. C4est ici que vous réapparaitrez désormais.");
+			e.getClicker().sendMessage(e.getNPC().getName()+ChatColor.WHITE+" > "+ChatColor.YELLOW+"Votre position a été sauvegardée. C'est ici que vous réapparaitrez désormais.");
 			return;
 		}
 		

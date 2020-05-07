@@ -45,7 +45,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		}
 		if(main.getDonjonManager().getBossManager().isBoss(e.getDamager())) {
 			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
-				alertDeathPlayer(e.getEntity().getName(), main.getDonjonManager().getBossManager().getBoss(e.getDamager()).getCustomName());
+				alertDeathPlayer((Player)e.getEntity(), "le "+main.getDonjonManager().getBossManager().getBoss(e.getDamager()).getCustomName());
 			}
 		}
 		if( ! (e.getEntity() instanceof LivingEntity))
@@ -69,7 +69,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				return;
 			}
 			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
-				alertDeathPlayer(e.getEntity().getName(), mob.getCustomName());
+				alertDeathPlayer((Player)e.getEntity(), "un "+mob.getCustomName());
 			}
 			return;
 		}
@@ -101,7 +101,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				
 				if( ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
 					if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
-						alertDeathPlayer(e.getEntity().getName(), damager.getCustomName() != null ? damager.getCustomName() : invocs.getCasterName(damager));
+						alertDeathPlayer((Player)e.getEntity(), "un "+ damager.getCustomName() != null ? damager.getCustomName() : invocs.getCasterName(damager));
 					}
 				}
 			}
@@ -121,7 +121,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		if(CitizensAPI.getNPCRegistry().isNPC(e.getDamager())) {
 			if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
 				if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
-					alertDeathPlayer(e.getEntity().getName(), CitizensAPI.getNPCRegistry().getNPC(e.getDamager()).getName());
+					alertDeathPlayer((Player)e.getEntity(), CitizensAPI.getNPCRegistry().getNPC(e.getDamager()).getName());
 				}
 			}
 			return;
@@ -145,7 +145,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		
 		if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
 			if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
-				alertDeathPlayer(e.getEntity().getName(), p.getName());
+				alertDeathPlayer((Player)e.getEntity(), p.getName());
 			}
 		}
 		
@@ -200,13 +200,26 @@ public class EntityDamageOtherListener extends HalystiaListener {
 	
 	private final static String SKULL = new String(Character.toChars(10060));
 	
-	public static void alertDeathPlayer(String killed, String killer) {
-		String message = ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + killed + ChatColor.GRAY;
+	public void alertDeathPlayer(Player killed, String killer) {
+		String message = ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + killed.getName() + ChatColor.GRAY;
 		if(killer == null) {
-			Bukkit.broadcastMessage(message + " s'est suicidé.");
+			playerDeath(killed, message + " s'est suicidé.");
 		} else {
-			Bukkit.broadcastMessage(message + " a été tué par " + ChatColor.RED + killer + ChatColor.GRAY + ".");
+			playerDeath(killed, message + " a été tué par " + killer + ChatColor.GRAY + ".");
 		}
+	}
+	
+	public void playerDeath(Player source, String msg) {
+		main.getConsole().sendMessage(msg);
+		if(main.getDonjonManager().getContainerDonjon(source) == null) {
+			Bukkit.getOnlinePlayers().forEach(pl -> pl.sendMessage(msg));
+			return;
+		}
+		main.getDonjonManager().getContainerDonjon(source).getJoinedPlayers().forEach(id -> {
+			Player pl = Bukkit.getPlayer(id);
+			if(pl != null && pl.isOnline())
+				pl.sendMessage(msg);
+		});
 	}
 	
 	@EventHandler
@@ -223,17 +236,17 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			if(e.getFinalDamage() < p.getHealth())
 				return;
 			if(e.getCause() == DamageCause.CRAMMING || e.getCause() == DamageCause.FIRE_TICK || e.getCause() == DamageCause.FIRE || e.getCause() == DamageCause.HOT_FLOOR || e.getCause() == DamageCause.MELTING) {
-				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est mort dans d'horribles flammes.");
+				playerDeath(p ,ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est mort dans d'horribles flammes.");
 			} else if(e.getCause() == DamageCause.LAVA) {
-				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est mort dans dans lave.");
+				playerDeath(p ,ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est mort dans dans lave.");
 			} else if(e.getCause() == DamageCause.FALL) {
-				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est tombé de haut.");
+				playerDeath(p ,ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est tombé de haut.");
 			}else if(e.getCause() == DamageCause.THORNS) {
-				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " ne pensait pas que ça piquait.");
+				playerDeath(p ,ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " ne pensait pas que ça piquait.");
 			}else if(e.getCause() == DamageCause.SUICIDE || e.getCause() == DamageCause.VOID) {
-				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " a mit fin à ses jours.");
+				playerDeath(p ,ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " a mit fin à ses jours.");
 			}else if(e.getCause() == DamageCause.DROWNING) {
-				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " s'est noyé...");
+				playerDeath(p ,ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " s'est noyé...");
 			}
 		}
 		
