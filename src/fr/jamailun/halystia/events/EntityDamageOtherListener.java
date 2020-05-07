@@ -43,7 +43,11 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		if(main.getSuperMobManager().damageMob(e.getEntity(), e.getDamager().getUniqueId(), 0)) {
 			e.setCancelled(true);
 		}
-		
+		if(main.getDonjonManager().getBossManager().isBoss(e.getDamager())) {
+			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
+				alertDeathPlayer(e.getEntity().getName(), main.getDonjonManager().getBossManager().getBoss(e.getDamager()).getCustomName());
+			}
+		}
 		if( ! (e.getEntity() instanceof LivingEntity))
 			return;
 		
@@ -64,7 +68,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				e.setCancelled(true);
 				return;
 			}
-			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() < ((EntityDamageEvent)e).getFinalDamage()) {
+			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
 				alertDeathPlayer(e.getEntity().getName(), mob.getCustomName());
 			}
 			return;
@@ -96,7 +100,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				}
 				
 				if( ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
-					if(((LivingEntity)e.getEntity()).getHealth() < ((EntityDamageEvent)e).getFinalDamage()) {
+					if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
 						alertDeathPlayer(e.getEntity().getName(), damager.getCustomName() != null ? damager.getCustomName() : invocs.getCasterName(damager));
 					}
 				}
@@ -116,7 +120,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		}
 		if(CitizensAPI.getNPCRegistry().isNPC(e.getDamager())) {
 			if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
-				if(((LivingEntity)e.getEntity()).getHealth() < ((EntityDamageEvent)e).getFinalDamage()) {
+				if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
 					alertDeathPlayer(e.getEntity().getName(), CitizensAPI.getNPCRegistry().getNPC(e.getDamager()).getName());
 				}
 			}
@@ -140,7 +144,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		Player p = (Player) e.getDamager();
 		
 		if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
-			if(((LivingEntity)e.getEntity()).getHealth() < ((EntityDamageEvent)e).getFinalDamage()) {
+			if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
 				alertDeathPlayer(e.getEntity().getName(), p.getName());
 			}
 		}
@@ -211,23 +215,27 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			return;
 		
 		if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
-			if(main.getChunkManager().isSafe(e.getEntity().getLocation())) {
+			Player p = (Player) e.getEntity();
+			if(main.getChunkManager().isSafe(p.getLocation())) {
 				e.setCancelled(true);
 				return;
 			}
-		}
-		/*if(e.getEntity() instanceof Player) {
-			Player cible = (Player) e.getEntity();
-			if(e.getFinalDamage() >= cible.getHealth()) {
-				if(e.getCause() == DamageCause.FIRE_TICK || e.getCause() == DamageCause.LAVA) {
-					alertDeathPlayer(cible.getName() );
-				}
-				
-				
+			if(e.getFinalDamage() < p.getHealth())
 				return;
+			if(e.getCause() == DamageCause.CRAMMING || e.getCause() == DamageCause.FIRE_TICK || e.getCause() == DamageCause.FIRE || e.getCause() == DamageCause.HOT_FLOOR || e.getCause() == DamageCause.MELTING) {
+				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est mort dans d'horribles flammes.");
+			} else if(e.getCause() == DamageCause.LAVA) {
+				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est mort dans dans lave.");
+			} else if(e.getCause() == DamageCause.FALL) {
+				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " est tombé de haut.");
+			}else if(e.getCause() == DamageCause.THORNS) {
+				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " ne pensait pas que ça piquait.");
+			}else if(e.getCause() == DamageCause.SUICIDE || e.getCause() == DamageCause.VOID) {
+				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " a mit fin à ses jours.");
+			}else if(e.getCause() == DamageCause.DROWNING) {
+				Bukkit.broadcastMessage(ChatColor.DARK_RED + SKULL + " " + ChatColor.GOLD + p.getName() + ChatColor.GRAY + " s'est noyé...");
 			}
-		}*/
-		
+		}
 		
 		if(main.getDonjonManager().getBossManager().isBoss(e.getEntity())) {
 			LivingEntity en = (LivingEntity) e.getEntity();
