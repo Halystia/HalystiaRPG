@@ -108,8 +108,8 @@ public class BossRuines extends Boss {
 	private void invoke() {
 		Phantom inv = mob.getWorld().spawn(mob.getLocation().clone().add(0, 3, 0), Phantom.class);
 		new EffectSpellEntity(mob.getEyeLocation().clone().add(0,1,0), mob, 1, new ArrayList<>(), 1, false).addParticleEffect(Particle.ENCHANTMENT_TABLE, 300, .2, .1, .4);
-		inv.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(30);
-		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(inv, mob, false, this, 8);
+		inv.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10);
+		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(inv, mob, false, this, 5);
 		invocations.add(inv);
 		inv.setCustomName(ChatColor.DARK_AQUA+"Illusion");
 		inv.setCustomNameVisible(true);
@@ -124,6 +124,7 @@ public class BossRuines extends Boss {
 				break;
 			}
 		}
+		
 		invocations.removeIf(en -> en.getUniqueId().equals(uuid));
 	}
 

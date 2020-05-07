@@ -56,5 +56,12 @@ public class BossManager {
 				return true;
 		return false;
 	}
+
+	public Boss getBoss(Entity en) {
+		for(Boss boss : bosses)
+			if(boss.isBoss(en.getUniqueId()))
+				return boss;
+		return null;
+	}
 	
 }
