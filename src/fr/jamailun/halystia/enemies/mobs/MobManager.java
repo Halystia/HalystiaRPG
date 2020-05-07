@@ -181,7 +181,7 @@ public class MobManager extends FileDataRPG {
 	}
 	
 	public int getHowManyMobsAround(Location loc, double range) {
-		return (int) alives.values().stream().filter(en -> en.getEntity().getLocation().distance(loc) < range).count();
+		return (int) alives.values().stream().filter(en -> en.getEntity().getWorld().equals(loc.getWorld())).filter(en -> en.getEntity().getLocation().distance(loc) < range).count();
 	}
 	
 	public void killNonReferedsMobs(World world) {
