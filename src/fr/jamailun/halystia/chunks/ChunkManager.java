@@ -60,8 +60,12 @@ public class ChunkManager {
 	/**
 	 * @return null if no value was found
 	 */
-	public ChunkType getValueOfChunk(Chunk c) {
-		return getValueOfChunk(new Point(c.getX(), c.getZ()));
+	public synchronized ChunkType getValueOfChunk(Chunk c) {
+		try {
+			return getValueOfChunk(new Point(c.getX(), c.getZ()));
+		} catch (NullPointerException e) {
+			return null;
+		}
 	}
 	
 	public void setValueOfChunk(Chunk c, ChunkType type) {
