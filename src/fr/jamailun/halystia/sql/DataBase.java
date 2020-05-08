@@ -9,29 +9,29 @@ import org.bukkit.ChatColor;
 import fr.jamailun.halystia.HalystiaRPG;
 
 public abstract class DataBase {
-	
+
 	private String url ;
 	private String user ;
 	private String password;
 	protected final boolean debug;
-	
+
 	protected HalystiaRPG api;
-	
+
 	protected static Connection conn;
-	
+
 	public DataBase(HalystiaRPG api, String server, String dataBase, String user, String password, boolean debug) {
 		this.api = api;
 		this.debug = debug;
 		enableDataBase(server, dataBase, user, password);
 	}
-	
+
 	public void enableDataBase(String server, String dataBase, String user, String password) {
 		this.url = "jdbc://" + server + "/" + dataBase;
 		this.user = user;
 		this.password = password;
 		connect();
 	}
-	
+
 	protected void connect() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -50,7 +50,7 @@ public abstract class DataBase {
 				e.printStackTrace();
 		}
 	}
-	
+
 	public void disconnect() {
 		if(isConnected()) {
 			try {
@@ -64,7 +64,7 @@ public abstract class DataBase {
 			}
 		}
 	}
-	
+
 	public boolean isConnected() {
 		try {
 			if(conn == null || conn.isClosed())
@@ -77,11 +77,11 @@ public abstract class DataBase {
 		}
 		return false;
 	}
-	
+
 	public Connection getConnection() {
 		return conn;
 	}
-	
+
 	protected String getBddName() {
 		return user;
 	}

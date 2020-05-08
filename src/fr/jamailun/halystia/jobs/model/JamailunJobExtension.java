@@ -58,7 +58,7 @@ public class JamailunJobExtension {
 		items.put("diams", new ItemBuilder(Material.DIAMOND_ORE).setName(c() + "Roche diamantée").toItemStack());
 		items.put("obsi", new ItemBuilder(Material.OBSIDIAN).setName(c() + "Obsidienne").toItemStack());
 		//RESSOUCRES BUCHERON
-		items.put("oak", new ItemBuilder(Material.OAK_LOG).setName(c() + "Bois de chêne").toItemStack());
+		items.put("oak", new ItemBuilder(Material.OAK_LOG).setName(c() + "Bûche de chêne").toItemStack());
 		items.put("birch", new ItemBuilder(Material.BIRCH_LOG).setName(c() + "Bois de boulot").toItemStack());
 		items.put("spruce", new ItemBuilder(Material.SPRUCE_LOG).setName(c() + "Bois de sapin").toItemStack());
 		items.put("dark", new ItemBuilder(Material.DARK_OAK_LOG).setName(c() + "Bois maudit").toItemStack());

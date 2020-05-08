@@ -33,7 +33,6 @@ public class CommandEditNPC extends HalystiaCommand {
 
 	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "tphere", "rename", "dialog", "goto", "list", "equipment", "reload", "texture", "mode", "aubergiste"));
 	private static final Set<String> dialogs = new HashSet<>(Arrays.asList("clear", "see", "add", "remove", "set", "insert"));
-	//private static final Set<String> slots = new HashSet<>(Arrays.asList("head", "chest", "legs", "feet", "mainhand", "offhand")); 
 	private final static String NULL_ITEM = "#none";
 	
 	private final NpcManager npcs;
