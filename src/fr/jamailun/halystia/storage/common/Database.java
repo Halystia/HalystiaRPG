@@ -20,8 +20,8 @@ public abstract class Database {
 		plugin = instance;
 		this.dbName = dbName;
 	}
-
-	public Connection getSQLConnection() {
+	
+	public boolean connect() {
 		File dataFolder = new File(plugin.getDataFolder(), dbName+".db");
 		if (!dataFolder.exists()){
 			try {
@@ -32,17 +32,29 @@ public abstract class Database {
 		}
 		try {
 			if(connection!=null&&!connection.isClosed()){
-				return connection;
+				return true;
 			}
 			Class.forName("org.sqlite.JDBC");
 			connection = DriverManager.getConnection("jdbc:sqlite:" + dataFolder);
-			return connection;
+			return true;
 		} catch (SQLException ex) {
 			plugin.getLogger().log(Level.SEVERE,"SQLite exception on initialize", ex);
 		} catch (ClassNotFoundException ex) {
 			plugin.getLogger().log(Level.SEVERE, "You need the SQLite JBDC library. Google it. Put it in /lib folder.");
 		}
-		return null;
+		return false;
+	}
+	
+	public boolean isConnected() {
+		try {
+			return connection != null && ! connection.isClosed();
+		} catch (SQLException e) {
+			return false;
+		}
+	}
+	
+	public Connection getSQLConnection() {
+		return connection;
 	}
 
 	public abstract void load();

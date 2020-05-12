@@ -1,11 +1,14 @@
 package fr.jamailun.halystia.storage;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -17,46 +20,25 @@ import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
 import fr.jamailun.halystia.sql.temporary.Saver;
 import fr.jamailun.halystia.storage.common.Database;
+import fr.jamailun.halystia.storage.structure.TablePlayersStructure;
 import fr.jamailun.halystia.titles.Title;
 
 public class SQLite extends Database implements Saver {
-
-	private final static String UUID = "uuid";
-	private final static String CLASSE_ID = "classeId";
-	private final static String CLASSE_XP = "classeXp";
-	private final static String ROYAUME = "kingOf";
-	private final static String SOULS_NB = "nbSouls";
-	private final static String SOULS_LAST = "lastSoul";
-	//private final static String QUESTS = "quests";
-	private final static String TAGS = "tags";
-	private final static String TITLE = "title";
-	private final static String SPAWN = "spawn";
+	
+	private final static int FIRST_COL = 1;
+	private final TablePlayersStructure playersTable;
 	
 	public SQLite(HalystiaRPG plugin, String dbName){
 		super(plugin, dbName);
+		playersTable = new TablePlayersStructure();
 	}
-
-	public static final String CREATE_TABLE = 
-			"CREATE TABLE IF NOT EXISTS playerData (" + // make sure to put your table name in here too.
-			"`"+UUID+"` varchar(32) NOT NULL," + // This creates the different colums you will save data too. varchar(32) Is a string, int = integer
-			"`"+CLASSE_ID+"` INT NOT NULL," +
-			"`"+CLASSE_XP+"` INT NOT NULL," +
-			"`"+SOULS_NB+"` TINYINT NOT NULL," +
-			"`"+SOULS_LAST+"` BIGINT NOT NULL," +
-			"`"+ROYAUME+"` TEXT," +
-			"`"+TAGS+"` TEXT," +
-			"`"+TITLE+"` TEXT," +
-			"`"+SPAWN+"` TEXT," +
-			"PRIMARY KEY (`"+UUID+"`)" +  // This is creating 3 colums Player, Kills, Total. Primary key is what you are going to use as your indexer. Here we want to use player so
-			");"; // we can search by player, and get kills and total. If you some how were searching kills it would provide total and player.
-
-	public static final String INSERT_PLAYER = "";
 	
 	public void load() {
+		Validate.isTrue(isConnected(), "No connection !");
 		connection = getSQLConnection();
 		try {
 			Statement s = connection.createStatement();
-			s.executeUpdate(CREATE_TABLE);
+			s.executeUpdate(playersTable.getTableCreationString());
 			s.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -65,50 +47,117 @@ public class SQLite extends Database implements Saver {
 	
 	@Override
 	public boolean createPlayerTableClass() {
-		// TODO Auto-generated method stub
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			return s.executeUpdate(playersTable.getTableCreationString()) == 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean addPlayerProfile(Player player) {
-		// TODO Auto-generated method stub
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			return s.executeUpdate(playersTable.getStringInsertion(player)) == 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public PlayerData getPlayerData(Player player) {
-		// TODO Auto-generated method stub
-		return null;
+		int id = getClasseID(player);
+		Classe classe = Classe.getClasseWithId(id);
+		int exp = getRawExp(player);
+		return new PlayerData(classe, exp, player);
+	}
+	
+	private int getRawExp(Player player) {
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			ResultSet r = s.executeQuery(playersTable.getStringGetColumn(player, TablePlayersStructure.COL_CLASSE_XP));
+			return r.getInt(FIRST_COL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	private int getClasseID(Player player) {
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			ResultSet r = s.executeQuery(playersTable.getStringGetColumn(player, TablePlayersStructure.COL_CLASSE_ID));
+			return r.getInt(FIRST_COL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	@Override
 	public boolean changePlayerClasse(Player player, Classe classe) {
-		// TODO Auto-generated method stub
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			int r1 = s.executeUpdate(playersTable.getStringUpdateColumn(player, TablePlayersStructure.COL_CLASSE_ID, Classe.NONE.getClasseId()));
+			int r2 = s.executeUpdate(playersTable.getStringUpdateColumn(player, TablePlayersStructure.COL_CLASSE_XP, 0));
+			return r1 == 0 && r2 == 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean updateXp(Player player, int exp) {
-		// TODO Auto-generated method stub
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			return 0 == s.executeUpdate(playersTable.getStringUpdateColumn(player, TablePlayersStructure.COL_CLASSE_XP, exp));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public void saveAll(Collection<PlayerData> players) {
-		// TODO Auto-generated method stub
-		
+		players.forEach(playerData -> {
+			updateXp(playerData.getPlayer(), playerData.getExpAmount());
+		});
 	}
 
 	@Override
 	public Location getSpawnLocation(Player player) {
-		// TODO Auto-generated method stub
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			ResultSet r = s.executeQuery(playersTable.getStringGetColumn(player, TablePlayersStructure.COL_SPAWN));
+			String locRaw = r.getString(1);
+			return (Location) playersTable.deserialize(locRaw, TablePlayersStructure.COL_SPAWN);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public void updateSpawnLocation(Player player, Location location) {
-		// TODO Auto-generated method stub
-		
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			s.executeUpdate(playersTable.getStringUpdateColumn(player, TablePlayersStructure.COL_SPAWN, location));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return;
 	}
 
 	@Override
@@ -119,31 +168,76 @@ public class SQLite extends Database implements Saver {
 
 	@Override
 	public boolean setRoi(Royaume r, Player p) {
-		// TODO Auto-generated method stub
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			//TODO il reste des trucs à fare pour changer de roi.
+			return 0 == s.executeUpdate(playersTable.getStringUpdateColumn(p, TablePlayersStructure.COL_ROYAUME, r.getName()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	public int getLastSoulRefresh(Player p) {
-		// TODO Auto-generated method stub
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			ResultSet r = s.executeQuery(playersTable.getStringGetColumn(p, TablePlayersStructure.COL_SOULS_LAST));
+			final long current = System.currentTimeMillis();
+			long last = r.getLong(FIRST_COL);
+			long elapsed = current - last;
+			float secs = elapsed / 1000f;
+			return (int) secs;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return 0;
 	}
 
 	@Override
 	public int getHowManySouls(Player p) {
-		// TODO Auto-generated method stub
-		return 0;
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			ResultSet r = s.executeQuery(playersTable.getStringGetColumn(p, TablePlayersStructure.COL_SOULS_NB));
+			return r.getInt(FIRST_COL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
 	@Override
 	public boolean refreshSoul(Player p) {
-		// TODO Auto-generated method stub
-		return false;
+		int current = getHowManySouls(p);
+		current++;
+		return updateSouls(p, current);
 	}
 
 	@Override
 	public boolean looseSoul(Player p) {
-		// TODO Auto-generated method stub
+		int current = getHowManySouls(p);
+		current--;
+		return updateSouls(p, current);
+	}
+	
+	private boolean updateSouls(Player p, int current) {
+		if(current > 3)
+			current = 3;
+		if(current < 0)
+			current = 1; //pour des cas aussi étranges que particuliers
+		
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			s.executeUpdate(playersTable.getStringUpdateColumn(p, TablePlayersStructure.COL_SOULS_NB, current));
+			s.executeUpdate(playersTable.getStringUpdateColumn(p, TablePlayersStructure.COL_SOULS_LAST, System.currentTimeMillis()));
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 
@@ -191,41 +285,74 @@ public class SQLite extends Database implements Saver {
 
 	@Override
 	public boolean playerHasTag(Player p, String tag) {
-		// TODO Auto-generated method stub
-		return false;
+		return getTagsOfPlayer(p).contains(tag);
 	}
 
 	@Override
 	public void addTagToPlayer(Player p, String tag) {
-		// TODO Auto-generated method stub
-		
+		List<String> tags = getTagsOfPlayer(p);
+		if(tags.contains(tag))
+			return;
+		tags.add(tag);
+		exportTags(p, tags);
 	}
 
 	@Override
 	public void removeTagFromPlayer(Player p, String tag) {
-		// TODO Auto-generated method stub
-		
+		List<String> tags = getTagsOfPlayer(p);
+		if( ! tags.contains(tag) )
+			return;
+		tags.remove(tag);
+		exportTags(p, tags);
+	}
+	
+	private void exportTags(Player p, List<String> tags) {
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			s.executeUpdate(playersTable.getStringUpdateColumn(p, TablePlayersStructure.COL_TAGS_LIST, tags));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getTagsOfPlayer(Player p) {
-		// TODO Auto-generated method stub
-		return null;
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			ResultSet r = s.executeQuery(playersTable.getStringGetColumn(p, TablePlayersStructure.COL_TAGS_LIST));
+			String listRaw = r.getString(FIRST_COL);
+			return (List<String>) playersTable.deserialize(listRaw, TablePlayersStructure.COL_TAGS_LIST);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return new ArrayList<>();
 	}
 
 	@Override
 	public String getCurrentTitleOfPlayer(Player p) {
-		// TODO Auto-generated method stub
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			ResultSet r = s.executeQuery(playersTable.getStringGetColumn(p, TablePlayersStructure.COL_TAGS_SELECTED));
+			return r.getString(FIRST_COL);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public void setCurrentTitleOfPlayer(Player p, Title title) {
-		// TODO Auto-generated method stub
-		
+		Validate.isTrue(isConnected(), "No connection !");
+		connection = getSQLConnection();
+		try(Statement s = connection.createStatement()) {
+			s.executeUpdate(playersTable.getStringUpdateColumn(p, TablePlayersStructure.COL_TAGS_SELECTED, title.getTag()));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
-
-
-	// SQL creation stuff, You can leave the blow stuff untouched.
 	
 }

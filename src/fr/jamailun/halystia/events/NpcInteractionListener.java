@@ -5,6 +5,7 @@ import static org.bukkit.ChatColor.RED;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.npcs.NpcManager;
@@ -29,15 +31,28 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 public class NpcInteractionListener extends HalystiaListener {
 
 	private List<Player> actives;
+	private List<UUID> activesNPCS;
 	
 	public NpcInteractionListener(HalystiaRPG main) {
 		super(main);
-		actives = new ArrayList<Player>();
+		actives = new ArrayList<>();
+		activesNPCS = new ArrayList<>();
 	}
 	
 	@EventHandler
 	public void citizenInteract(NPCRightClickEvent e) {
-		
+		final Player p = e.getClicker();
+		if(activesNPCS.contains(p.getUniqueId())) {
+			e.setCancelled(true);
+			return;
+		}
+		activesNPCS.add(p.getUniqueId());
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				activesNPCS.remove(p.getUniqueId());
+			}
+		}.runTaskLater(main, 25L);
 		if(e.getNPC().hasTrait(AubergisteTrait.class)) {
 			main.getDataBase().updateSpawnLocation(e.getClicker(), e.getClicker().getLocation());
 			e.getClicker().sendMessage(e.getNPC().getName()+ChatColor.WHITE+" > "+ChatColor.YELLOW+"Votre position a été sauvegardée. C'est ici que vous réapparaitrez désormais.");
@@ -45,7 +60,6 @@ public class NpcInteractionListener extends HalystiaListener {
 		}
 		
 		RpgNpc npc = main.getNpcManager().getNpc(e.getNPC());
-		Player p = e.getClicker();
 		if(npc == null) {
 			if(p.isOp())
 				p.sendMessage(DARK_RED + "(op only) -> NPC invalide ! Merci de le supprimer avec les commandes de citizens ? sauf si c'est fait exprès xD");
@@ -174,7 +188,7 @@ public class NpcInteractionListener extends HalystiaListener {
 					scheduleRemove(p);
 				}
 			}
-		}, 20L);
+		}, 15L);
 	}
 
 }

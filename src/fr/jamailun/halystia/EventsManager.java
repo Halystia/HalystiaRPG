@@ -1,9 +1,5 @@
 package fr.jamailun.halystia;
 
-import org.bukkit.Bukkit;
-
-import com.codingforcookies.armorequip.ArmorListener;
-
 import fr.jamailun.halystia.chunks.ChunkManager;
 import fr.jamailun.halystia.events.BossListeners;
 import fr.jamailun.halystia.events.ConsumeItemListener;
@@ -27,7 +23,7 @@ import fr.jamailun.halystia.jobs.JobsManager;
 public class EventsManager {
 	
 	EventsManager(HalystiaRPG main, JobsManager jobs, ChunkManager chunks) {
-		Bukkit.getPluginManager().registerEvents(new ArmorListener(), main); //génère des ArmorEquiEvent !
+		//Bukkit.getPluginManager().registerEvents(new ArmorListener(), main); //génère des ArmorEquiEvent !
 		new PlayerJoinLeaveListener(main);
 		new PlayerDropItemListener(main);
 		new GUIListener(main);

@@ -21,7 +21,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.mcmonkey.sentinel.SentinelTrait;
 import org.mcmonkey.sentinel.targeting.SentinelTargetLabel;
