@@ -97,7 +97,6 @@ public class NpcInteractionListener extends HalystiaListener {
 		
 		//2 : si aucune quête ne part du NPC, on peut faire le dialogue normal.
 		if( ! npc.hasQuest() ) {
-			npc.setAsSpeaker(p);
 			npc.speak(p);
 			npc.free(p);
 			return;
