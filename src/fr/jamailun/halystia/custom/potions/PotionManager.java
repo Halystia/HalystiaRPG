@@ -40,9 +40,10 @@ public class PotionManager {
 			String lastLore = lore.get(lore.size() - 1);
 			if( ! lastLore.contains(SIGNATURE))
 				return -1;
-			String[] words = lore.get(1).split(" ");
+			String[] words = lore.get(lore.size() - 2).split(" ");
 			return Integer.parseInt(words[2]);
-		} catch (NullPointerException | IndexOutOfBoundsException | NumberFormatException e) {}
+		} catch (NullPointerException | IndexOutOfBoundsException | NumberFormatException e) {
+			System.out.println(">ERREUR MANA BOTTLE :" + e.getMessage());}
 		return -1;
 	}
 	
