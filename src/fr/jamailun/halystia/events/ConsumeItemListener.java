@@ -17,7 +17,6 @@ public class ConsumeItemListener extends HalystiaListener {
 	public void playerConsumeItemEvent(PlayerItemConsumeEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getPlayer()))
 			return;
-		
 		int manaGiven = main.getPotionManager().getPowerOfBottle(e.getItem());
 		if(manaGiven > -1) {
 			try {
@@ -32,5 +31,4 @@ public class ConsumeItemListener extends HalystiaListener {
 			} catch(NullPointerException ee) {}
 		}
 	}
-	
 }

@@ -17,7 +17,6 @@ public enum GUIEntityType {
 	PHANTOM(EntityType.PHANTOM, new ItemBuilder(Material.PHANTOM_MEMBRANE).setName(RED+"Phantom").toItemStack()),
 	SILVERFISH(EntityType.SILVERFISH, new ItemBuilder(Material.INFESTED_MOSSY_STONE_BRICKS).setName(RED+"Silverfish").toItemStack()),
 	ENDERMITE(EntityType.ENDERMITE, new ItemBuilder(Material.CHORUS_FRUIT).setName(RED+"Endermite").toItemStack()),
-	
 	HUSK(EntityType.HUSK, new ItemBuilder(Material.SAND).setName(RED+"Husk").toItemStack(), true),
 	STRAY(EntityType.STRAY, new ItemBuilder(Material.SNOW).setName(RED+"Stray").toItemStack(), true),
 	DROWNED(EntityType.DROWNED, new ItemBuilder(Material.WATER_BUCKET).setName(RED+"Drowned").toItemStack(), true),
@@ -37,7 +36,6 @@ public enum GUIEntityType {
 	WITCH(EntityType.WITCH, new ItemBuilder(Material.GLASS_BOTTLE).setName(DARK_RED+"Sorcière").toItemStack()),
 	GHAST(EntityType.GHAST, new ItemBuilder(Material.GHAST_TEAR).setName(DARK_RED+"Ghast").toItemStack()),
 	RAVAGER(EntityType.RAVAGER, new ItemBuilder(Material.IRON_BLOCK).setName(DARK_RED+"Ravager").toItemStack()),
-	
 	;
 	
 	private final EntityType type;
@@ -73,6 +71,10 @@ public enum GUIEntityType {
 		throw new IllegalArgumentException("Unknow EntityType : " + type + ".");
 	}
 	
+	/**
+	 * @deprecated because unused.
+	 */
+	@Deprecated
 	public static boolean isBadEntity(Entity e) {
 		switch(e.getType()) {
 			case ZOMBIE:
@@ -88,9 +90,100 @@ public enum GUIEntityType {
 			case PHANTOM:
 			case WITCH:
 			case GHAST:
+			case HUSK:
+			case ILLUSIONER:
+			case DRAGON_FIREBALL:
+			case ELDER_GUARDIAN:
+			case ENDER_CRYSTAL:
+			case DROWNED:
+			case ENDER_DRAGON:
+			case EVOKER:
+			case EVOKER_FANGS:
+			case FIREBALL:
+			case LLAMA_SPIT:
+			case MAGMA_CUBE:
+			case GUARDIAN:
+			case PIG_ZOMBIE:
+			case PILLAGER:
+			case SHULKER:
+			case RAVAGER:
+			case SHULKER_BULLET:
+			case SILVERFISH:
+			case SLIME:
+			case TRIDENT:
+			case SMALL_FIREBALL:
+			case PLAYER:
+			case SPECTRAL_ARROW:
+			case VEX:
+			case VINDICATOR:
+			case WITHER:
+			case WITHER_SKULL:
+			case STRAY:
+			case ZOMBIE_VILLAGER:
+			case PRIMED_TNT:
+			case ARROW:
 				return true;
-			default:
-				return false;
+		case AREA_EFFECT_CLOUD:
+		case ARMOR_STAND:
+		case BAT:
+		case BEE:
+		case BOAT:
+		case CAT:
+		case CHICKEN:
+		case COD:
+		case COW:
+		case DOLPHIN:
+		case DONKEY:
+		case DROPPED_ITEM:
+		case EGG:
+		case ENDER_PEARL:
+		case ENDER_SIGNAL:
+		case EXPERIENCE_ORB:
+		case FALLING_BLOCK:
+		case IRON_GOLEM:
+		case HORSE:
+		case ITEM_FRAME:
+		case LEASH_HITCH:
+		case LLAMA:
+		case LIGHTNING:
+		case MINECART:
+		case MINECART_CHEST:
+		case MINECART_COMMAND:
+		case MINECART_FURNACE:
+		case MINECART_HOPPER:
+		case MINECART_MOB_SPAWNER:
+		case MINECART_TNT:
+		case MULE:
+		case MUSHROOM_COW:
+		case OCELOT:
+		case PAINTING:
+		case PANDA:
+		case PARROT:
+		case PIG:
+		case POLAR_BEAR:
+		case PUFFERFISH:
+		case RABBIT:
+		case SHEEP:
+		case SALMON:
+		case SNOWMAN:
+		case SNOWBALL:
+		case SKELETON_HORSE:
+		case ZOMBIE_HORSE:
+		case WOLF:
+		case WANDERING_TRADER:
+		case VILLAGER:
+		case SPLASH_POTION:
+		case SQUID:
+		case THROWN_EXP_BOTTLE:
+		case TRADER_LLAMA:
+		case TROPICAL_FISH:
+		case TURTLE:
+		case UNKNOWN:
+		case FIREWORK:
+		case FISHING_HOOK:
+		case FOX:
+			break;
 		}
+		return false;
 	}
 }

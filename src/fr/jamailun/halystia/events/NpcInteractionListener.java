@@ -53,6 +53,8 @@ public class NpcInteractionListener extends HalystiaListener {
 				activesNPCS.remove(p.getUniqueId());
 			}
 		}.runTaskLater(main, 25L);
+		
+		
 		if(e.getNPC().hasTrait(AubergisteTrait.class)) {
 			main.getDataBase().updateSpawnLocation(e.getClicker(), e.getClicker().getLocation());
 			e.getClicker().sendMessage(e.getNPC().getName()+ChatColor.WHITE+" > "+ChatColor.YELLOW+"Votre position a été sauvegardée. C'est ici que vous réapparaitrez désormais.");
@@ -65,12 +67,19 @@ public class NpcInteractionListener extends HalystiaListener {
 				p.sendMessage(DARK_RED + "(op only) -> NPC invalide ! Merci de le supprimer avec les commandes de citizens ? sauf si c'est fait exprès xD");
 			return;
 		}
+
+		if(npc.isSpeacking(p)) {
+			e.setCancelled(true);
+			return;
+		}
+		
 		//1 : valider le step !
 		for(QuestStep step : main.getDataBase().getOnGoingQuestSteps(p)) {
 			if(step instanceof QuestStepSpeak) {
 				QuestStepSpeak realStep = (QuestStepSpeak) step;
 				if(realStep.getTarget().equals(npc)) {
 					realStep.valid(p);
+					npc.free(p);
 					return;
 				}
 			}
@@ -78,16 +87,19 @@ public class NpcInteractionListener extends HalystiaListener {
 				QuestStepBring realStep = (QuestStepBring) step;
 				if(realStep.getTarget().equals(npc)) {
 					realStep.trade(p);
+					npc.free(p);
 					return;
 				}
 			}
 		}
-		
+
 	//	System.out.println("no validation");
 		
 		//2 : si aucune quête ne part du NPC, on peut faire le dialogue normal.
-		if( ! npc.hasQuest()) {
+		if( ! npc.hasQuest() ) {
+			npc.setAsSpeaker(p);
 			npc.speak(p);
+			npc.free(p);
 			return;
 		}
 		
@@ -95,8 +107,9 @@ public class NpcInteractionListener extends HalystiaListener {
 		
 		Quest quest = main.getQuestManager().getQuestById(npc.getQuestName());
 		if(quest == null) {
-			p.sendMessage(RED + "Erreur ! La quête débutée par ce NPC est nulle !");
+			main.getConsole().sendMessage(RED + "Erreur ! La quête débutée par ce NPC est nulle ! (npc="+npc.getConfigId()+").");
 			npc.speak(p);
+			npc.free(p);
 			return;
 		}
 		
@@ -104,24 +117,27 @@ public class NpcInteractionListener extends HalystiaListener {
 		
 		if( ! quest.isvalid()) {
 			npc.speak(p);
+			npc.free(p);
 			return;
 		}
 		if( ! quest.isCorrect()) {
-			System.err.println("QUETE INVALIDE ("+quest.getID()+").");
+			main.getConsole().sendMessage(RED + "QUETE INVALIDE ("+quest.getID()+").");
 			npc.speak(p);
+			npc.free(p);
 			return;
 		}
 		// 3 : Quête non terminée : mais toujours truc
 		if(main.getDataBase().getOnGoingQuests(p).contains(quest)) {
 			npc.speak(p);
+			npc.free(p);
 			return;
 		}
 
 	//	System.out.println("quete non commencée");
-		
+
 		//Quête non commencée : on la commence :D
 		if(quest.playerHasLevel(p)) {
-	//		System.out.println("niveau validé !");
+			npc.setAsSpeaker(p);
 			int size = quest.sendIntroduction(npc, p);
 			Bukkit.getScheduler().runTaskLater(main, new Runnable() {
 				public void run() {
@@ -131,10 +147,9 @@ public class NpcInteractionListener extends HalystiaListener {
 			}, (NpcManager.TIME_BETWEEN_MESSAGES + 2L) * size );
 			return;
 		} else {
-	//		System.out.println("niveau insuffisant !");
-	//		npc.sendMessage(p, ChatColor.RED + "Tu");
-	//		npc.free(p);
+			//Niveau insuffisant
 			npc.speak(p);
+			npc.free(p);
 			return;
 		}
 		//tous les cas ont été explorés !

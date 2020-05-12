@@ -19,6 +19,8 @@ public interface RpgNpc extends Dialogable {
 	public void speak(Player p);
 	public void sendMessage(Player p, String message);
 	public void free(Player p);
+	public void setAsSpeaker(Player p);
+	public boolean isSpeaking(Player p);
 	
 	public void rename(String name);
 	public String getDisplayName();

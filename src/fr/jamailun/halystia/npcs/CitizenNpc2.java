@@ -125,6 +125,18 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 	public void setEquipment(EquipmentSlot slot, ItemStack item) {
 		npc.getTrait(Equipment.class).set(slot, item);;
 	}
+
+	@Override
+	public void setAsSpeaker(Player p) {
+		if(speackers.contains(p))
+			return;
+		speackers.add(p);
+	}
+	
+	@Override
+	public boolean isSpeaking(Player p) {
+		return speackers.contains(p);
+	}
 	
 	public void speak(Player p) {
 		if(speackers.contains(p.getPlayer()))

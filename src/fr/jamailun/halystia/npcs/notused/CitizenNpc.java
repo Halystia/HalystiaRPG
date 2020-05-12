@@ -529,5 +529,17 @@ public class CitizenNpc extends FileDataRPG implements RpgNpc {
 	public String getDisplayName() {
 		return ChatColor.translateAlternateColorCodes('&', displayName);
 	}
+
+	@Override
+	public void setAsSpeaker(Player p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isSpeaking(Player p) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }
