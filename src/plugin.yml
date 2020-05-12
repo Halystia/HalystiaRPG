@@ -1,9 +1,9 @@
 name: HalystiaRPG
-version: 4.1.3
+version: 4.1.4
 main: fr.jamailun.halystia.HalystiaRPG
 authors: [jamailun]
 depend: [Citizens, Sentinel]
-softdepend: [PlaceholderAPI]
+softdepend: [PlaceholderAPI, ArmorEquipEvent]
 loadbefore: [TAB]
 description: Halystia RPG plugin, by jamailun.
 
