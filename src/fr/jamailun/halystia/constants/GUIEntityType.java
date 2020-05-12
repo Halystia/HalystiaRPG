@@ -18,6 +18,10 @@ public enum GUIEntityType {
 	SILVERFISH(EntityType.SILVERFISH, new ItemBuilder(Material.INFESTED_MOSSY_STONE_BRICKS).setName(RED+"Silverfish").toItemStack()),
 	ENDERMITE(EntityType.ENDERMITE, new ItemBuilder(Material.CHORUS_FRUIT).setName(RED+"Endermite").toItemStack()),
 	
+	HUSK(EntityType.HUSK, new ItemBuilder(Material.SAND).setName(RED+"Husk").toItemStack(), true),
+	STRAY(EntityType.STRAY, new ItemBuilder(Material.SNOW).setName(RED+"Stray").toItemStack(), true),
+	DROWNED(EntityType.DROWNED, new ItemBuilder(Material.WATER_BUCKET).setName(RED+"Drowned").toItemStack(), true),
+	
 	PIG(EntityType.PIG, new ItemBuilder(Material.PORKCHOP).setName(GREEN+"Cochon").toItemStack()),
 	COW(EntityType.COW, new ItemBuilder(Material.LEATHER).setName(GREEN+"Vache").toItemStack()),
 	SHEEP(EntityType.SHEEP, new ItemBuilder(Material.WHITE_WOOL).setName(GREEN+"Mouton").toItemStack()),
@@ -27,10 +31,12 @@ public enum GUIEntityType {
 	PANDA(EntityType.PANDA, new ItemBuilder(Material.BAMBOO).setName(GREEN+"Panda").toItemStack()),
 	
 	BLAZE(EntityType.BLAZE, new ItemBuilder(Material.BLAZE_ROD).setName(DARK_RED+"Blaze").toItemStack()),
+	WITHER_SKELETON(EntityType.WITHER_SKELETON, new ItemBuilder(Material.BLAZE_ROD).setName(DARK_RED+"Blaze").toItemStack()),
 	ENDERMAN(EntityType.ENDERMAN, new ItemBuilder(Material.ENDER_PEARL).setName(DARK_RED+"Enderman").toItemStack()),
 	MAGMA_CUBE(EntityType.MAGMA_CUBE, new ItemBuilder(Material.MAGMA_CREAM).setName(DARK_RED+"Magma cube").toItemStack()),
 	WITCH(EntityType.WITCH, new ItemBuilder(Material.GLASS_BOTTLE).setName(DARK_RED+"Sorcière").toItemStack()),
 	GHAST(EntityType.GHAST, new ItemBuilder(Material.GHAST_TEAR).setName(DARK_RED+"Ghast").toItemStack()),
+	RAVAGER(EntityType.RAVAGER, new ItemBuilder(Material.IRON_BLOCK).setName(DARK_RED+"Ravager").toItemStack()),
 	
 	;
 	
