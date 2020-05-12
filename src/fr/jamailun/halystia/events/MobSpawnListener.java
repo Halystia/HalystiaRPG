@@ -14,6 +14,7 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.enemies.mobSpawner.MobSpawner;
+import fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerType;
 
 public class MobSpawnListener extends HalystiaListener {
 	
@@ -65,10 +66,11 @@ public class MobSpawnListener extends HalystiaListener {
 		//Bukkit.broadcastMessage("§adonjonWorld="+donjonWorld+", §espawner found ? " + (spawner != null));
 		if(donjonWorld && spawner == null)
 			e.setCancelled(true);
-		if(spawner != null){
+		if(spawner != null) {
 			if( e.getSpawner().getBlock().getWorld().getEntities().stream().filter(en -> en.getLocation().distance(e.getSpawner().getBlock().getLocation()) < 20).count() < 12 )
 				main.getMobManager().spawnMob( spawner.getName(), e.getLocation(), donjonWorld );
-			e.setCancelled(true);
+			e.setCancelled(Math.random() > 0.3 && spawner.getType() != MobSpawnerType.SNIPER ? true : false);
+			e.getEntity().remove();
 		}
 	}
 
