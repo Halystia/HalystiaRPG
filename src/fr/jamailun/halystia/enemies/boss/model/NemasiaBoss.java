@@ -40,7 +40,7 @@ public class NemasiaBoss extends Boss {
 	public static final int HEALTH = 5000;
 	public static final int HEALTH_PER_CUBE = 200;
 	public static final int CUBES_HEALTH = 100;
-	public static final int CUBES_DAMAGES = 5;
+	public static final int CUBES_DAMAGES = 12;
 	
 	private Location loc;
 	
@@ -58,7 +58,7 @@ public class NemasiaBoss extends Boss {
 	
 	private int noPlayers = 0;
 	private int counter = 0;
-	private final static int ACTION_EVERY_SECONDS = 5;
+	private final static int ACTION_EVERY_SECONDS = 4;
 	@Override
 	protected void doAction() {
 		for(Player pl : loc.getWorld().getPlayers()) {
@@ -75,7 +75,7 @@ public class NemasiaBoss extends Boss {
 		counter++;
 		if(counter < ACTION_EVERY_SECONDS)
 			return;
-		counter = 0 - rand.nextInt(5);
+		counter = 0 - rand.nextInt(2);
 		
 		Player closest = getClosestPlayer(head.getEyeLocation(), 20, true);
 		double random = rand.nextInt(100)+1;
@@ -163,7 +163,7 @@ public class NemasiaBoss extends Boss {
 			@Override
 			public void run() {
 				loc.getWorld().strikeLightningEffect(hitLoc);
-				SpellEntity spell = new EffectAndDamageSpellEntity(hitLoc, giant, 1, new ArrayList<>(), 4, false, 100, 11*multiplicator, 0.001, false);
+				SpellEntity spell = new EffectAndDamageSpellEntity(hitLoc, giant, 1, new ArrayList<>(), 4, false, 100, 20*multiplicator, 0.001, false);
 				spell.addParticleEffect(Particle.FLAME, 300, 1, .1, .5);
 				spell.addParticleEffect(Particle.FLASH, 2, .1, .1, 1);
 			}
@@ -175,7 +175,7 @@ public class NemasiaBoss extends Boss {
 	private void fire(Player target) {	
 		if(target == null)
 			return;	
-		SpellEntity spell = new EffectAndDamageSpellEntity(head.getLocation(), giant, 30, effects, 2.8, false, 100, 3.0, 0, false);
+		SpellEntity spell = new EffectAndDamageSpellEntity(head.getLocation(), giant, 30, effects, 2.8, false, 100, 5.0, 0, false);
 		spell.setDirection(target.getLocation().toVector().subtract(head.getLocation().toVector()).normalize().multiply(.9));
 		spell.addSoundEffect(Sound.BLOCK_CAMPFIRE_CRACKLE, 2f, .1f);
 		spell.addParticleEffect(Particle.END_ROD, 40, 1, 1, .01);
