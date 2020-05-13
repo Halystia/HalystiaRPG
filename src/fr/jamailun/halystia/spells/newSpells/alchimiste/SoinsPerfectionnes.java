@@ -6,26 +6,17 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.players.Classe;
-import fr.jamailun.halystia.spells.*;
+import fr.jamailun.halystia.spells.Spell;
 
 public class SoinsPerfectionnes extends Spell {
 	
-	public final static int RANGE = 5;
+	public final static int RANGE = 4;
 	public final static int VAGUES = 3;
 	public final static int DELAI = 20*3;
-	
-	private List<PotionEffect> effects;
-	@Override
-	public void init() {
-		effects = Arrays.asList(
-			new PotionEffect(PotionEffectType.HEAL, 1, 1, false, false, false)
-		);
-	}
+	public final static int HEALTH = 8;
 	
 	@Override
 	public synchronized boolean cast(Player p) {
@@ -35,8 +26,7 @@ public class SoinsPerfectionnes extends Spell {
 				public void run() {
 					for(Player pl : getPlayersAroundPlayer(p, 100, true)) {
 						if(pl.getLocation().distance(p.getLocation()) < RANGE)
-							for(PotionEffect effect : effects)
-								pl.addPotionEffect(effect);
+							pl.setHealth(pl.getHealth() + HEALTH);
 						spawnParticles(pl, p.getLocation(), Particle.HEART, (int) (Math.PI*RANGE*RANGE), RANGE, 1, .05);
 					}
 				}
@@ -86,7 +76,7 @@ public class SoinsPerfectionnes extends Spell {
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 4;
 	}
 
 }
