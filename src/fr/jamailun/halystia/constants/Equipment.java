@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
 
 public enum Equipment {
 	
 	SWORD(Material.WOODEN_SWORD, Material.IRON_SWORD, Material.STONE_SWORD, Material.GOLDEN_SWORD, Material.DIAMOND_SWORD),
-	BOW(Material.BOW),
+	BOW(Material.BOW, Material.CROSSBOW),
 	OFFENSIVE(SWORD, BOW),
 	
 	AXE(Material.WOODEN_AXE, Material.IRON_AXE, Material.STONE_AXE, Material.GOLDEN_AXE, Material.DIAMOND_AXE),
@@ -55,6 +56,13 @@ public enum Equipment {
 			if(material.toString().equalsIgnoreCase(name))
 				return material;
 		return null;
+	}
+	
+	public static boolean isEquipment(ItemStack item) {
+		for(Equipment equip : values())
+			if(equip.hasObject(item.getType()))
+				return true;
+		return false;
 	}
 	
 }

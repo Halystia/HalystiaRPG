@@ -207,6 +207,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	public void onDisable() {
 		console.sendMessage(PREFIX + ChatColor.YELLOW + "Désactivation de HalystiaRPG...");
 		final long debut = System.currentTimeMillis();
+		Bukkit.getOnlinePlayers().forEach(pl -> pl.closeInventory());
 		classesMgr.saveData(false);
 		jobs.saveJobs();
 		shopMgr.despawnAll();

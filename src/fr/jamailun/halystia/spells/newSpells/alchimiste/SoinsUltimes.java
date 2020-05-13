@@ -17,17 +17,10 @@ import fr.jamailun.halystia.spells.*;
 
 public class SoinsUltimes extends Spell {
 	
-	public final static int RANGE = 4;
+	public final static int RANGE = 5;
 	public final static int VAGUES = 3;
 	public final static int DELAI = 20*3;
-	
-	private List<PotionEffect> effects;
-	@Override
-	public void init() {
-		effects = Arrays.asList(
-			new PotionEffect(PotionEffectType.HEAL, 1, 4, false, false, false)
-		);
-	}
+	public final static int HEALTH = 8;
 	
 	@Override
 	public synchronized boolean cast(Player p) {
@@ -35,18 +28,23 @@ public class SoinsUltimes extends Spell {
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					for(Entity e : getEntitiesAroundPlayer(p, RANGE, true)) {
+					for(Entity e : getEntitiesAroundPlayer(p, 100, true)) {
 						if( ! (e instanceof LivingEntity))
 							return;
-						if(e.getLocation().distance(p.getLocation()) < RANGE)
-							for(PotionEffect effect : effects)
-								((LivingEntity)e).addPotionEffect(effect);
+						boolean heal = e.getLocation().distance(p.getLocation()) < RANGE;
+						
 						if(e instanceof Player) {
 							Player pl = (Player) e;
 							pl.playSound(p.getLocation(), Sound.BLOCK_BAMBOO_PLACE, 2f, .4f);
 							spawnParticles(pl, p.getLocation(), Particle.HEART, (int) (Math.PI*RANGE*RANGE*6), RANGE, 1, .05);
 							spawnParticles(pl, p.getLocation(), Particle.VILLAGER_HAPPY, (int) (Math.PI*RANGE*RANGE), RANGE, 1, .5);
-							pl.playSound(pl.getLocation(), Sound.BLOCK_WET_GRASS_STEP, 1f, .4f);
+							if(heal) {
+								pl.playSound(pl.getLocation(), Sound.BLOCK_WET_GRASS_STEP, 1f, .4f);
+								pl.setHealth(pl.getHealth() + HEALTH);
+							}
+						} else {
+							if(heal)
+								((LivingEntity)e).addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 1));
 						}
 					}
 				}
@@ -91,12 +89,12 @@ public class SoinsUltimes extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 20;
+		return 25;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 4;
 	}
 
 }

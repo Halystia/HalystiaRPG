@@ -102,16 +102,26 @@ public class JobType extends FileDataRPG {
 	}
 	
 	public int getLevel(int exp) {
-		double level = (double)exp / 500.0;
-		if(level < 1)
-			level = 1;
-		if(level > 15)
-			level = 15;
-		return (int) level;
+		if(exp < 600)
+			return 1;
+		if(exp < 2500)
+			return 2;
+		if(exp < 6000)
+			return 3;
+		if(exp < 16000)
+			return 4;
+		return 5;
 	}
 	
 	public int getXpRequired(int level) {
-		return level * 500;
+		switch (level) {
+		case 1: return 1;
+		case 2: return 600;
+		case 3: return 2500;
+		case 4: return 6000;
+		case 5: return 16000;
+		default: return level*1500;
+		}
 	}
 	
 	public String getPercentBar(int currentXp, int currentLvl) {

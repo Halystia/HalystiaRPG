@@ -6,7 +6,7 @@ public enum JobCategory {
 	
 	RECOLTE("Métier de récolte", ChatColor.BLUE),
 	CRAFT("Métier de conception", ChatColor.GREEN),
-	BOOST("Métier d'amélioration", ChatColor.GOLD),
+	BOOST("Métier d'amélioration", ChatColor.LIGHT_PURPLE),
 	NONE("Aucun métier", ChatColor.GRAY);
 	
 	private final String name;

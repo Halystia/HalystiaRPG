@@ -3,13 +3,7 @@ package fr.jamailun.halystia.jobs.model;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import static org.bukkit.attribute.AttributeModifier.Operation.*;
-import org.bukkit.enchantments.Enchantment;
-import static org.bukkit.inventory.EquipmentSlot.*;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.constants.Rarity;
@@ -21,6 +15,7 @@ import fr.jamailun.halystia.jobs.JobCraftGUI;
 import fr.jamailun.halystia.jobs.JobCraftsManager;
 import fr.jamailun.halystia.jobs.JobType;
 import fr.jamailun.halystia.jobs.JobsManager;
+import fr.jamailun.halystia.jobs.model.enchanteur.EnchanteurGUI;
 import fr.jamailun.halystia.utils.ItemBuilder;
 
 public class JamailunJobExtension {
@@ -39,6 +34,8 @@ public class JamailunJobExtension {
 			registerMineur();
 			registerBucheron();
 			registerFogeron();
+			registerPaysan();
+			registerEnchanteur();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
@@ -48,117 +45,9 @@ public class JamailunJobExtension {
 	
 	private Map<String, ItemStack> registerItems() {
 		Map<String, ItemStack> items = new HashMap<>();
-		// RESSOURCES MINEUR
-		items.put("cobble", new ItemBuilder(Material.COBBLESTONE).setName(c() + "Pierre taillée").toItemStack());
-		items.put("gravel", new ItemBuilder(Material.GRAVEL).setName(c() + "Gravier").toItemStack());
-		items.put("coal", new ItemBuilder(Material.CHARCOAL).setName(c() + "Vieux charbon").toItemStack());
-		items.put("iron", new ItemBuilder(Material.IRON_ORE).setName(c() + "Fer primitif").toItemStack());
-		items.put("gold", new ItemBuilder(Material.GOLD_ORE).setName(c() + "Or primitif").toItemStack());
-		items.put("quartz", new ItemBuilder(Material.QUARTZ).setName(c() + "Quartz").toItemStack());
-		items.put("diams", new ItemBuilder(Material.DIAMOND_ORE).setName(c() + "Roche diamantée").toItemStack());
-		items.put("obsi", new ItemBuilder(Material.OBSIDIAN).setName(c() + "Obsidienne").toItemStack());
-		//RESSOUCRES BUCHERON
-		items.put("oak", new ItemBuilder(Material.OAK_LOG).setName(c() + "Bûche de chêne").toItemStack());
-		items.put("birch", new ItemBuilder(Material.BIRCH_LOG).setName(c() + "Bois de boulot").toItemStack());
-		items.put("spruce", new ItemBuilder(Material.SPRUCE_LOG).setName(c() + "Bois de sapin").toItemStack());
-		items.put("dark", new ItemBuilder(Material.DARK_OAK_LOG).setName(c() + "Bois maudit").toItemStack());
-		items.put("acacia", new ItemBuilder(Material.ACACIA_LOG).setName(c() + "Bois sacré").toItemStack());
-		//RESSOURCES DIVERSES
-		items.put("stick", new ItemBuilder(Material.STICK).setName(c()+"Baton").toItemStack());
-		items.put("string", new ItemBuilder(Material.STRING).setName(c()+"Corde").toItemStack());
-		items.put("water", new ItemBuilder(Material.POTION).addItemFlag(ItemFlag.HIDE_POTION_EFFECTS).setPotionColor(Color.BLUE).setName(c()+"Eau pure").toItemStack());
-		items.put("lava", new ItemBuilder(Material.LAVA_BUCKET).setName(c()+"Lave").toItemStack());
+		items.putAll(new JamailunItemExtension().getItems());
+		items.putAll(new JamailunStuffExtension().getItems());
 		
-		//CRAFTS MINEUR
-		items.put("stone", new ItemBuilder(Material.STONE).setName(c() + "Pierre lisse").toItemStack());
-		items.put("silex", new ItemBuilder(Material.FLINT).setName(c() + "Silex").toItemStack());
-		items.put("stone1", new ItemBuilder(Material.SMOOTH_STONE).setName(c() + "Pierre condensée").toItemStack());
-		items.put("coal1", new ItemBuilder(Material.COAL).setName(c() + "Charbon épuré").toItemStack());
-		items.put("coal2", new ItemBuilder(Material.COAL).shine().setName(c() + "Charbon raffiné").toItemStack());
-		items.put("coal3", new ItemBuilder(Material.COAL_BLOCK).setName(c() + "Charbon pur").toItemStack());
-		items.put("silex1", new ItemBuilder(Material.FLINT).shine().setName(c() + "Silex enchanté").toItemStack());
-		items.put("iron1", new ItemBuilder(Material.IRON_INGOT).setName(c() + "Lingot de fer").toItemStack());
-		items.put("iron2", new ItemBuilder(Material.IRON_BLOCK).setName(c() + "Fer condensé").toItemStack());
-		items.put("stone2", new ItemBuilder(Material.DEAD_BRAIN_CORAL_BLOCK).shine().setName(c() + "Roche enchantée").toItemStack());
-		items.put("gold1", new ItemBuilder(Material.GOLD_INGOT).setName(c() + "Lingot d'or").toItemStack());
-		items.put("gold2", new ItemBuilder(Material.GOLD_BLOCK).setName(c() + "Or condensé").toItemStack());
-		items.put("acier", new ItemBuilder(Material.IRON_INGOT).shine().setName(r() + "Barre d'acier").toItemStack());
-		items.put("diams1", new ItemBuilder(Material.DIAMOND).setName(c() + "Diamant brut").toItemStack());
-		items.put("diams2", new ItemBuilder(Material.DIAMOND_BLOCK).setName(c() + "Diamant taillée").toItemStack());
-		items.put("tasei", new ItemBuilder(Material.BLUE_GLAZED_TERRACOTTA).shine().setName(r() + "Taseigaru").toItemStack());
-		
-		//CRAFTS BUCHERON
-		items.put("oak1", new ItemBuilder(Material.OAK_PLANKS).setName(c() + "Planches de chêne").toItemStack());
-		items.put("oak2", new ItemBuilder(Material.STRIPPED_OAK_WOOD).shine().setName(c() + "Essence de chêne").toItemStack());
-		items.put("birch1", new ItemBuilder(Material.BIRCH_PLANKS).setName(c() + "Planches de boulot").toItemStack());
-		items.put("birch2", new ItemBuilder(Material.STRIPPED_BIRCH_WOOD).shine().setName(c() + "Essence de boulot").toItemStack());
-		items.put("spruce1", new ItemBuilder(Material.SPRUCE_PLANKS).setName(c() + "Planches de sapin").toItemStack());
-		items.put("spruce2", new ItemBuilder(Material.STRIPPED_SPRUCE_WOOD).shine().setName(c() + "Essence de sapin").toItemStack());
-		items.put("dark1", new ItemBuilder(Material.DARK_OAK_PLANKS).setName(c() + "Planches de bois maudit").toItemStack());
-		items.put("dark2", new ItemBuilder(Material.STRIPPED_DARK_OAK_WOOD).shine().setName(c() + "Essence de bois maudit").toItemStack());
-		items.put("acacia1", new ItemBuilder(Material.ACACIA_PLANKS).setName(c() + "Planches de bois sacré").toItemStack());
-		items.put("acacia2", new ItemBuilder(Material.STRIPPED_ACACIA_WOOD).shine().setName(c() + "Essence de bois sacré").toItemStack());
-		
-		//ARMURES FORGERON
-		items.put("visiH", new ItemBuilder(Material.IRON_HELMET).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1).addEnchant(Enchantment.DURABILITY, 1).setName(c() + "Casque du visiteur").toItemStack());
-		items.put("visiC", new ItemBuilder(Material.IRON_CHESTPLATE).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1).addEnchant(Enchantment.DURABILITY, 1).setName(c() + "Plastron du visiteur").toItemStack());
-		items.put("visiL", new ItemBuilder(Material.IRON_LEGGINGS).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1).addEnchant(Enchantment.DURABILITY, 1).setName(c() + "Jambières du visiteur").toItemStack());
-		items.put("visiB", new ItemBuilder(Material.IRON_BOOTS).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1).addEnchant(Enchantment.DURABILITY, 1).setName(c() + "Bottes du visiteur").toItemStack());
-		items.put("visiE", new ItemBuilder(Material.IRON_SWORD).addEnchant(Enchantment.DAMAGE_ALL, 1).addEnchant(Enchantment.DURABILITY, 1).setName(c() + "Épée du visiteur").toItemStack());
-		
-		items.put("pioche1", new ItemBuilder(Material.IRON_PICKAXE).addEnchant(Enchantment.DIG_SPEED, 1).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1, ADD_NUMBER, HAND).setName(c() + "Pioche moderne").toItemStack());
-		items.put("hache1", new ItemBuilder(Material.IRON_AXE).addEnchant(Enchantment.DIG_SPEED, 1).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1, ADD_NUMBER, HAND).setName(c() + "Hache moderne").toItemStack());
-		
-		items.put("noviH", new ItemBuilder(Material.IRON_HELMET).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchant(Enchantment.DURABILITY, 2).setName(c() + "Casque du novice").toItemStack());
-		items.put("noviC", new ItemBuilder(Material.IRON_CHESTPLATE).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchant(Enchantment.DURABILITY, 2).setName(c() + "Plastron du novice").toItemStack());
-		items.put("noviL", new ItemBuilder(Material.IRON_LEGGINGS).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchant(Enchantment.DURABILITY, 2).setName(c() + "Jambières du novice").toItemStack());
-		items.put("noviB", new ItemBuilder(Material.IRON_BOOTS).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchant(Enchantment.DURABILITY, 2).setName(c() + "Bottes du novice").toItemStack());
-		items.put("noviE", new ItemBuilder(Material.IRON_SWORD).addEnchant(Enchantment.DAMAGE_ALL, 2).addEnchant(Enchantment.DURABILITY, 2).setName(c() + "Épée du novice").toItemStack());
-		
-		items.put("neopH", new ItemBuilder(Material.IRON_HELMET).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchant(Enchantment.DURABILITY, 3).setName(c() + "Casque du néophyte").toItemStack());
-		items.put("neopC", new ItemBuilder(Material.IRON_CHESTPLATE).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchant(Enchantment.DURABILITY, 3).setName(c() + "Plastron du néophyte").toItemStack());
-		items.put("neopL", new ItemBuilder(Material.IRON_LEGGINGS).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchant(Enchantment.DURABILITY, 3).setName(c() + "Jambières du néophyte").toItemStack());
-		items.put("neopB", new ItemBuilder(Material.IRON_BOOTS).addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 2).addEnchant(Enchantment.DURABILITY, 3).setName(c() + "Bottes du néophyte").toItemStack());
-		items.put("neopE", new ItemBuilder(Material.IRON_SWORD).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 8, ADD_NUMBER, HAND)
-				.addEnchant(Enchantment.DAMAGE_UNDEAD, 1).addEnchant(Enchantment.DURABILITY, 3).setName(c() + "Épée du néophyte").toItemStack());
-		
-		items.put("peleH", new ItemBuilder(Material.IRON_HELMET).addAttribute(Attribute.GENERIC_ARMOR, 6, ADD_NUMBER, HEAD).addEnchant(Enchantment.DURABILITY, 4).setName(c() + "Casque du pélerin").toItemStack());
-		items.put("peleC", new ItemBuilder(Material.IRON_CHESTPLATE).addAttribute(Attribute.GENERIC_ARMOR, 8, ADD_NUMBER, CHEST).addEnchant(Enchantment.DURABILITY, 4).setName(c() + "Plastron du pélerin").toItemStack());
-		items.put("peleL", new ItemBuilder(Material.IRON_LEGGINGS).addAttribute(Attribute.GENERIC_ARMOR, 7, ADD_NUMBER, LEGS).addEnchant(Enchantment.DURABILITY, 4).setName(c() + "Jambières du pélerin").toItemStack());
-		items.put("peleB", new ItemBuilder(Material.IRON_BOOTS).addAttribute(Attribute.GENERIC_ARMOR, 4, ADD_NUMBER, FEET).addEnchant(Enchantment.DURABILITY, 4).setName(c() + "Bottes du pélerin").toItemStack());
-		items.put("peleE", new ItemBuilder(Material.IRON_SWORD).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 9, ADD_NUMBER, HAND)
-				.addEnchant(Enchantment.DAMAGE_UNDEAD, 1).addEnchant(Enchantment.DURABILITY, 4).setName(c() + "Épée du pélerin").toItemStack());
-		
-		items.put("pioche2", new ItemBuilder(Material.IRON_PICKAXE).addEnchant(Enchantment.DIG_SPEED, 2).addEnchant(Enchantment.DURABILITY, 3).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1, ADD_NUMBER, HAND).setName(c() + "Pioche puissante").toItemStack());
-		items.put("hache2", new ItemBuilder(Material.IRON_AXE).addEnchant(Enchantment.DIG_SPEED, 2).addEnchant(Enchantment.DURABILITY, 3).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1, ADD_NUMBER, HAND).setName(c() + "Hache puissante").toItemStack());
-		
-		items.put("voyaH", new ItemBuilder(Material.IRON_HELMET).addAttribute(Attribute.GENERIC_ARMOR, 7, ADD_NUMBER, HEAD).addEnchant(Enchantment.DURABILITY, 5).setName(c() + "Casque du voyageur").toItemStack());
-		items.put("voyaC", new ItemBuilder(Material.IRON_CHESTPLATE).addAttribute(Attribute.GENERIC_ARMOR, 9, ADD_NUMBER, CHEST).addEnchant(Enchantment.DURABILITY, 5).addEnchant(Enchantment.THORNS, 1).setName(c() + "Plastron du voyageur").toItemStack());
-		items.put("voyaL", new ItemBuilder(Material.IRON_LEGGINGS).addAttribute(Attribute.GENERIC_ARMOR, 8, ADD_NUMBER, LEGS).addEnchant(Enchantment.DURABILITY, 5).setName(c() + "Jambières du voyageur").toItemStack());
-		items.put("voyaB", new ItemBuilder(Material.IRON_BOOTS).addAttribute(Attribute.GENERIC_ARMOR, 6, ADD_NUMBER, FEET).addEnchant(Enchantment.DURABILITY, 5).setName(c() + "Bottes du voyageur").toItemStack());
-		items.put("voyaE", new ItemBuilder(Material.IRON_SWORD).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 10, ADD_NUMBER, HAND)
-				.addEnchant(Enchantment.DAMAGE_UNDEAD, 2).addEnchant(Enchantment.DURABILITY, 5).setName(c() + "Épée du voyageur").toItemStack());
-		
-		items.put("explH", new ItemBuilder(Material.GOLDEN_HELMET).addAttribute(Attribute.GENERIC_ARMOR, 8, ADD_NUMBER, HEAD).addEnchant(Enchantment.PROTECTION_EXPLOSIONS, 1).setUnbreakable().setName(c() + "Casque de l'explorateur").toItemStack());
-		items.put("explC", new ItemBuilder(Material.GOLDEN_CHESTPLATE).addAttribute(Attribute.GENERIC_ARMOR, 10, ADD_NUMBER, CHEST).setUnbreakable().addEnchant(Enchantment.PROTECTION_FIRE, 1).addEnchant(Enchantment.THORNS, 1).setName(c() + "Plastron de l'explorateur").toItemStack());
-		items.put("explL", new ItemBuilder(Material.GOLDEN_LEGGINGS).addAttribute(Attribute.GENERIC_ARMOR, 9, ADD_NUMBER, LEGS).setUnbreakable().addEnchant(Enchantment.PROTECTION_PROJECTILE, 1).setName(c() + "Jambières de l'explorateur").toItemStack());
-		items.put("explB", new ItemBuilder(Material.GOLDEN_BOOTS).addAttribute(Attribute.GENERIC_ARMOR, 7, ADD_NUMBER, FEET).addEnchant(Enchantment.PROTECTION_FALL, 1).setUnbreakable().setName(c() + "Bottes de l'explorateur").toItemStack());
-		items.put("explE", new ItemBuilder(Material.GOLDEN_SWORD).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 11, ADD_NUMBER, HAND).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.02, MULTIPLY_SCALAR_1, HAND).setUnbreakable()
-				.addEnchant(Enchantment.DAMAGE_UNDEAD, 3).setName(c() + "Épée de l'explorateur").toItemStack());
-		
-		items.put("conqH", new ItemBuilder(Material.GOLDEN_HELMET).addAttribute(Attribute.GENERIC_ARMOR, 9, ADD_NUMBER, HEAD).addAttribute(Attribute.GENERIC_MAX_HEALTH, 1, ADD_NUMBER, HEAD)
-				.addEnchant(Enchantment.PROTECTION_EXPLOSIONS, 2).setUnbreakable().setName(r() + "Casque du conquérant").toItemStack());
-		items.put("conqC", new ItemBuilder(Material.GOLDEN_CHESTPLATE).addAttribute(Attribute.GENERIC_ARMOR, 10, ADD_NUMBER, CHEST).addAttribute(Attribute.GENERIC_MAX_HEALTH, 1, ADD_NUMBER, CHEST)
-				.setUnbreakable().addEnchant(Enchantment.PROTECTION_FIRE, 2).addEnchant(Enchantment.THORNS, 1).setName(r() + "Plastron du conquérant").toItemStack());
-		items.put("conqL", new ItemBuilder(Material.GOLDEN_LEGGINGS).addAttribute(Attribute.GENERIC_ARMOR, 10, ADD_NUMBER, LEGS).addAttribute(Attribute.GENERIC_MAX_HEALTH, 1, ADD_NUMBER, LEGS)
-				.setUnbreakable().addEnchant(Enchantment.PROTECTION_PROJECTILE, 2).setName(r() + "Jambières du conquérant").toItemStack());
-		items.put("conqB", new ItemBuilder(Material.GOLDEN_BOOTS).addAttribute(Attribute.GENERIC_ARMOR, 8, ADD_NUMBER, FEET).addAttribute(Attribute.GENERIC_MAX_HEALTH, 1, ADD_NUMBER, FEET)
-				.addEnchant(Enchantment.PROTECTION_FALL, 2).setUnbreakable().setName(r() + "Bottes du conquérant").toItemStack());
-		items.put("conqE", new ItemBuilder(Material.GOLDEN_SWORD).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 12, ADD_NUMBER, HAND).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.03, MULTIPLY_SCALAR_1, HAND)
-				.setUnbreakable().addEnchant(Enchantment.DAMAGE_UNDEAD, 3).setName(r() + "Épée du conquérant").toItemStack());
-		
-		items.put("pioche3", new ItemBuilder(Material.IRON_PICKAXE).addEnchant(Enchantment.DIG_SPEED, 4).setUnbreakable().addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1, ADD_NUMBER, HAND).setName(c() + "Pioche parfaite").toItemStack());
-		items.put("hache3", new ItemBuilder(Material.IRON_AXE).addEnchant(Enchantment.DIG_SPEED, 4).setUnbreakable().addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1, ADD_NUMBER, HAND).setName(c() + "Hache parfaite").toItemStack());
 		
 		
 		return items;
@@ -172,6 +61,19 @@ public class JamailunJobExtension {
 		return new ItemBuilder(items.get(index)).setAmount(amount).toItemStack();
 	}
 
+	private void registerEnchanteur() {
+		JobType enchanteur = new JobType(path, "enchanteur", JobCategory.BOOST, jobs);
+		enchanteur.setIcon(1, Material.BOOK);
+		enchanteur.setIcon(2, Material.BOOKSHELF);
+		enchanteur.setIcon(3, Material.ENCHANTING_TABLE);
+		enchanteur.setIcon(4, Material.HEART_OF_THE_SEA);
+		enchanteur.setIcon(5, Material.BEACON);
+		jobs.registerJob(enchanteur);
+		EnchanteurGUI gui = new EnchanteurGUI(enchanteur);
+		items.putAll(gui.getSources());
+		enchanteur.changeCraftGUI(Material.ENCHANTING_TABLE, gui);
+	}
+	
 	private void registerMineur() {
 		JobType mineur = new JobType(path, "mineur", JobCategory.RECOLTE, jobs);
 		mineur.setIcon(1, Material.WOODEN_PICKAXE);
@@ -246,6 +148,45 @@ public class JamailunJobExtension {
 		bucheron.changeCraftGUI(Material.STONECUTTER, new JobCraftGUI(bucheron));
 	}
 	
+	private void registerPaysan() {
+		JobType agriculteur = new JobType(path, "agriculteur", JobCategory.RECOLTE, jobs);
+		agriculteur.setIcon(1, Material.WOODEN_HOE);
+		agriculteur.setIcon(2, Material.STONE_HOE);
+		agriculteur.setIcon(3, Material.IRON_HOE);
+		agriculteur.setIcon(4, Material.GOLDEN_HOE);
+		agriculteur.setIcon(5, Material.DIAMOND_HOE);
+		jobs.registerJob(agriculteur);
+		
+		JobBlockManager blocs = jobs.getBlocsManager();
+		blocs.registerContent(new JobBlock(agriculteur, 1, Material.WHEAT, item("blé"), 3, 40));
+		blocs.registerContent(new JobBlock(agriculteur, 2, Material.BEETROOTS, item("bettrave"), 9, 90));
+		blocs.registerContent(new JobBlock(agriculteur, 2, Material.POTATOES, item("patate"), 11, 150));
+		
+		blocs.registerContent(new JobBlock(agriculteur, 3, Material.SUGAR_CANE, item("canna"), 30, 180));
+		blocs.registerContent(new JobBlock(agriculteur, 3, Material.CARROT, item("carotte"), 30, 180));
+		
+		blocs.registerContent(new JobBlock(agriculteur, 4, Material.PUMPKIN, item("citrouille"), 50, 230));
+		blocs.registerContent(new JobBlock(agriculteur, 5, Material.MELON, item("melon"), 100, 300));
+		
+		JobCraftsManager crafts = jobs.getCraftsManager();
+		crafts.registerContent(new JobCraft(agriculteur, 1, item("farine1", 1), 4, 	item("blé", 6), item("cobble")));
+		crafts.registerContent(new JobCraft(agriculteur, 1, item("pain1", 3), 6, 	item("farine1", 2), item("water")));
+		crafts.registerContent(new JobCraft(agriculteur, 1, item("perlimpimpim", 1), 30, item("farine1", 20), item("water", 3), item("miel", 5), item("chair", 64), item("vésiculePokoi", 10)));
+		
+		crafts.registerContent(new JobCraft(agriculteur, 2, item("farine2", 1), 12, item("blé", 30), item("bettrave",5), item("patate", 5), item("silex")));
+		crafts.registerContent(new JobCraft(agriculteur, 2, item("pain2", 3), 12, item("farine2", 2), item("water",2)));
+		crafts.registerContent(new JobCraft(agriculteur, 2, item("bakedpotato", 32), 8, item("patate", 8), item("coal",1)));
+		crafts.registerContent(new JobCraft(agriculteur, 2, item("soupe1", 4), 8, item("bettrave", 8), item("coal",1), item("stick", 10)));
+		
+		crafts.registerContent(new JobCraft(agriculteur, 3, item("sucre1", 1), 6, item("canna", 3), item("water"), item("silex")));
+		crafts.registerContent(new JobCraft(agriculteur, 3, item("sucre2", 1), 18, item("canna", 32), item("water", 4), item("silex1")));
+		crafts.registerContent(new JobCraft(agriculteur, 3, item("carottedorée", 5), 5, item("carotte", 2), item("birch2"), item("gold1")));
+		crafts.registerContent(new JobCraft(agriculteur, 3, item("farine3", 1), 24, item("farine2", 2), item("carotte", 15), item("sucre2", 2)));
+		crafts.registerContent(new JobCraft(agriculteur, 3, item("soupe2", 1), 5, item("farine2", 2), item("carotte", 15), item("sucre2", 2)));
+		
+		agriculteur.changeCraftGUI(Material.COMPOSTER, new JobCraftGUI(agriculteur));
+	}
+	
 	private void registerFogeron() {
 		JobType forgeron = new JobType(path, "forgeron", JobCategory.CRAFT, jobs);
 		forgeron.setIcon(1, Material.BRICK);
@@ -297,11 +238,10 @@ public class JamailunJobExtension {
 		forgeron.changeCraftGUI(Material.ANVIL, new JobCraftGUI(forgeron));
 	}
 	
-	private static String c() {
+	protected String c() {
 		return Rarity.COMMON.getColor();
 	}
-	private static String r() {
+	protected String r() {
 		return Rarity.RARE.getColor();
 	}
-	
 }
