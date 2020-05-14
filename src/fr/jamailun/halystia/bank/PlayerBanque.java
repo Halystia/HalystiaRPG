@@ -17,6 +17,7 @@ class PlayerBanque extends FileDataRPG {
 	
 	private final int maxPages = 1;
 	private int page = 1;
+	private int level = 1;
 	private Map<Integer, ItemStack> content;
 	private final UUID uuid;
 	private Inventory inv;
@@ -37,6 +38,7 @@ class PlayerBanque extends FileDataRPG {
 	
 	void saveInventory() {
 		synchronized (file) {
+			config.set("level", level);
 			for(int i = 0; i < inv.getSize(); i ++) {
 				ItemStack item = inv.getItem(i);
 				int slotValue = page * 100 + i;
@@ -49,12 +51,23 @@ class PlayerBanque extends FileDataRPG {
 		}
 	}
 	
+	boolean canImproveLevel() {
+		return level <= 4;
+	}
+	
+	void improveLevel() {
+		synchronized (file) {
+			level = Math.min(Math.max(0, level + 1), 4);
+			save();
+		}
+	}
+	
 	void openInventoryToOwner(Player p) {
 		if( ! p.getUniqueId().equals(uuid)) {
 			p.sendMessage(ChatColor.RED + "Ce n'est pas ton compte !");
 			return;
 		}
-		inv = Bukkit.createInventory(null, 9*3, ChatColor.DARK_BLUE + "Banque - " + p.getName());
+		inv = Bukkit.createInventory(null, 9*(2+Math.min(level, 4)), ChatColor.DARK_BLUE + "Banque - " + p.getName());
 		for(int slotValue : content.keySet()) {
 			int slot = slotValue - page * 100;
 			inv.setItem(slot, content.get(slotValue));
