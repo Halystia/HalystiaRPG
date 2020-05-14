@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import fr.jamailun.halystia.donjons.DonjonManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.quests.Messages;
@@ -24,7 +25,7 @@ public abstract class QuestStep {
 	protected final MobManager mobs;
 	protected ItemStack loot;
 	
-	public static QuestStep factory(ConfigurationSection section, Quest quest, int step, NpcManager npcs, MobManager mobs) {
+	public static QuestStep factory(ConfigurationSection section, Quest quest, int step, NpcManager npcs, MobManager mobs, DonjonManager donjons) {
 		QuestStepType type = null;
 		try {
 			type = QuestStepType.valueOf(section.getString("type").toUpperCase());
@@ -39,7 +40,7 @@ public abstract class QuestStep {
 			case KILL:
 				return new QuestStepKill(section, quest, step, npcs, mobs);
 			case DONJON:
-				return new QuestStepDonjon(section, quest, step, npcs, mobs);
+				return new QuestStepDonjon(section, quest, step, npcs, mobs, donjons);
 			case INTERACT:
 				return new QuestStepInteract(section, quest, step, npcs, mobs);
 		}

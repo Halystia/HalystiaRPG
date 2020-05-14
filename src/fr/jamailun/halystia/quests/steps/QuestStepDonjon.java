@@ -8,6 +8,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.DonjonManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.quests.Quest;
@@ -22,11 +23,11 @@ public final class QuestStepDonjon extends QuestStep {
 		section.set("type", QuestStepType.DONJON.toString());
 	}
 	
-	public QuestStepDonjon(ConfigurationSection section, Quest quest, int step, NpcManager npcs, MobManager mobs) {
+	public QuestStepDonjon(ConfigurationSection section, Quest quest, int step, NpcManager npcs, MobManager mobs, DonjonManager donjons) {
 		super(section, quest, step, npcs, mobs);
 		
 		donjonID = section.getString("what");
-		if( HalystiaRPG.getInstance().getDonjonManager().getLegacyWithConfigName(donjonID) == null) {
+		if( donjons.getLegacyWithConfigName(donjonID) == null) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "[QUEST-" + quest.getID() +"/" + step + "] Impossible to get donjon #" + donjonID + ".");
 			quest.invalid();
 		}

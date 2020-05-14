@@ -13,11 +13,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.DonjonManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.quests.steps.QuestStepBring;
+import fr.jamailun.halystia.quests.steps.QuestStepDonjon;
+import fr.jamailun.halystia.quests.steps.QuestStepInteract;
 import fr.jamailun.halystia.quests.steps.QuestStepKill;
 import fr.jamailun.halystia.quests.steps.QuestStepSpeak;
 
@@ -28,12 +31,14 @@ public class QuestManager {
 	private final HalystiaRPG main;
 	private final NpcManager npcs;
 	private final MobManager mobs;
+	private final DonjonManager donjons;
 	
-	public QuestManager(String path, HalystiaRPG main, NpcManager npcs, MobManager mobs) {
+	public QuestManager(String path, HalystiaRPG main, NpcManager npcs, MobManager mobs, DonjonManager donjons) {
 		this.path = path;
 		this.main = main;
 		this.npcs = npcs;
 		this.mobs = mobs;
+		this.donjons = donjons;
 		quests = new HashSet<>();
 		reload();
 	}
@@ -57,7 +62,7 @@ public class QuestManager {
 	public Quest createQuest(String idName) {
 		if(getQuestById(idName) != null)
 			return null;
-		Quest quest = new Quest(path, idName, main, npcs, mobs);
+		Quest quest = new Quest(path, idName, main, npcs, mobs, donjons);
 		quests.add(quest);
 		return quest;
 	}
@@ -72,7 +77,7 @@ public class QuestManager {
 		try {
 			Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(f -> {
 				String name = FilenameUtils.removeExtension(f.toFile().getName());
-				quests.add(new Quest(path, name, main, npcs, mobs));
+				quests.add(new Quest(path, name, main, npcs, mobs, donjons));
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -100,6 +105,13 @@ public class QuestManager {
 						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Le step de la quete ("+quest.getID()+") numéro " + st + " appelle un monstre non valide.");
 						continue;
 					}
+				} else if( step instanceof QuestStepDonjon ) {
+					if( main.getDonjonManager().getLegacyWithConfigName(((QuestStepDonjon)step).getDonjonID()) == null) {
+						Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Le step de la quete ("+quest.getID()+") numéro " + st + " appelle un donjon non valide.");
+						continue;
+					}
+				} else if( step instanceof QuestStepInteract ) {
+					
 				}
 			}
 		}

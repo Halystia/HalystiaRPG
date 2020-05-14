@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.DonjonManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
@@ -54,14 +55,15 @@ public class Quest extends FileDataRPG {
 	private boolean valid;
 	private final NpcManager npcs;
 	private final MobManager mobs;
+	private final DonjonManager donjons;
 	
-	public Quest(String path, String id, HalystiaRPG main, NpcManager npcs, MobManager mobs) {
+	public Quest(String path, String id, HalystiaRPG main, NpcManager npcs, MobManager mobs, DonjonManager donjons) {
 		super(path, id);
 		this.main = main;
 		this.id = id;
 		this.npcs = npcs;
 		this.mobs = mobs;
-		
+		this.donjons = donjons;
 		loadData();
 	}
 	
@@ -92,7 +94,7 @@ public class Quest extends FileDataRPG {
 		valid = true;
 		steps = new QuestStep[config.getInt("steps.n")];
 		for(int i = 0; i < steps.length; i++)
-			steps[i] = QuestStep.factory(config.getConfigurationSection("steps."+i), this, i, npcs, mobs);
+			steps[i] = QuestStep.factory(config.getConfigurationSection("steps."+i), this, i, npcs, mobs, donjons);
 		intro = new Messages(config.getStringList("intro"));
 		
 	}
@@ -458,7 +460,7 @@ public class Quest extends FileDataRPG {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				tab[steps.length] = new QuestStepDonjon(config.getConfigurationSection("steps."+steps.length), quest, steps.length, npcs, mobs);
+				tab[steps.length] = new QuestStepDonjon(config.getConfigurationSection("steps."+steps.length), quest, steps.length, npcs, mobs, donjons);
 				steps = tab;
 			}
 		}.runTaskLater(HalystiaRPG.getInstance(), 10L);
@@ -521,7 +523,7 @@ public class Quest extends FileDataRPG {
 				case DONJON:
 					QuestStepDonjon std = (QuestStepDonjon) old;
 					QuestStepDonjon.serialize(std.getDonjonID(), section);
-					step = new QuestStepDonjon(section, this, i, npcs, mobs);
+					step = new QuestStepDonjon(section, this, i, npcs, mobs, donjons);
 					break;
 				case INTERACT:
 					QuestStepInteract sti = (QuestStepInteract) old;
@@ -570,7 +572,7 @@ public class Quest extends FileDataRPG {
 				case DONJON:
 					QuestStepDonjon std = (QuestStepDonjon) old;
 					QuestStepDonjon.serialize(std.getDonjonID(), section);
-					step = new QuestStepDonjon(section, this, i, npcs, mobs);
+					step = new QuestStepDonjon(section, this, i, npcs, mobs, donjons);
 					break;
 				case INTERACT:
 					QuestStepInteract sti = (QuestStepInteract) old;
