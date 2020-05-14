@@ -8,6 +8,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,6 +41,14 @@ public class EntityDamageOtherListener extends HalystiaListener {
 	public void playerDamageEntity(EntityDamageByEntityEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getDamager()))
 			return;
+		if (e.getEntity() instanceof ItemFrame) {
+			e.setCancelled(true);
+			if(e.getDamager() instanceof Player)
+				if(((Player)e.getDamager()).getGameMode() == GameMode.CREATIVE)
+					e.setCancelled(false);
+			return;
+        }
+		
 		if(main.getSuperMobManager().damageMob(e.getEntity(), e.getDamager().getUniqueId(), 0)) {
 			e.setCancelled(true);
 		}
