@@ -74,7 +74,7 @@ public class EnchanteurGUI extends JobCraftGUI {
 		int level = job.getPlayerLevel(p);
 		double karma = Math.random() - 0.6 + (0.11*level);
 
-		job.addExp(Math.abs(((int)karma)*30), p);
+		job.addExp((int)Math.abs((karma*50)), p);
 		
 		Operation op = Operation.ADD_SCALAR;
 		if(attribut == Attribute.GENERIC_ARMOR || attribut == Attribute.GENERIC_MAX_HEALTH)
