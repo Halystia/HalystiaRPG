@@ -718,6 +718,8 @@ public class CommandEditQuests extends HalystiaCommand {
 			if(args[0].equals("steps") && args[2].equals("create"))
 				if(args[3].equalsIgnoreCase(QuestStepType.KILL.toString()))
 					return Arrays.asList("1", "32", "64").stream().filter(str -> str.startsWith(args[5])).collect(Collectors.toList());
+				else if(args[3].equalsIgnoreCase(QuestStepType.DONJON.toString()))
+					return HalystiaRPG.getInstance().getDonjonManager().getDonjons().stream().map(d -> d.getConfigName()).filter(str -> str.startsWith(args[5])).collect(Collectors.toList());
 		
 		return new ArrayList<>();
 	}// 0=STEPS 1=(QUEST) 2=messages 3=<step> 4=add 5=...

@@ -82,7 +82,7 @@ public class EditMobGUI extends MenuGUI {
 		for(int i = 0; i < 4; i++) {
 			updateDrop(i, new ItemStack(Material.AIR));
 		}
-		xp = 500;
+		xp = 20;
 		updateXp();
 		
 		addOption(new ItemBuilder(Material.REDSTONE_BLOCK).setName(DARK_RED+"Annuler").toItemStack(), 52);

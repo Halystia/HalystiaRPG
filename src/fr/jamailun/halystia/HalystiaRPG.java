@@ -154,12 +154,12 @@ public final class HalystiaRPG extends JavaPlugin {
 		potionMgr = new PotionManager();
 		superMobMgr = new SuperMobManager(PATH, "superMobs");
 		npcMgr = new NpcManager(PATH + "/npcs", PATH + "/npcs-textures.yml", this);
-		questsMgr = new QuestManager(PATH+"/quests", this, npcMgr, mobMgr);
+		donjonsMgr = new DonjonManager(PATH+"/donjons");
+		questsMgr = new QuestManager(PATH+"/quests", this, npcMgr, mobMgr, donjonsMgr);
 		titleMgr = new TitlesManager(PATH);
 		banque = new Banque(PATH+"/banque");
 		jobs = new JobsManager();
 		new JamailunJobExtension(PATH+"/jobs", jobs);
-		donjonsMgr = new DonjonManager(PATH+"/donjons");
 		
 		npcMgr.verifyQuests(questsMgr);
 		
