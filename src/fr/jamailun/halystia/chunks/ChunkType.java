@@ -22,10 +22,11 @@ public class ChunkType {
 	public final static List<String> tags = Arrays.asList("spawn-limit");
 	
 	public static final List<MetaTag> metaDatas = Arrays.asList(
-			 new MetaTag("collectable", Type.BOOLEAN)	// if players can collect ressources.
-			,new MetaTag("safe", Type.BOOLEAN)	// if players can take damages.
-			,new MetaTag("title", Type.STRING)			// title displayed
-			,new MetaTag("subtitle", Type.STRING)			// title displayed
+			 new MetaTag("collectable", Type.BOOLEAN)		// if players can collect ressources.
+			,new MetaTag("safe", Type.BOOLEAN)				// if players can take damages.
+			,new MetaTag("title", Type.STRING)				// title displayed
+			,new MetaTag("subtitle", Type.STRING)			// subtitle displayed
+			,new MetaTag("buildable", Type.BOOLEAN)			// if players can build.
 	);
 		
 	public static MetaTag getTag(String name) {
@@ -46,7 +47,7 @@ public class ChunkType {
 	protected HashMap<String, Integer> possiblesSpawns;
 	private String title, subtitle;
 	
-	private boolean collectable, safe;
+	private boolean collectable, safe, buildable;
 	/**
 	 * Create new ChunkType in config.
 	 */
@@ -86,15 +87,18 @@ public class ChunkType {
 			i++;
 		}
 		if( config.contains(name+".collectable") ) {
-			collectable = config.getString(name+".collectable") == "true" || config.getString(name+".collectable") == "1";
+			collectable = config.getString(name+".collectable").equals("true") || config.getString(name+".collectable").equals("1") || config.getInt(name+".collectable") == 1;
 		}
 		if( config.contains(name+".safe") ) {
-			collectable = config.getString(name+".safe") == "true" || config.getString(name+".safe") == "1";
+			safe = config.getString(name+".safe").equals("true") || config.getString(name+".safe").equals("1") || config.getInt(name+".safe") == 1;
+		}
+		if( config.contains(name+".buildable") ) {
+			buildable = config.getString(name+".buildable").equals("true") || config.getString(name+".buildable").equals("1") || config.getInt(name+".buildable") == 1;
 		}
 		if( config.contains(name+".title") ) {
 			title = config.getString(name+".title");
 		}
-		if( config.contains(name+".title") ) {
+		if( config.contains(name+".subtitle") ) {
 			subtitle = config.getString(name+".subtitle");
 		}
 		
@@ -139,6 +143,10 @@ public class ChunkType {
 	
 	public boolean haveTitle() {
 		return title != null;
+	}
+	
+	public boolean isBuildable() {
+		return buildable;
 	}
 	
 	public boolean haveSubTitle() {

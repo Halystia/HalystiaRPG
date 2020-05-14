@@ -6,14 +6,18 @@ import static org.bukkit.ChatColor.RED;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.Equipment;
 import fr.jamailun.halystia.jobs.JobResult;
 import fr.jamailun.halystia.jobs.JobsManager;
 
@@ -25,7 +29,8 @@ public class PlayerBreakListener extends HalystiaListener {
 		this.jobs = jobs;
 	}
 	
-	@EventHandler
+	@SuppressWarnings("deprecation")
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void playerBreakBlock(BlockBreakEvent e) {
 		if( ! HalystiaRPG.isRpgWorld(e.getBlock().getWorld()))
 			return;
@@ -41,12 +46,35 @@ public class PlayerBreakListener extends HalystiaListener {
 		if(p.getGameMode() == GameMode.CREATIVE)
 			return;
 		
+		final Location loc = e.getBlock().getLocation();
+		if(main.getChunkManager().isBuildable(loc)) {
+			e.setCancelled(true);
+			e.setDropItems(false);
+			e.setExpToDrop(0);
+			ItemStack tool = p.getInventory().getItemInMainHand();
+			for(ItemStack item : e.getBlock().getDrops(tool, p))
+				loc.getWorld().dropItemNaturally(loc, item);
+			e.getBlock().setType(Material.AIR);
+			if(tool != null) {
+				if(Equipment.TOOLS.hasObject(tool.getType())) {
+					short dura = (short) (tool.getDurability() + 1);
+					if( dura < tool.getType().getMaxDurability() ) {
+						tool.setDurability(dura);
+					} else {
+						p.playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
+						p.getInventory().getItemInMainHand().setAmount(0);
+					}
+				}
+			}
+			return;
+		}
+		
 		JobResult result = jobs.blockBreakEvent(e.getBlock(), p);
 		
 		switch ( result.getType() ) {
 			case NOT_HARVESTABLE:
-				//p.sendMessage(HalystiaRPG.PREFIX + RED + "Impossible de récolter dans cette zone.");
-				//e.setCancelled(true);
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "Impossible de récolter dans cette zone.");
+				e.setCancelled(true);
 				return;
 			case NO_JOB:
 				p.sendMessage(HalystiaRPG.PREFIX + RED + "Vous n'avez pas le bon métier !");

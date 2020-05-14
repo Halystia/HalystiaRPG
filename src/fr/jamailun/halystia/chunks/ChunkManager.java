@@ -145,4 +145,11 @@ public class ChunkManager {
 		return type.isSafe();
 	}
 	
+	public boolean isBuildable(Location location) {
+		ChunkType type = getValueOfChunk(location.getChunk());
+		if(type == null)
+			return false;
+		return type.isBuildable();
+	}
+	
 }

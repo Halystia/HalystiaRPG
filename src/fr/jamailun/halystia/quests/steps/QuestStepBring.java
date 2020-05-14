@@ -13,7 +13,6 @@ import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
-import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.shops.Trade;
 
@@ -46,10 +45,7 @@ public final class QuestStepBring extends QuestStep {
 			return;
 		}
 		
-		trade = new Trade("step_"+step+"_"+quest.getID(), Classe.NONE,
-				null,
-				Arrays.asList(item),
-				0);
+		trade = new Trade(null, Arrays.asList(item));
 		loot = section.getItemStack("loot");
 	}
 	
