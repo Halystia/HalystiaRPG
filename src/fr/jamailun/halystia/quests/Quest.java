@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +25,8 @@ import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.quests.steps.QuestStepBring;
+import fr.jamailun.halystia.quests.steps.QuestStepDonjon;
+import fr.jamailun.halystia.quests.steps.QuestStepInteract;
 import fr.jamailun.halystia.quests.steps.QuestStepKill;
 import fr.jamailun.halystia.quests.steps.QuestStepSpeak;
 import fr.jamailun.halystia.titles.Title;
@@ -440,6 +443,47 @@ public class Quest extends FileDataRPG {
 		}.runTaskLater(HalystiaRPG.getInstance(), 10L);
 	}
 
+	public void addStepDonjon(String donjonID) {
+		int newNumberSteps = steps.length + 1;
+		QuestStep[] tab = new QuestStep[newNumberSteps];
+		for(int i = 0; i < steps.length; i++)
+			tab[i] = steps[i];
+		
+		synchronized (file) {
+			QuestStepDonjon.serialize(donjonID, config.createSection("steps."+steps.length));
+			config.set("steps.n", newNumberSteps);
+			save();
+		}
+		final Quest quest = this;
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				tab[steps.length] = new QuestStepDonjon(config.getConfigurationSection("steps."+steps.length), quest, steps.length, npcs, mobs);
+				steps = tab;
+			}
+		}.runTaskLater(HalystiaRPG.getInstance(), 10L);
+	}
+	
+	public void addStepInteract(Block block, String blockName) {
+		int newNumberSteps = steps.length + 1;
+		QuestStep[] tab = new QuestStep[newNumberSteps];
+		for(int i = 0; i < steps.length; i++)
+			tab[i] = steps[i];
+		
+		synchronized (file) {
+			QuestStepInteract.serialize(block.getLocation(), blockName, config.createSection("steps."+steps.length));
+			config.set("steps.n", newNumberSteps);
+			save();
+		}
+		final Quest quest = this;
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				tab[steps.length] = new QuestStepInteract(config.getConfigurationSection("steps."+steps.length), quest, steps.length, npcs, mobs);
+				steps = tab;
+			}
+		}.runTaskLater(HalystiaRPG.getInstance(), 10L);
+	}
 	
 	public boolean destroyStep(int slot) {
 		if(slot < 0 || slot >= steps.length)
@@ -474,7 +518,18 @@ public class Quest extends FileDataRPG {
 					QuestStepSpeak.serialize(stp.getTarget(), section);
 					step = new QuestStepSpeak(section, this, j, npcs, mobs);
 					break;
+				case DONJON:
+					QuestStepDonjon std = (QuestStepDonjon) old;
+					QuestStepDonjon.serialize(std.getDonjonID(), section);
+					step = new QuestStepDonjon(section, this, i, npcs, mobs);
+					break;
+				case INTERACT:
+					QuestStepInteract sti = (QuestStepInteract) old;
+					QuestStepInteract.serialize(sti.getTargettedBlock().getLocation(), sti.getBlockName(), section);
+					step = new QuestStepInteract(section, this, i, npcs, mobs);
+					break;
 				default:
+					main.getConsole().sendMessage(ChatColor.RED+"ALERTE TYPE DE STEP NON DEFINI destorStep QUEST class.");
 					return false;
 				}
 				tab[j] = step;
@@ -512,7 +567,18 @@ public class Quest extends FileDataRPG {
 					QuestStepSpeak.serialize(stp.getTarget(), section);
 					step = new QuestStepSpeak(section, this, i, npcs, mobs);
 					break;
+				case DONJON:
+					QuestStepDonjon std = (QuestStepDonjon) old;
+					QuestStepDonjon.serialize(std.getDonjonID(), section);
+					step = new QuestStepDonjon(section, this, i, npcs, mobs);
+					break;
+				case INTERACT:
+					QuestStepInteract sti = (QuestStepInteract) old;
+					QuestStepInteract.serialize(sti.getTargettedBlock().getLocation(), sti.getBlockName(), section);
+					step = new QuestStepInteract(section, this, i, npcs, mobs);
+					break;
 				default:
+					main.getConsole().sendMessage(ChatColor.RED+"ALERTE TYPE DE STEP NON DEFINI destorLastStep QUEST class.");
 					return false;
 				}
 				tab[i] = step;

@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -23,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.steps.QuestStep;
+import fr.jamailun.halystia.quests.steps.QuestStepInteract;
 import fr.jamailun.halystia.quests.steps.QuestStepKill;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.MenuGUI;
@@ -64,6 +66,18 @@ public class MainQuestsGUI extends MenuGUI {
 						break;
 					case SPEAK:
 						type = Material.PAPER;
+						break;
+					case DONJON:
+						type = Material.END_PORTAL_FRAME;
+						break;
+					case INTERACT:
+						Block bl = ((QuestStepInteract)step).getTargettedBlock();
+						if(bl.getType() == Material.AIR || bl.getType() == Material.CAVE_AIR || bl.getType() == Material.WATER || bl.getType() == Material.LAVA) {
+							type = Material.BARRIER;
+							additionalLore.add(RED+"ERREUR : type de bloc cible non valide:");
+							additionalLore.add(GRAY+bl.toString());
+						} else
+							type =bl.getType();
 						break;
 				}
 				builder = new ItemBuilder(type);

@@ -38,6 +38,10 @@ public abstract class QuestStep {
 				return new QuestStepBring(section, quest, step, npcs, mobs);
 			case KILL:
 				return new QuestStepKill(section, quest, step, npcs, mobs);
+			case DONJON:
+				return new QuestStepDonjon(section, quest, step, npcs, mobs);
+			case INTERACT:
+				return new QuestStepInteract(section, quest, step, npcs, mobs);
 		}
 		throw new IllegalArgumentException("Type '"+section.getString("type")+"' not compatible.");
 	}

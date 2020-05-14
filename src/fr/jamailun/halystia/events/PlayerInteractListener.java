@@ -3,6 +3,10 @@ package fr.jamailun.halystia.events;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -13,6 +17,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.codingforcookies.armorequip.ArmorEquipEvent;
 
@@ -20,6 +25,8 @@ import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
 import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.players.Classe;
+import fr.jamailun.halystia.quests.steps.QuestStep;
+import fr.jamailun.halystia.quests.steps.QuestStepInteract;
 
 public class PlayerInteractListener extends HalystiaListener {
 
@@ -31,6 +38,8 @@ public class PlayerInteractListener extends HalystiaListener {
 	}
 	
 	private long lastBoat = System.currentTimeMillis();
+	
+	private Set<UUID> lastones = new HashSet<>();
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void playerInteract(PlayerInteractEvent e) {
@@ -44,6 +53,24 @@ public class PlayerInteractListener extends HalystiaListener {
 			if(e.getClickedBlock().getType() == Material.FARMLAND) {
 				e.setUseInteractedBlock(Event.Result.DENY);
 				e.setCancelled(true);
+			}
+		}
+		
+		if(e.getAction() == Action.RIGHT_CLICK_BLOCK && ! lastones.contains(p.getUniqueId()) && e.getClickedBlock() != null) {
+			lastones.add(p.getUniqueId());
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					lastones.remove(p.getUniqueId());
+				}
+			}.runTaskLater(main, 20L);
+			for(QuestStep step : HalystiaRPG.getInstance().getDataBase().getOnGoingQuestSteps(p)) {
+				if(step instanceof QuestStepInteract) {
+					QuestStepInteract real = (QuestStepInteract) step;
+					if(real.getTargettedBlock().getLocation().equals(e.getClickedBlock().getLocation())) {
+						real.valid(p);
+					}
+				}
 			}
 		}
 		

@@ -55,11 +55,7 @@ public class NpcInteractionListener extends HalystiaListener {
 		}.runTaskLater(main, 25L);
 		
 		
-		if(e.getNPC().hasTrait(AubergisteTrait.class)) {
-			main.getDataBase().updateSpawnLocation(e.getClicker(), e.getClicker().getLocation());
-			e.getClicker().sendMessage(e.getNPC().getName()+ChatColor.WHITE+" > "+ChatColor.YELLOW+"Votre position a été sauvegardée. C'est ici que vous réapparaitrez désormais.");
-			return;
-		}
+		
 		
 		RpgNpc npc = main.getNpcManager().getNpc(e.getNPC());
 		if(npc == null) {
@@ -91,6 +87,12 @@ public class NpcInteractionListener extends HalystiaListener {
 					return;
 				}
 			}
+		}
+		
+		if(e.getNPC().hasTrait(AubergisteTrait.class)) {
+			main.getDataBase().updateSpawnLocation(e.getClicker(), e.getClicker().getLocation());
+			e.getClicker().sendMessage(e.getNPC().getName()+ChatColor.WHITE+" > "+ChatColor.YELLOW+"Votre position a été sauvegardée. C'est ici que vous réapparaitrez désormais.");
+			return;
 		}
 
 	//	System.out.println("no validation");

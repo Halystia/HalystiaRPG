@@ -39,6 +39,8 @@ import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.enemies.Enemy;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.quests.steps.QuestStep;
+import fr.jamailun.halystia.quests.steps.QuestStepDonjon;
 import fr.jamailun.halystia.spells.Invocator;
 
 public abstract class Boss implements Enemy, Invocator {
@@ -87,7 +89,17 @@ public abstract class Boss implements Enemy, Invocator {
 			public void run() {
 				p.getInventory().setContents(inv);
 			}
-		}.runTaskLater(HalystiaRPG.getInstance(), 60L);
+		}.runTaskLater(HalystiaRPG.getInstance(), 50L);
+		
+		for(QuestStep step : HalystiaRPG.getInstance().getDataBase().getOnGoingQuestSteps(p)) {
+			if(step instanceof QuestStepDonjon) {
+				QuestStepDonjon real = (QuestStepDonjon) step;
+				if(this.donjon.getConfigName().equals(real.getDonjonID())) {
+					real.valid(p);
+					p.sendMessage(ChatColor.GOLD+"Donjon validé dans la quête " + real.getQuest().getDisplayName()+ChatColor.GOLD+".");
+				}
+			}
+		}
 	}
 	
 	public Map<Player, Double> getDamagers() {

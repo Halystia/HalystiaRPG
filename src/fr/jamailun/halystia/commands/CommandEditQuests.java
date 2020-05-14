@@ -17,14 +17,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bukkit.ChatColor;
+import org.bukkit.FluidCollisionMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.Donjon;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
@@ -601,6 +604,28 @@ public class CommandEditQuests extends HalystiaCommand {
 						return true;
 					}
 					quest.addStepSpeak(npcc);
+					break;
+				case DONJON:
+					Donjon donjon = main.getDonjonManager().getLegacyWithConfigName(args[4]);
+					if(donjon == null) {
+						p.sendMessage(RED + "Le donjon ("+args[4]+") n'existe pas !");
+						return true;
+					}
+					quest.addStepDonjon(donjon.getConfigName());
+					break;
+				case INTERACT:
+					Block target = p.getTargetBlockExact(5, FluidCollisionMode.NEVER);
+					if(target == null) {
+						p.sendMessage(RED + "Il faut regarder un block !");
+						return true;
+					}
+					StringBuilder builder = new StringBuilder();
+					for(int i = 4; i < args.length; i++) {
+						builder.append(args[i]);
+						if(i < args.length - 1)
+							builder.append(" ");
+					}
+					quest.addStepInteract(target, builder.toString());
 					break;
 				}
 				p.sendMessage(GREEN+"Etape créée avec succès.");
