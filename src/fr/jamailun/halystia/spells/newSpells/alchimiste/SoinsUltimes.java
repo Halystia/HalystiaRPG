@@ -6,15 +6,16 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import fr.jamailun.halystia.players.Classe;
-import fr.jamailun.halystia.spells.*;
-import fr.jamailun.halystia.utils.PlayerUtils;
+import fr.jamailun.halystia.spells.Spell;
 
 public class SoinsUltimes extends Spell {
 	
@@ -42,7 +43,7 @@ public class SoinsUltimes extends Spell {
 							if(heal) {
 								pl.playSound(pl.getLocation(), Sound.BLOCK_WET_GRASS_STEP, 1f, .4f);
 								double health = pl.getHealth() + HEALTH;
-								double max = PlayerUtils.getMaxHealthOfPlayer(pl);
+								double max = pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 								pl.setHealth(health > max ? max : health);
 							}
 						} else {

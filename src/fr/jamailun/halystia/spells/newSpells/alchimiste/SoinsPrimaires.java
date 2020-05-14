@@ -6,12 +6,12 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.Spell;
-import fr.jamailun.halystia.utils.PlayerUtils;
 
 public class SoinsPrimaires extends Spell {
 	
@@ -29,7 +29,7 @@ public class SoinsPrimaires extends Spell {
 					for(Player pl : getPlayersAroundPlayer(p, 100, true)) {
 						if(pl.getLocation().distance(p.getLocation()) < RANGE) {
 							double health = pl.getHealth() + HEALTH;
-							double max = PlayerUtils.getMaxHealthOfPlayer(pl);
+							double max = pl.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 							pl.setHealth(health > max ? max : health);
 						}
 						pl.playSound(p.getLocation(), Sound.BLOCK_BAMBOO_PLACE, 2f, .4f);
