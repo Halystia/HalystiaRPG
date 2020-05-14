@@ -7,7 +7,6 @@ import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 
 import java.util.NoSuchElementException;
-import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -136,7 +135,7 @@ public class TchatListener extends HalystiaListener {
 					.map(str -> str.replace("prefix."+weight+".", ""))
 					.findFirst().get();
 		} catch (NoSuchElementException ee) {
-			Bukkit.getLogger().log(Level.WARNING, "Impossible de retrouver les propriété de tchat de " + p.getName()+".");
+			//Bukkit.getLogger().log(Level.WARNING, "Impossible de retrouver les propriété de tchat de " + p.getName()+".");
 			prefixNormal = "";
 		}
 		
