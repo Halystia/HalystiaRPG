@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.Spell;
+import fr.jamailun.halystia.utils.PlayerUtils;
 
 public class SoinsPrimaires extends Spell {
 	
@@ -26,8 +27,11 @@ public class SoinsPrimaires extends Spell {
 				@Override
 				public void run() {
 					for(Player pl : getPlayersAroundPlayer(p, 100, true)) {
-						if(pl.getLocation().distance(p.getLocation()) < RANGE)
-							pl.setHealth(pl.getHealth() + HEALTH);
+						if(pl.getLocation().distance(p.getLocation()) < RANGE) {
+							double health = pl.getHealth() + HEALTH;
+							double max = PlayerUtils.getMaxHealthOfPlayer(pl);
+							pl.setHealth(health > max ? max : health);
+						}
 						pl.playSound(p.getLocation(), Sound.BLOCK_BAMBOO_PLACE, 2f, .4f);
 						spawnParticles(pl, p.getLocation(), Particle.HEART, (int) (Math.PI*RANGE*RANGE*5), RANGE, 1, .05);
 					}

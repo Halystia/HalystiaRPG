@@ -63,7 +63,7 @@ public class Propulsion extends Spell {
 	
 	@Override
 	public int getManaCost() {
-		return 7;
+		return 12;
 	}
 
 	@Override

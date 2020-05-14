@@ -115,7 +115,7 @@ public class PluieDacier extends InvocationSpell {
 	@Override
 	public
 	int getManaCost() {
-		return 10;
+		return 12;
 	}
 
 	@Override

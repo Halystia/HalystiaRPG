@@ -19,10 +19,10 @@ public class Flameche extends Spell {
 	@Override
 	public synchronized boolean cast(Player p) {
 		
-		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 4*2, new ArrayList<>(), 1, false, 5*20, 1, 0, false);
+		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 4*3, new ArrayList<>(), 1, false, 5*20, 1, 0, false);
 		
 		Vector dir = p.getLocation().getDirection();
-		Vector dirr = dir.multiply(.4);
+		Vector dirr = dir.multiply(.5);
 		spell.setDirection(dirr);
 		spell.addParticleEffect(Particle.FLAME, 50, 0, 0, .05);
 		spell.addSoundEffect(Sound.BLOCK_FIRE_EXTINGUISH, .5f, 1.5f);
@@ -66,12 +66,12 @@ public class Flameche extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 7;
+		return 9;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 3;
 	}
 
 }

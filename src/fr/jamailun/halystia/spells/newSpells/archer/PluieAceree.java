@@ -87,12 +87,12 @@ public class PluieAceree extends InvocationSpell {
 
 	@Override
 	public int getManaCost() {
-		return 4;
+		return 8;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 1;
+		return 2;
 	}
 
 }

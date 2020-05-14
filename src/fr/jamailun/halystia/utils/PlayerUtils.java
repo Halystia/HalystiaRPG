@@ -13,12 +13,40 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 public class PlayerUtils {
 	private List<Player> players;
 
+	public static double getMaxHealthOfPlayer(Player p) {
+		double base = p.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+		double equip = 0;
+		equip += getHealthOfItem(p.getInventory().getHelmet(), EquipmentSlot.HEAD);
+		equip += getHealthOfItem(p.getInventory().getChestplate(), EquipmentSlot.CHEST);
+		equip += getHealthOfItem(p.getInventory().getLeggings(), EquipmentSlot.LEGS);
+		equip += getHealthOfItem(p.getInventory().getBoots(), EquipmentSlot.FEET);
+		equip += getHealthOfItem(p.getInventory().getItemInMainHand(), EquipmentSlot.HAND);
+		equip += getHealthOfItem(p.getInventory().getItemInOffHand(), EquipmentSlot.OFF_HAND);
+		double all = base + equip;
+		if(all < 1)
+			all = 1;
+		return all;
+	}
+	
+	public static double getHealthOfItem(ItemStack item, EquipmentSlot slot) {
+		double value = 0;
+		if(item != null)
+			if(item.hasItemMeta())
+				if(item.getItemMeta().hasAttributeModifiers())
+					if(item.getItemMeta().getAttributeModifiers(Attribute.GENERIC_MAX_HEALTH) != null)
+						value += item.getItemMeta().getAttributeModifiers(Attribute.GENERIC_MAX_HEALTH).stream().filter(mod -> mod.getSlot() == slot).mapToDouble(modif -> modif.getAmount()).sum();
+		return value;
+	}
+	
 	public PlayerUtils(Player p) {
 		players = new ArrayList<Player>();
 		players.add(p);

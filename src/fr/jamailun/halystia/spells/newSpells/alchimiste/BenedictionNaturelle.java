@@ -32,6 +32,10 @@ public class BenedictionNaturelle extends Spell {
 	@Override
 	public synchronized boolean cast(Player p) {
 		RayTraceResult rayTrace = p.rayTraceBlocks(5, FluidCollisionMode.NEVER);
+		if(rayTrace == null) {
+			p.sendMessage(ChatColor.RED + "Il faut viser un joueur pour utiliser ce sort ! Portée maximale de 5 blocs.");
+			return false;
+		}
 		Entity entity = rayTrace.getHitEntity();
 		if(entity == null) {
 			p.sendMessage(ChatColor.RED + "Il faut viser un joueur pour utiliser ce sort ! Portée maximale de 5 blocs.");
@@ -107,12 +111,12 @@ public class BenedictionNaturelle extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 10;
+		return 12;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 3;
 	}
 
 }

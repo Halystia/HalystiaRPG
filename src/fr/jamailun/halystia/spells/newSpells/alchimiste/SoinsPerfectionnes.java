@@ -10,11 +10,12 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.Spell;
+import fr.jamailun.halystia.utils.PlayerUtils;
 
 public class SoinsPerfectionnes extends Spell {
 	
 	public final static int RANGE = 4;
-	public final static int VAGUES = 3;
+	public final static int VAGUES = 2;
 	public final static int DELAI = 20*3;
 	public final static int HEALTH = 8;
 	
@@ -25,8 +26,11 @@ public class SoinsPerfectionnes extends Spell {
 				@Override
 				public void run() {
 					for(Player pl : getPlayersAroundPlayer(p, 100, true)) {
-						if(pl.getLocation().distance(p.getLocation()) < RANGE)
-							pl.setHealth(pl.getHealth() + HEALTH);
+						if(pl.getLocation().distance(p.getLocation()) < RANGE) {
+							double health = pl.getHealth() + HEALTH;
+							double max = PlayerUtils.getMaxHealthOfPlayer(pl);
+							pl.setHealth(health > max ? max : health);
+						}
 						spawnParticles(pl, p.getLocation(), Particle.HEART, (int) (Math.PI*RANGE*RANGE), RANGE, 1, .05);
 					}
 				}
@@ -71,12 +75,12 @@ public class SoinsPerfectionnes extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 3;
+		return 25;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 4;
+		return 6;
 	}
 
 }

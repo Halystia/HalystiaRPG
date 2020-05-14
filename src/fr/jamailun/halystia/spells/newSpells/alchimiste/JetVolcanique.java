@@ -22,7 +22,7 @@ public class JetVolcanique extends Spell {
 		spawnParticles(p.getLocation(), Particle.DRIP_LAVA, 200, .1, 3, 1);
 		spawnParticles(p.getLocation(), Particle.FLAME, 200, 1, .5, .2);
 		ball.setBounce(false);
-		ball.setIsIncendiary(true);
+		ball.setIsIncendiary(false);
 		ball.setInvulnerable(false);
 		ball.setYield(3);
 		
@@ -80,7 +80,7 @@ public class JetVolcanique extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 45;
+		return 50;
 	}
 
 	@Override

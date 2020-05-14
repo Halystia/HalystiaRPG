@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.*;
+import fr.jamailun.halystia.utils.PlayerUtils;
 
 public class SoinsUltimes extends Spell {
 	
@@ -40,7 +41,9 @@ public class SoinsUltimes extends Spell {
 							spawnParticles(pl, p.getLocation(), Particle.VILLAGER_HAPPY, (int) (Math.PI*RANGE*RANGE), RANGE, 1, .5);
 							if(heal) {
 								pl.playSound(pl.getLocation(), Sound.BLOCK_WET_GRASS_STEP, 1f, .4f);
-								pl.setHealth(pl.getHealth() + HEALTH);
+								double health = pl.getHealth() + HEALTH;
+								double max = PlayerUtils.getMaxHealthOfPlayer(pl);
+								pl.setHealth(health > max ? max : health);
 							}
 						} else {
 							if(heal)
@@ -89,12 +92,12 @@ public class SoinsUltimes extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 25;
+		return 40;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 4;
+		return 7;
 	}
 
 }

@@ -89,7 +89,7 @@ public class VitesseExtreme extends Spell {
 	
 	@Override
 	public int getManaCost() {
-		return 15;
+		return 18;
 	}
 
 	@Override

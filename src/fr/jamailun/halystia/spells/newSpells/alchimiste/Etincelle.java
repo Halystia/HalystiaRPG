@@ -126,12 +126,12 @@ public class Etincelle extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 18;
+		return 25;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 4;
 	}
 
 }

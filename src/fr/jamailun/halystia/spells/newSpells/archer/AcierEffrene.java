@@ -90,12 +90,12 @@ public class AcierEffrene extends InvocationSpell {
 
 	@Override
 	public int getManaCost() {
-		return 20;
+		return 25;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 6;
 	}
 
 }

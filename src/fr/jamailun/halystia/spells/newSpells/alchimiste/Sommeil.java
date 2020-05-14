@@ -21,7 +21,7 @@ public class Sommeil extends Spell {
 	@Override
 	public void init() {
 		effects = Arrays.asList(
-			new PotionEffect(PotionEffectType.SLOW, 20*3, 50, false, false, true),
+			new PotionEffect(PotionEffectType.SLOW, 20*3, 3, false, false, true),
 			new PotionEffect(PotionEffectType.SLOW_DIGGING, 9*20, 2, false, false, true),
 			new PotionEffect(PotionEffectType.JUMP, 9*20, 199, false, false, false),
 			new PotionEffect(PotionEffectType.BLINDNESS, 9*20, 199, false, false, true)

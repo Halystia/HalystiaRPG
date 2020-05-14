@@ -45,8 +45,8 @@ public class PlayerBreakListener extends HalystiaListener {
 		
 		switch ( result.getType() ) {
 			case NOT_HARVESTABLE:
-				p.sendMessage(HalystiaRPG.PREFIX + RED + "Impossible de récolter dans cette zone.");
-				e.setCancelled(true);
+				//p.sendMessage(HalystiaRPG.PREFIX + RED + "Impossible de récolter dans cette zone.");
+				//e.setCancelled(true);
 				return;
 			case NO_JOB:
 				p.sendMessage(HalystiaRPG.PREFIX + RED + "Vous n'avez pas le bon métier !");

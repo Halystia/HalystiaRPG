@@ -21,7 +21,7 @@ public class Toxine extends Spell {
 	@Override
 	public void init() {
 		effects = Arrays.asList(
-			new PotionEffect(PotionEffectType.POISON, 20*5, 0)
+			new PotionEffect(PotionEffectType.POISON, 20*6, 1)
 		);
 	}
 	
@@ -75,7 +75,7 @@ public class Toxine extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 4;
+		return 12;
 	}
 
 	@Override
