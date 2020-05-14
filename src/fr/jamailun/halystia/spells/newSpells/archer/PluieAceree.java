@@ -31,7 +31,7 @@ public class PluieAceree extends InvocationSpell {
 					
 					Arrow a = p.launchProjectile(Arrow.class);
 					a.setVelocity(p.getLocation().getDirection().multiply(POWER));
-					a.setPickupStatus(PickupStatus.CREATIVE_ONLY);
+					a.setPickupStatus(PickupStatus.DISALLOWED);
 					a.setPierceLevel(3);
 					a.setShooter(p);
 					a.setCustomNameVisible(false);

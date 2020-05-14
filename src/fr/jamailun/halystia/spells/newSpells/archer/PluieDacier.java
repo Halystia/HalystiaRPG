@@ -10,6 +10,7 @@ import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.entity.AbstractArrow.PickupStatus;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -55,6 +56,7 @@ public class PluieDacier extends InvocationSpell {
 						
 						Arrow a = loc.getWorld().spawnArrow(new Location(loc.getWorld(), loc.getX() + dx, loc.getY() + 12, loc.getZ() + dz), new Vector(0, -1, 0), 0.7f, 12);
 						
+						a.setPickupStatus(PickupStatus.DISALLOWED);
 						a.setCustomNameVisible(false);
 						a.setShooter(p);
 						

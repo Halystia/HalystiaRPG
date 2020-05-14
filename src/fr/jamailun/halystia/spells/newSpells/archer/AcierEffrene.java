@@ -32,7 +32,7 @@ public class AcierEffrene extends InvocationSpell {
 				public void run() {
 					Arrow a = p.launchProjectile(Arrow.class);
 					a.setVelocity(p.getLocation().getDirection().multiply(POWER));
-					a.setPickupStatus(PickupStatus.CREATIVE_ONLY);
+					a.setPickupStatus(PickupStatus.DISALLOWED);
 					a.setPierceLevel(5);
 					a.setShooter(p);
 					if(RandomString.randInt(1, 100) < 20)
