@@ -193,7 +193,9 @@ public class SpellManager {
 		
 		Spell spell = getSpellOfItem(p.getInventory().getItemInMainHand());
 		if(spell == null) {
-			return false;
+			spell = getSpellOfItem(p.getInventory().getItemInOffHand());
+			if(spell == null)
+				return false;
 		}
 		
 		synchronized (spell) {
