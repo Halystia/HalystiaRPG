@@ -19,8 +19,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.codingforcookies.armorequip.ArmorEquipEvent;
-
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
 import fr.jamailun.halystia.jobs.JobsManager;
@@ -157,7 +155,6 @@ public class PlayerInteractListener extends HalystiaListener {
 				return;
 			}
 		}
-		
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -167,28 +164,6 @@ public class PlayerInteractListener extends HalystiaListener {
 		if(e.getRecipe().getResult().getType() == Material.FISHING_ROD) {
 			e.setCancelled(true);
 			return;
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void playerEquipArmor(ArmorEquipEvent e) {
-		if( ! HalystiaRPG.isInRpgWorld(e.getPlayer()))
-			return;
-		final Player p = e.getPlayer();
-		try {
-		Classe classe = main.getClasseManager().getPlayerData(p).getClasse();
-		if(e.getNewArmorPiece() != null) {
-			Classe ob = main.getTradeManager().getClasseOfItem(e.getNewArmorPiece());
-			if(classe != ob && ob != Classe.NONE) {
-				e.setCancelled(true);
-				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée pour équiper cet objet !");
-				p.updateInventory();
-				return;
-			}
-		}
-		} catch(NullPointerException ee) {
-			e.setCancelled(true);
-			e.getPlayer().sendMessage(RED+"Une erreur est survenue, merci de réessayer dans quelques secondes !");
 		}
 	}
 
