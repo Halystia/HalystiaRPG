@@ -19,6 +19,8 @@ import fr.jamailun.halystia.spells.InvocationSpell;
 public class Corruption extends InvocationSpell {
 	
 	public final static double RAYON = 3.0;
+	public final static int CREATURE_DAMAGES = 10;
+	public final static double CREATURE_HEALTH = 10;
 	
 	private EntityType[] types;
 	
@@ -29,7 +31,7 @@ public class Corruption extends InvocationSpell {
 	
 	@Override
 	public synchronized boolean cast(Player p) {
-		if( ! canInvoke(p.getUniqueId(), LIMIT)) {
+		if( ! canInvoke(p.getUniqueId(), LIMIT - 3)) {
 			p.sendMessage(ChatColor.RED+"Attends que toutes tes créations aient disparues !");
 			return false;
 		}
@@ -44,18 +46,18 @@ public class Corruption extends InvocationSpell {
 				LivingEntity en = (LivingEntity) p.getWorld().spawnEntity(loc, type);
 				en.setCustomName(ChatColor.RED + "Créature de " + ChatColor.GOLD +  p.getName());
 				
-				en.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1);
-				en.setHealth(1.0);
+				en.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(CREATURE_HEALTH);
+				en.setHealth(CREATURE_HEALTH);
 				
-				addInvocation(en, p, false, 2);
+				addInvocation(en, p, false, CREATURE_DAMAGES);
 				
 				new BukkitRunnable() {
 					@Override
 					public void run() {
 						if(en.isValid())
-							en.damage(100);
+							en.damage(1000);
 					}
-				}.runTaskLater(main, 20*30);
+				}.runTaskLater(main, 20*20);
 			}
 		}	
 		return true;
@@ -68,7 +70,7 @@ public class Corruption extends InvocationSpell {
 
 	@Override
 	public ChatColor getColor() {
-		return ChatColor.YELLOW;
+		return ChatColor.RED;
 	}
 
 	@Override
@@ -86,7 +88,7 @@ public class Corruption extends InvocationSpell {
 		return Arrays.asList(
 			ChatColor.GRAY + "Conjure les forces obscure pour faire corrompre",
 			ChatColor.GRAY + "les alentours. Une armée ténébreuse apparait.",
-			ChatColor.GRAY + "Créature : " + ChatColor.RED + "1 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "2 dmgs" + ChatColor.GRAY + ".",
+			ChatColor.GRAY + "Créature : " + ChatColor.RED + "10 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "10 dmgs" + ChatColor.GRAY + ".",
 			ChatColor.GRAY + "Durée des invocations : " + ChatColor.GREEN + (30) + "s" + ChatColor.GRAY + "."
 		);
 	}

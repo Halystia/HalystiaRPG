@@ -66,7 +66,7 @@ public class RepliqueFeu extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 4;
+		return 8;
 	}
 
 	@Override

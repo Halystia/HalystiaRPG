@@ -4,17 +4,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.FluidCollisionMode;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.RayTraceResult;
-import fr.jamailun.halystia.players.*;
-import fr.jamailun.halystia.spells.*;
+
+import fr.jamailun.halystia.players.Classe;
+import fr.jamailun.halystia.spells.Spell;
 
 public class BenedictionNaturelle extends Spell {
 
@@ -31,23 +29,11 @@ public class BenedictionNaturelle extends Spell {
 	
 	@Override
 	public synchronized boolean cast(Player p) {
-		RayTraceResult rayTrace = p.rayTraceBlocks(5, FluidCollisionMode.NEVER);
-		if(rayTrace == null) {
-			p.sendMessage(ChatColor.RED + "Il faut viser un joueur pour utiliser ce sort ! Portée maximale de 5 blocs.");
+		Player target = super.getClosestPlayerAtRange(p.getLocation(), 5);
+		if(target == null) {
+			p.sendMessage(ChatColor.RED + "Il faut un joueur à proximité !");
 			return false;
 		}
-		Entity entity = rayTrace.getHitEntity();
-		if(entity == null) {
-			p.sendMessage(ChatColor.RED + "Il faut viser un joueur pour utiliser ce sort ! Portée maximale de 5 blocs.");
-			return false;
-		}
-		
-		if(!(entity instanceof Player)) {
-			p.sendMessage(ChatColor.RED + "Il faut viser un joueur pour utiliser ce sort !");
-			return false;
-		}
-		
-		Player target = (Player) entity;
 		for(PotionEffect eff : effects)
 			target.addPotionEffect(eff);
 		

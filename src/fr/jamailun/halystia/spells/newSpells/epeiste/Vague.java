@@ -65,12 +65,12 @@ public class Vague extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 12;
+		return 15;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 3;
+		return 4;
 	}
 
 }

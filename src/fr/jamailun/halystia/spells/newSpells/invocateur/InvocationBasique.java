@@ -81,7 +81,7 @@ public class InvocationBasique extends InvocationSpell {
 
 	@Override
 	public int getManaCost() {
-		return 4;
+		return 7;
 	}
 
 	@Override

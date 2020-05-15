@@ -298,11 +298,11 @@ public abstract class Spell {
 		for(int x = bottomBlockX; x <= topBlockX; x++) {
 			for(int z = bottomBlockZ; z <= topBlockZ; z++) {
 				for(int y = bottomBlockY; y <= topBlockY; y++) {
-						Block block = loc1.getWorld().getBlockAt(x, y, z);
-						blocks.add(block);
-					}
+					Block block = loc1.getWorld().getBlockAt(x, y, z);
+					blocks.add(block);
 				}
 			}
+		}
 		return blocks;
 	}
 	

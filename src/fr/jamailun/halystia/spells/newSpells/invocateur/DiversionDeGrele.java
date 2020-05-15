@@ -13,10 +13,17 @@ import fr.jamailun.halystia.spells.InvocationSpell;
 
 public class DiversionDeGrele extends InvocationSpell {
 	
+	public final static double HEALTH = 12;
+	
+	@Override
+	public void init() {
+		LIMIT = 5;
+	}
+	
 	@Override
 	public synchronized boolean cast(Player p) {
-		if( ! canInvoke(p.getUniqueId(), 2)) {
-			p.sendMessage(ChatColor.RED+"Tu ne peux pas invoquer plus de golems de neige à la fois !");
+		if( ! canInvoke(p.getUniqueId(), 1)) {
+			p.sendMessage(ChatColor.RED+"Tu ne peux pas invoquer plus de "+LIMIT+" golems de neige à la fois !");
 			return false;
 		}
 		
@@ -24,14 +31,11 @@ public class DiversionDeGrele extends InvocationSpell {
 		if(block == null) {
 			return false;
 		}
-		
-		for(int i = 1; i <= 2; i++) {
-			Snowman golem = p.getWorld().spawn(block.getLocation().add(i*0.01, 1, i*0.01), Snowman.class);
-			golem.setCustomName(ChatColor.DARK_AQUA + "Golem de " + ChatColor.BLUE +  p.getName());
-			golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(5.0);
-			golem.setHealth(5.0);
-			addInvocation(golem, p, false, 0);
-		}
+		Snowman golem = p.getWorld().spawn(block.getLocation().add(0, 1, 0), Snowman.class);
+		golem.setCustomName(ChatColor.DARK_AQUA + "Golem de " + ChatColor.BLUE +  p.getName());
+		golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(HEALTH);
+		golem.setHealth(HEALTH);
+		addInvocation(golem, p, false, 0);
 		
 		return true;
 	}
@@ -59,8 +63,8 @@ public class DiversionDeGrele extends InvocationSpell {
 	@Override
 	public List<String> getLore() {
 		return Arrays.asList(
-			ChatColor.GRAY + "Invoque deux bonhommes de neige.",
-			ChatColor.GRAY + "SnowMan : " + ChatColor.RED + "5 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "0 dmgs" + ChatColor.GRAY + "."
+			ChatColor.GRAY + "Invoque un bonhomme de neige.",
+			ChatColor.GRAY + "SnowMan : " + ChatColor.RED + HEALTH + " PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "0 dmgs" + ChatColor.GRAY + "."
 		);
 	}
 

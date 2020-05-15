@@ -35,8 +35,8 @@ public class Revenants extends InvocationSpell {
 	
 	@Override
 	public synchronized boolean cast(Player p) {
-		if( ! canInvoke(p.getUniqueId(), 25)) {
-			p.sendMessage(ChatColor.RED+"Attends que tous les revenants aient disparus !");
+		if( ! canInvoke(p.getUniqueId(), 20)) {
+			p.sendMessage(ChatColor.RED+"Attends que tes revenants aient disparu !");
 			return false;
 		}
 		
@@ -141,7 +141,7 @@ public class Revenants extends InvocationSpell {
 
 	@Override
 	public int getManaCost() {
-		return 15;
+		return 21;
 	}
 
 	@Override

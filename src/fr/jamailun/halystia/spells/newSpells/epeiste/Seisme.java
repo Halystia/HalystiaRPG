@@ -120,12 +120,12 @@ public class Seisme extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 9;
+		return 21;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 4;
 	}
 
 }
