@@ -95,7 +95,7 @@ public class DonjonManager {
 	public void playerLeaveGame(Player p) {
 		DonjonI donjon = getContainerDonjon(p);
 		if(donjon != null)
-			donjon.forcePlayerExit(p);
+			donjon.forcePlayerExit(p, false);
 	}
 	
 	//API

@@ -14,9 +14,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.Donjon;
 import fr.jamailun.halystia.donjons.animations.PorteDonjon;
 import fr.jamailun.halystia.enemies.mobs.EnemyMob;
 import fr.jamailun.halystia.players.Classe;
@@ -89,15 +89,7 @@ public class CommandDonjonPorte implements CommandExecutor {
 		Trade trade = new Trade(null, Classe.NONE, null, Arrays.asList(new ItemBuilder(EnemyMob.DONJON_KEY).setAmount(how).toItemStack()), 0);
 		
 		if(trade.canAfford(p)) {
-			ItemStack[] content = p.getInventory().getContents();
-			for(int i = 0; i < content.length; i++) {
-				ItemStack stack = content[i];
-				if(stack == null)
-					continue;;
-				if(Trade.areItemsTheSame(stack, new ItemStack(EnemyMob.DONJON_KEY))) {
-					content[i].setAmount(0);
-				}
-			}
+			Donjon.removeKeysFromPlayer(p);
 			for(Player pl : p.getPlayer().getWorld().getPlayers())
 				pl.playSound(p.getPlayer().getLocation(), Sound.BLOCK_CHEST_OPEN, 1F, 0.3F);
 			final PorteDonjon pDj = new PorteDonjon(blockPorte, api);

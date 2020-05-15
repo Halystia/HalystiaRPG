@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
@@ -69,9 +68,7 @@ public class PorteDonjon {
 	}
 	
 	private void bruit() {
-		for(Player p : centreBlock.getWorld().getPlayers()) {
-			p.playSound(centreLoc, Sound.BLOCK_ANVIL_LAND, (float) 1, 1.3F);
-		}
+		centreBlock.getWorld().getPlayers().forEach(p -> p.playSound(centreLoc, Sound.BLOCK_ANVIL_LAND, 1f, 1.3f));
 	}
 	
 	private void stade1() {

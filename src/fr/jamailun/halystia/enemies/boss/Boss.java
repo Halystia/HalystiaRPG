@@ -76,6 +76,7 @@ public abstract class Boss implements Enemy, Invocator {
 	protected void safeExit(DonjonI donjon, Player p) {
 		final ItemStack[] inv = Arrays.copyOf(p.getInventory().getContents(), p.getInventory().getContents().length);
 		p.teleport(donjon.getExitOfDonjon(), TeleportCause.PLUGIN);
+		donjon.forcePlayerExit(p, true);
 		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Vous avez été téléporté à la sortie du donjon.");
 		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Bravo pour votre victoire.");
 		new BukkitRunnable() {

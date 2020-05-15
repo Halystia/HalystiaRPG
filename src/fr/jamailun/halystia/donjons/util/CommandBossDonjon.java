@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.Donjon;
 import fr.jamailun.halystia.donjons.DonjonI;
 
 public class CommandBossDonjon implements CommandExecutor {
@@ -55,7 +56,8 @@ public class CommandBossDonjon implements CommandExecutor {
 			sender.sendMessage(DARK_RED + "Le donjon [" + args[0] + "] n'est pas valide !");
 			return true;
 		}
-		
+
+		Donjon.removeKeysFromPlayer(p);
 		donjon.trySpawnBoss(p);
 		return true;
 	}

@@ -1,5 +1,6 @@
 package fr.jamailun.halystia.donjons;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,6 +18,8 @@ import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.enemies.boss.Boss;
 import fr.jamailun.halystia.enemies.boss.BossManager;
 import fr.jamailun.halystia.enemies.boss.model.NemasiaBoss;
+import fr.jamailun.halystia.enemies.mobs.EnemyMob;
+import fr.jamailun.halystia.shops.Trade;
 import fr.jamailun.halystia.utils.FileDataRPG;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.Reloadable;
@@ -255,12 +258,13 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 	}
 
 	@Override
-	public boolean forcePlayerExit(Player p) {
+	public boolean forcePlayerExit(Player p, boolean silent) {
 		if( ! isPlayerInside(p))
 			return false;
 		inside.remove(p.getUniqueId());
 		insideBoss.remove(p.getUniqueId());
-		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous quittez le donjon.");
+		if(!silent)
+			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous quittez le donjon.");
 		return true;
 	}
 
@@ -295,7 +299,12 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes mort 3 fois. Vous avez été téléporté en dehors du donjon.");
 		inside.remove(player.getUniqueId());
 		insideBoss.remove(player.getUniqueId());
+		removeKeysFromPlayer(player);
 		return exit;
+	}
+	
+	public static void removeKeysFromPlayer(Player player) {
+		Arrays.asList(player.getInventory().getContents()).stream().filter(i -> Trade.areItemsTheSame(i, EnemyMob.DONJON_KEY)).forEach(i -> i.setAmount(0));
 	}
 
 	@Override

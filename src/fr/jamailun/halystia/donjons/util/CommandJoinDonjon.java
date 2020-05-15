@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.donjons.Donjon;
 import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.shops.Trade;
@@ -79,6 +80,7 @@ public class CommandJoinDonjon implements CommandExecutor {
 			return true;
 		}
 
+		Donjon.removeKeysFromPlayer(p);
 		p.playSound(p.getLocation(), Sound.ENTITY_SHULKER_TELEPORT, 1f, 1f);
 		p.getPlayer().teleport(donjon.getEntryInDonjon());
 		donjon.playerEnterDonjon(p);

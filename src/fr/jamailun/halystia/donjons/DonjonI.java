@@ -77,7 +77,7 @@ public interface DonjonI {
 	 * Force a Player to go out of the donjon.
 	 * @return false if the Player is not in the donjon.
 	 */
-	public boolean forcePlayerExit(Player p);
+	public boolean forcePlayerExit(Player p, boolean silent);
 	
 	/**
 	 * @return the location the boss have to spawn
