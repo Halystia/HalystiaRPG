@@ -1,6 +1,5 @@
 package fr.jamailun.halystia.spells.spellEntity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -8,15 +7,12 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
-import fr.jamailun.halystia.utils.RandomString;
-
 public class EffectAndDamageSpellEntity extends SpellEntity {
-
-	private final double range, damages, upperForce;
-	private final List<PotionEffect> effects;
+	
+	private final EffectData data;
 	
 	private final boolean hurtHimSelf, oneTarget;
-	private final int fire;
+	private final double range;
 	
 	/**
 	 * Create a moving form emetting particles.
@@ -32,30 +28,52 @@ public class EffectAndDamageSpellEntity extends SpellEntity {
 	 * @param oneTarget : if the spell should deseseapear after hit an Living Entity.
 	 */
 	private final LivingEntity launcherEntity;
-	public EffectAndDamageSpellEntity(Location loc, LivingEntity launcher, int life, List<PotionEffect> effects, double range, boolean hurtHimSelf, int fire, double damages, double upperForce, boolean oneTarget) {
+	public EffectAndDamageSpellEntity(Location loc, LivingEntity launcher, int life, double range, boolean hurtHimSelf, boolean oneTarget) {
 		super(loc, launcher, life);
-		this.effects = new ArrayList<>(effects);
+		data = new EffectData();
 		this.range = range;
 		this.hurtHimSelf = hurtHimSelf;
 		launcherEntity = launcher;
-		this.fire = fire;
-		this.damages = damages;
-		
-		this.upperForce = upperForce;
 		this.oneTarget = oneTarget;
 	}
+	
+	public void setFireTick(int fireTicks) {
+		data.setFireTick(fireTicks);
+	}
+	
+	public void setDamages(double damages) {
+		data.setDamages(damages);
+	}
+	
+	public void setYForce(double yForce) {
+		data.setYForce(yForce);
+	}
+	
+	public void addPotionEffect(PotionEffect effect) {
+		data.addEffect(effect);
+	}
+	
+	public void addPotionEffects(List<PotionEffect> effects) {
+		effects.forEach(eff -> addPotionEffect(eff));
+	}
 
+	public void setPotionEffects(List<PotionEffect> effects) {
+		data.setEffects(effects);
+	}
+	
 	@Override
 	protected void doThing() {
 		for(LivingEntity en : getEntitiesAround(loc, range, hurtHimSelf)) {
-			for(PotionEffect effect : effects)
-				en.addPotionEffect(effect);
-			if(fire > 0)
-				en.setFireTicks(RandomString.randInt(fire/2, fire + (fire/2)));
-			if(damages > 0)
-				en.damage(damages, launcherEntity);
-			if(upperForce > 0)
-				en.setVelocity(en.getVelocity().add(new Vector(0, upperForce, 0)));
+			data.getEffects().forEach(e -> {
+				en.removePotionEffect(e.getType());
+				en.addPotionEffect(e);
+			});
+			if(data.getFireTick() > 0)
+				en.setFireTicks(data.getFireTick());
+			if(data.getDamages() > 0)
+				en.damage(data.getDamages(), launcherEntity);
+			if(data.getyForce() > 0)
+				en.setVelocity(en.getVelocity().add(new Vector(0 , data.getyForce(), 0)));
 			if(oneTarget) {
 				cancel();
 			}

@@ -1,6 +1,5 @@
 package fr.jamailun.halystia.spells.newSpells.alchimiste;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,9 +17,9 @@ public class Flameche extends Spell {
 
 	@Override
 	public synchronized boolean cast(Player p) {
-		
-		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 4*3, new ArrayList<>(), 1, false, 5*20, 1, 0, false);
-		
+		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 4*3, 5*20, false, false);
+		spell.setDamages(2);
+		spell.setFireTick(8);
 		Vector dir = p.getLocation().getDirection();
 		Vector dirr = dir.multiply(.5);
 		spell.setDirection(dirr);

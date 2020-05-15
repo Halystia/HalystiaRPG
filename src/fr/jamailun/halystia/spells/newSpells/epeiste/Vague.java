@@ -1,6 +1,5 @@
 package fr.jamailun.halystia.spells.newSpells.epeiste;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +20,9 @@ public class Vague extends Spell {
 	
 	@Override
 	public boolean cast(Player p) {
-		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 9*2, new ArrayList<>(), POWER, false, 0, 1, 1, false);
+		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 9*2, 12, false, false);
+		spell.setDamages(4);
+		spell.setYForce(.7);
 		Vector dir = p.getLocation().getDirection();
 		Vector dirr = dir.multiply(1.1);
 		spell.setDirection(dirr);

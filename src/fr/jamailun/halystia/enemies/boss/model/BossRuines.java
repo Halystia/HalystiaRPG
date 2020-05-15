@@ -34,7 +34,6 @@ import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.enemies.boss.Boss;
 import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
 import fr.jamailun.halystia.spells.spellEntity.EffectSpellEntity;
-import fr.jamailun.halystia.spells.spellEntity.SpellEntity;
 import fr.jamailun.halystia.utils.ItemBuilder;
 
 public class BossRuines extends Boss {
@@ -99,8 +98,12 @@ public class BossRuines extends Boss {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				SpellEntity spell = new EffectAndDamageSpellEntity(mob.getEyeLocation(), mob, 8, effects, 2, false, 100, 4.0, 0.1, false);
-				spell.setDirection(target.getEyeLocation().toVector().subtract(mob.getEyeLocation().toVector()).normalize().multiply(1.5));
+				EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(mob.getEyeLocation(), mob, 12, 3, false, false);
+				spell.setPotionEffects(effects);
+				spell.setFireTick(20*5);
+				spell.setDamages(6);
+				spell.setYForce(.1);
+				spell.setDirection(target.getEyeLocation().toVector().subtract(mob.getEyeLocation().toVector()).normalize().multiply(1.7));
 				spell.addSoundEffect(Sound.BLOCK_CAMPFIRE_CRACKLE, 2f, .1f);
 				spell.addParticleEffect(Particle.END_ROD, 40, 1, .66, .01);
 				spell.addParticleEffect(Particle.FLAME, 100, 1, 1, .05);

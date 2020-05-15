@@ -33,11 +33,10 @@ import fr.jamailun.halystia.donjons.DonjonI;
 import fr.jamailun.halystia.enemies.boss.Boss;
 import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
 import fr.jamailun.halystia.spells.spellEntity.EffectSpellEntity;
-import fr.jamailun.halystia.spells.spellEntity.SpellEntity;
 
 public class NemasiaBoss extends Boss {
 
-	public static final int HEALTH = 5000;
+	public static final int HEALTH = 7000;
 	public static final int HEALTH_PER_CUBE = 200;
 	public static final int CUBES_HEALTH = 100;
 	public static final int CUBES_DAMAGES = 12;
@@ -163,7 +162,10 @@ public class NemasiaBoss extends Boss {
 			@Override
 			public void run() {
 				loc.getWorld().strikeLightningEffect(hitLoc);
-				SpellEntity spell = new EffectAndDamageSpellEntity(hitLoc, giant, 1, new ArrayList<>(), 4, false, 100, 20*multiplicator, 0.001, false);
+				EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(hitLoc, giant, 1, 4, false, false);
+				spell.setDamages(30*multiplicator);
+				spell.setFireTick(160);
+				spell.setYForce(0.1);
 				spell.addParticleEffect(Particle.FLAME, 300, 1, .1, .5);
 				spell.addParticleEffect(Particle.FLASH, 2, .1, .1, 1);
 			}
@@ -175,7 +177,11 @@ public class NemasiaBoss extends Boss {
 	private void fire(Player target) {	
 		if(target == null)
 			return;	
-		SpellEntity spell = new EffectAndDamageSpellEntity(head.getLocation(), giant, 30, effects, 2.8, false, 100, 5.0, 0, false);
+		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(head.getLocation(), giant, 30, 3, false, false);
+		spell.setPotionEffects(effects);
+		spell.setDamages(45);
+		spell.setFireTick(240);
+		spell.setYForce(-0.05);
 		spell.setDirection(target.getLocation().toVector().subtract(head.getLocation().toVector()).normalize().multiply(.9));
 		spell.addSoundEffect(Sound.BLOCK_CAMPFIRE_CRACKLE, 2f, .1f);
 		spell.addParticleEffect(Particle.END_ROD, 40, 1, 1, .01);

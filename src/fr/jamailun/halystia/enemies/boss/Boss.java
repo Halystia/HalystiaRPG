@@ -28,6 +28,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -168,8 +169,34 @@ public abstract class Boss implements Enemy, Invocator {
 		return player;
 	}
 	
+	protected LivingEntity getClosestEntity(Location loc, double maxDistance, boolean wallSentitive) {
+		Entity entity = null;
+		double distance = maxDistance+0.1;
+		for(Entity en : loc.getWorld().getEntities()) {
+			if(!(en instanceof LivingEntity))
+				continue;
+			double dist = en.getLocation().distance(loc);
+			if(dist < distance) {
+				if( ! wallSentitive) {
+					entity = en;
+					distance = dist;
+					continue;
+				}
+				if( ! isThereWallBetweenLocations(loc, en.getLocation(), dist)) {
+					entity = en;
+					distance = dist;
+				}
+			}
+		}
+		return (LivingEntity) entity;
+	}
+	
 	protected List<Player> getClosePlayers(Location loc, double maxDistance) {
 		return loc.getWorld().getPlayers().stream().filter(p -> p.getLocation().distance(loc) <= maxDistance).collect(Collectors.toList());
+	}
+	
+	protected List<LivingEntity> getCloseEntities(Location loc, double maxDistance) {
+		return loc.getWorld().getEntities().stream().filter(e -> e instanceof LivingEntity).map(e -> (LivingEntity)e).filter(p -> p.getLocation().distance(loc) <= maxDistance).collect(Collectors.toList());
 	}
 	
 	protected void makeSound(Location loc, Sound sound, float pitch) {

@@ -1,6 +1,5 @@
 package fr.jamailun.halystia.spells.newSpells.epeiste;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,13 +15,14 @@ import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
 
 public class RepliqueFeu extends Spell {
 
-	public final static double RANGE = 1;
-	public final static double POWER = 8;
+	public final static double RANGE = 1.2;
+	public final static double POWER = 5;
 	
 	@Override
 	public boolean cast(Player p) {
-		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 15, new ArrayList<>(), RANGE, false, 3*20, POWER, 0, true);
-		
+		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 15, RANGE, false, true);
+		spell.setDamages(POWER);
+		spell.setFireTick(20*2);
 		Vector dir = p.getLocation().getDirection();
 		Vector dirr = dir.multiply(1);
 		spell.setDirection(dirr);
