@@ -55,6 +55,10 @@ class PlayerBanque extends FileDataRPG {
 		return level <= 4;
 	}
 	
+	int getLevel() {
+		return level;
+	}
+	
 	void improveLevel() {
 		synchronized (file) {
 			level = Math.min(Math.max(0, level + 1), 4);
@@ -67,6 +71,7 @@ class PlayerBanque extends FileDataRPG {
 			p.sendMessage(ChatColor.RED + "Ce n'est pas ton compte !");
 			return;
 		}
+		level = config.getInt("level");
 		inv = Bukkit.createInventory(null, 9*(2+Math.min(level, 4)), ChatColor.DARK_BLUE + "Banque - " + p.getName());
 		for(int slotValue : content.keySet()) {
 			int slot = slotValue - page * 100;

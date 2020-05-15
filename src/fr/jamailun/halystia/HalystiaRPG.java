@@ -30,6 +30,7 @@ import fr.jamailun.halystia.jobs.model.JamailunJobExtension;
 import fr.jamailun.halystia.jobs.system.CacheMemory;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.traits.AubergisteTrait;
+import fr.jamailun.halystia.npcs.traits.BanquierTrait;
 import fr.jamailun.halystia.npcs.traits.HalystiaRpgTrait;
 import fr.jamailun.halystia.players.ClasseManager;
 import fr.jamailun.halystia.players.SoulManager;
@@ -120,10 +121,11 @@ public final class HalystiaRPG extends JavaPlugin {
 			return;
 		}
 		
-		// REHGISTER RPG TRAIT IN CITIZENS
+		// REGISTER RPG TRAIT IN CITIZENS
 		try {
 			CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(HalystiaRpgTrait.class));
 			CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(AubergisteTrait.class));
+			CitizensAPI.getTraitFactory().registerTrait(TraitInfo.create(BanquierTrait.class));
 		} catch(IllegalArgumentException e) {
 			getLogger().log(Level.SEVERE, "Citizens already registered the Rpg Trait.");
 		}

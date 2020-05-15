@@ -4,6 +4,7 @@ import static org.bukkit.ChatColor.BLUE;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,11 +28,13 @@ import fr.jamailun.halystia.npcs.NpcMode;
 import fr.jamailun.halystia.npcs.RpgNpc;
 import fr.jamailun.halystia.npcs.Texture;
 import fr.jamailun.halystia.npcs.traits.AubergisteTrait;
+import fr.jamailun.halystia.npcs.traits.BanquierTrait;
+import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment.EquipmentSlot;
 
 public class CommandEditNPC extends HalystiaCommand {
 
-	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "tphere", "rename", "dialog", "goto", "list", "equipment", "reload", "texture", "mode", "aubergiste"));
+	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "tphere", "rename", "dialog", "goto", "list", "equipment", "reload", "texture", "mode", "aubergiste", "banquier"));
 	private static final Set<String> dialogs = new HashSet<>(Arrays.asList("clear", "see", "add", "remove", "set", "insert"));
 	private final static String NULL_ITEM = "#none";
 	
@@ -114,12 +117,34 @@ public class CommandEditNPC extends HalystiaCommand {
 		}
 		
 		if(args[0].equals("aubergiste")) {
-			if(npc.getNPC().hasTrait(AubergisteTrait.class)) {
-				npc.getNPC().removeTrait(AubergisteTrait.class);
-				p.sendMessage(RED + "Ce NPC n'est désormais plus un aubergiste !");
+			NPC citizen = npc.getNPC();
+			if(citizen.hasTrait(BanquierTrait.class)) {
+				p.sendMessage(RED + "Ce NPC est déjà banquier !");
+				return true;
+			}
+			if(citizen.hasTrait(AubergisteTrait.class)) {
+				citizen.removeTrait(AubergisteTrait.class);
+				p.sendMessage(YELLOW + "Ce NPC n'est désormais plus un aubergiste !");
 			} else {
-				npc.getNPC().addTrait(AubergisteTrait.class);
+				citizen.addTrait(AubergisteTrait.class);
 				p.sendMessage(GREEN + "Ce NPC est désormais un aubergiste !");
+			}
+			p.playSound(p.getLocation(), Sound.ITEM_FLINTANDSTEEL_USE, 5f, .8f);
+			return true;
+		}
+		
+		if(args[0].equals("banquier")) {
+			NPC citizen = npc.getNPC();
+			if(citizen.hasTrait(AubergisteTrait.class)) {
+				p.sendMessage(RED + "Ce NPC est déjà aubergiste !");
+				return true;
+			}
+			if(citizen.hasTrait(BanquierTrait.class)) {
+				citizen.removeTrait(BanquierTrait.class);
+				p.sendMessage(YELLOW + "Ce NPC n'est désormais plus un banquier !");
+			} else {
+				citizen.addTrait(BanquierTrait.class);
+				p.sendMessage(GREEN + "Ce NPC est désormais un banquier !");
 			}
 			p.playSound(p.getLocation(), Sound.ITEM_FLINTANDSTEEL_USE, 5f, .8f);
 			return true;

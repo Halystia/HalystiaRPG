@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,9 +17,11 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.guis.UpdateBankAccountGUI;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
 import fr.jamailun.halystia.npcs.traits.AubergisteTrait;
+import fr.jamailun.halystia.npcs.traits.BanquierTrait;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.quests.Quest;
@@ -60,7 +63,7 @@ public class NpcInteractionListener extends HalystiaListener {
 		RpgNpc npc = main.getNpcManager().getNpc(e.getNPC());
 		if(npc == null) {
 			if(p.isOp())
-				p.sendMessage(DARK_RED + "(op only) -> NPC invalide ! Merci de le supprimer avec les commandes de citizens ? sauf si c'est fait exprès xD");
+				p.sendMessage(DARK_RED + "(op only) -> NPC invalide ! Utilisez /npcs pour faire les NPC.");
 			return;
 		}
 
@@ -90,8 +93,16 @@ public class NpcInteractionListener extends HalystiaListener {
 		}
 		
 		if(e.getNPC().hasTrait(AubergisteTrait.class)) {
-			main.getDataBase().updateSpawnLocation(e.getClicker(), e.getClicker().getLocation());
-			e.getClicker().sendMessage(e.getNPC().getName()+ChatColor.WHITE+" > "+ChatColor.YELLOW+"Votre position a été sauvegardée. C'est ici que vous réapparaitrez désormais.");
+			main.getDataBase().updateSpawnLocation(p, p.getLocation());
+			p.sendMessage(e.getNPC().getName()+ChatColor.WHITE+" > "+ChatColor.YELLOW+"Votre position a été sauvegardée. C'est ici que vous réapparaitrez désormais.");
+			p.playSound(p.getLocation(), Sound.ITEM_BOTTLE_FILL_DRAGONBREATH, 3f, .6f);
+			return;
+		}
+		
+		if(e.getNPC().hasTrait(BanquierTrait.class)) {
+			p.sendMessage(e.getNPC().getName()+ChatColor.WHITE+" > "+ChatColor.YELLOW+"Consultons votre dossier.");
+			p.playSound(p.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 4f, .7f);
+			new UpdateBankAccountGUI(p);
 			return;
 		}
 
