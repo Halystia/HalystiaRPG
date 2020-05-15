@@ -34,6 +34,7 @@ public class JamailunJobExtension {
 			registerMineur();
 			registerBucheron();
 			registerFogeron();
+			registerPhytomancien();
 			registerPaysan();
 			registerEnchanteur();
 		} catch (IllegalArgumentException e) {
@@ -47,8 +48,6 @@ public class JamailunJobExtension {
 		Map<String, ItemStack> items = new HashMap<>();
 		items.putAll(new JamailunItemExtension().getItems());
 		items.putAll(new JamailunStuffExtension().getItems());
-		
-		
 		
 		return items;
 	}
@@ -144,7 +143,6 @@ public class JamailunJobExtension {
 		crafts.registerContent(new JobCraft(bucheron, 5, item("acacia1", 1), 5, 	item("acacia", 5), item("water"), item("silex1")));
 		crafts.registerContent(new JobCraft(bucheron, 5, item("acacia2", 1), 20, 	item("acacia1", 10), item("acacia", 10), item("water", 3), item("silex1", 2), item("stone2")));
 		
-		
 		bucheron.changeCraftGUI(Material.STONECUTTER, new JobCraftGUI(bucheron));
 	}
 	
@@ -185,6 +183,19 @@ public class JamailunJobExtension {
 		crafts.registerContent(new JobCraft(agriculteur, 3, item("soupe2", 1), 5, item("farine2", 2), item("carotte", 15), item("sucre2", 2)));
 		
 		agriculteur.changeCraftGUI(Material.COMPOSTER, new JobCraftGUI(agriculteur));
+	}
+	
+	private void registerPhytomancien() {
+		JobType phyto = new JobType(path, "phytomancien", JobCategory.CRAFT, jobs);
+		phyto.setIcon(1, Material.DEAD_BUSH);
+		phyto.setIcon(2, Material.GLASS_BOTTLE);
+		phyto.setIcon(3, Material.HONEY_BOTTLE);
+		phyto.setIcon(4, Material.CAULDRON);
+		phyto.setIcon(5, Material.BREWING_STAND);
+		
+		jobs.registerJob(phyto);
+		
+		phyto.changeCraftGUI(Material.BREWING_STAND, new JobCraftGUI(phyto));
 	}
 	
 	private void registerFogeron() {

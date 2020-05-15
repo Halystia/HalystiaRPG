@@ -60,17 +60,7 @@ public class NemasiaBoss extends Boss {
 	private final static int ACTION_EVERY_SECONDS = 4;
 	@Override
 	protected void doAction() {
-		for(Player pl : loc.getWorld().getPlayers()) {
-			if(pl.getLocation().distance(loc) < 25) {
-				if( ! bar.getPlayers().contains(pl)) {
-					bar.addPlayer(pl);
-				}
-			} else {
-				if(bar.getPlayers().contains(pl)) {
-					bar.removePlayer(pl);
-				}
-			}
-		}
+		checkBarPlayers(head.getLocation());
 		counter++;
 		if(counter < ACTION_EVERY_SECONDS)
 			return;
@@ -88,11 +78,11 @@ public class NemasiaBoss extends Boss {
 				if(maxHealth < health)
 					health = maxHealth;
 			}
-			if ( random <= 70 )				// 70%
-				lightStrike(getClosestPlayer(loc, 20, false), 1.8);
-			else if ( random <= 90 )
-				summonCubes();				// 20%
-			return;							// 10%
+			if( random <= 30 && canInvoke(getMainUUID(), 1))		// 30 %
+				summonCubes();
+			else
+				lightStrike(getClosestPlayer(loc, 20, false), 1.8);	// 70 %
+			return;
 		}
 		noPlayers = 0;
 		Vector look = head.getLocation().toVector().subtract(closest.getLocation().toVector()).normalize();
@@ -112,7 +102,7 @@ public class NemasiaBoss extends Boss {
 		else if ( random <= 50 )
 			summonCubes();					// 30%
 		else if ( random <= 70 )
-			lightStrike(closest, 1);			// 20%
+			lightStrike(closest, 1);		// 20%
 		else
 			fire(closest);					// 30%
 	}

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -153,6 +154,8 @@ public abstract class Boss implements Enemy, Invocator {
 		Player player = null;
 		double distance = maxDistance+0.1;
 		for(Player pl : loc.getWorld().getPlayers()) {
+			if(pl.getGameMode() == GameMode.SPECTATOR)
+				continue;
 			double dist = pl.getLocation().distance(loc);
 			if(dist < distance) {
 				if( ! wallSentitive) {
@@ -169,12 +172,29 @@ public abstract class Boss implements Enemy, Invocator {
 		return player;
 	}
 	
+	protected void checkBarPlayers(Location source) {
+		for(Player pl : source.getWorld().getPlayers()) {
+			if(pl.getLocation().distance(source) < 30) {
+				if( ! bar.getPlayers().contains(pl)) {
+					bar.addPlayer(pl);
+				}
+			} else {
+				if(bar.getPlayers().contains(pl)) {
+					bar.removePlayer(pl);
+				}
+			}
+		}
+	}
+	
 	protected LivingEntity getClosestEntity(Location loc, double maxDistance, boolean wallSentitive) {
 		Entity entity = null;
 		double distance = maxDistance+0.1;
 		for(Entity en : loc.getWorld().getEntities()) {
 			if(!(en instanceof LivingEntity))
 				continue;
+			if(en instanceof Player)
+				if(((Player)en).getGameMode() == GameMode.SPECTATOR)
+					continue;
 			double dist = en.getLocation().distance(loc);
 			if(dist < distance) {
 				if( ! wallSentitive) {
@@ -192,7 +212,7 @@ public abstract class Boss implements Enemy, Invocator {
 	}
 	
 	protected List<Player> getClosePlayers(Location loc, double maxDistance) {
-		return loc.getWorld().getPlayers().stream().filter(p -> p.getLocation().distance(loc) <= maxDistance).collect(Collectors.toList());
+		return loc.getWorld().getPlayers().stream().filter(p -> p.getLocation().distance(loc) <= maxDistance && p.getGameMode() != GameMode.CREATIVE).collect(Collectors.toList());
 	}
 	
 	protected List<LivingEntity> getCloseEntities(Location loc, double maxDistance) {

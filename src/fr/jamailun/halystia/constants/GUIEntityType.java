@@ -28,6 +28,8 @@ public enum GUIEntityType {
 	CHICKEN(EntityType.CHICKEN, new ItemBuilder(Material.FEATHER).setName(GREEN+"Poulet").toItemStack()),
 	FOX(EntityType.FOX, new ItemBuilder(Material.ORANGE_WOOL).setName(GREEN+"Renard").toItemStack()),
 	PANDA(EntityType.PANDA, new ItemBuilder(Material.BAMBOO).setName(GREEN+"Panda").toItemStack()),
+	OCELOT(EntityType.OCELOT, new ItemBuilder(Material.BAMBOO).setName(GREEN+"Ocelot").toItemStack()),
+	PARROT(EntityType.PARROT, new ItemBuilder(Material.BAMBOO).setName(GREEN+"Péroquet").toItemStack()),
 	
 	BLAZE(EntityType.BLAZE, new ItemBuilder(Material.BLAZE_ROD).setName(DARK_RED+"Blaze").toItemStack()),
 	WITHER_SKELETON(EntityType.WITHER_SKELETON, new ItemBuilder(Material.BLAZE_ROD).setName(DARK_RED+"Blaze").toItemStack()),

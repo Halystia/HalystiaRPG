@@ -35,6 +35,7 @@ import fr.jamailun.halystia.enemies.boss.Boss;
 import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
 import fr.jamailun.halystia.spells.spellEntity.EffectSpellEntity;
 import fr.jamailun.halystia.utils.ItemBuilder;
+import fr.jamailun.halystia.utils.RandomString;
 
 public class BossRuines extends Boss {
 
@@ -84,7 +85,7 @@ public class BossRuines extends Boss {
 		
 		if(closest.getGameMode() != GameMode.CREATIVE && closest.getGameMode() != GameMode.SPECTATOR)
 			mob.setTarget(closest);
-		if(Math.random() < .6 && canInvoke(getMainUUID(), 1)) {
+		if(RandomString.randInt(0, 100) < 60 && canInvoke(getMainUUID(), 1)) {
 			invoke();
 		} else {
 			flame(closest);
