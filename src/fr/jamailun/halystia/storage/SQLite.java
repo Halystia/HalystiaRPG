@@ -18,12 +18,14 @@ import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
-import fr.jamailun.halystia.sql.temporary.Saver;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 import fr.jamailun.halystia.storage.common.Database;
 import fr.jamailun.halystia.storage.structure.TablePlayersStructure;
+import fr.jamailun.halystia.storage.structure.TableQuestStructure;
 import fr.jamailun.halystia.titles.Title;
 
-public class SQLite extends Database implements Saver {
+@SuppressWarnings("unused")
+public class SQLite extends Database implements DataHandler {
 	
 	private final static int FIRST_COL = 1;
 	private final TablePlayersStructure playersTable;
@@ -162,7 +164,7 @@ public class SQLite extends Database implements Saver {
 
 	@Override
 	public Royaume getKingdom(Player p) {
-		// TODO Auto-generated method stub
+		// TODO getKingdom
 		return null;
 	}
 
@@ -243,8 +245,17 @@ public class SQLite extends Database implements Saver {
 
 	@Override
 	public Set<Quest> getAllQuests(Player p) {
+		
+		for(Quest quest : HalystiaRPG.getInstance().getQuestManager().getAllQuests()) {
+			
+		}
+		
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private TableQuestStructure getQuestStructure(Quest quest) {
+		return new TableQuestStructure(quest);
 	}
 
 	@Override

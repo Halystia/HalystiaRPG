@@ -19,7 +19,7 @@ import fr.jamailun.halystia.royaumes.Royaume;
 import fr.jamailun.halystia.titles.Title;
 import fr.jamailun.halystia.utils.FileDataRPG;
 
-public class FileSaver extends FileDataRPG implements Saver {
+public class FileSaver extends FileDataRPG implements DataHandler {
 	
 	private final static String CLASSE_ID = ".classe.id";
 	private final static String CLASSE_XP = ".classe.xp";

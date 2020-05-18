@@ -3,7 +3,6 @@ package fr.jamailun.halystia.storage.structure;
 import static fr.jamailun.halystia.storage.structure.ColumnType.MULTI_CHAR;
 import static fr.jamailun.halystia.storage.structure.ColumnType.OVER_CHAR;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -16,29 +15,19 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class TablePlayersStructure extends TableStructure {
+import fr.jamailun.halystia.quests.Quest;
+
+public class TableQuestStructure extends TableStructure {
 
 	public static final ColumnTable COL_UUID = new ColumnTable("uuid", ColumnType.UUID);
-	public static final ColumnTable COL_CLASSE_ID = new ColumnTable("classeID", ColumnType.INTEGER);
-	public static final ColumnTable COL_CLASSE_XP = new ColumnTable("classeXP", ColumnType.INTEGER);
-	public static final ColumnTable COL_SOULS_NB = new ColumnTable("soulsNB", ColumnType.INTEGER);
-	public static final ColumnTable COL_SOULS_LAST = new ColumnTable("soulsLast", ColumnType.LONG);
-	public static final ColumnTable COL_ROYAUME = new ColumnTable("royaume", ColumnType.STRING, true);
-	public static final ColumnTable COL_TAGS_LIST = new ColumnTable("tagsList", ColumnType.STRING_LIST, true);
-	public static final ColumnTable COL_TAGS_SELECTED = new ColumnTable("title", ColumnType.STRING, true);
-	public static final ColumnTable COL_SPAWN = new ColumnTable("spawn", ColumnType.LOCATION, true);
+	public static final ColumnTable COL_STEP = new ColumnTable("step", ColumnType.INTEGER);
+	public static final ColumnTable COL_DATA = new ColumnTable("data", ColumnType.INTEGER);
 	
-	public TablePlayersStructure() {
-		super("playerData");
+	public TableQuestStructure(Quest quest) {
+		super("quest_"+quest.getID());
 		addColumn(COL_UUID, true);
-		addColumn(COL_CLASSE_ID);
-		addColumn(COL_CLASSE_XP);
-		addColumn(COL_SOULS_NB);
-		addColumn(COL_SOULS_LAST);
-		addColumn(COL_ROYAUME);
-		addColumn(COL_TAGS_LIST);
-		addColumn(COL_TAGS_SELECTED);
-		addColumn(COL_SPAWN);
+		addColumn(COL_STEP);
+		addColumn(COL_DATA);
 	}
 	
 	public String getStringInsertion(Player p) {
@@ -50,8 +39,7 @@ public class TablePlayersStructure extends TableStructure {
 		builder.append("0").append(",");	// classeID
 		builder.append("0").append(",");	// classeXP
 		builder.append("3").append(",");	// soulsNB
-		builder.append(System.currentTimeMillis()+"");	//soulslast
-		builder.append("``, ``, ``, null"); //le reste
+		builder.append(System.currentTimeMillis()+"").append(",");	//soulslast
 		return builder.append(");").toString();
 	}
 	
@@ -118,8 +106,6 @@ public class TablePlayersStructure extends TableStructure {
 			//TODO deserialize itemstacks
 			return ItemStack.deserialize(map);
 		case LOCATION:
-			if(sqlValue.equals("null"))
-				return null;
 			String[] bounds = sqlValue.split(MULTI_CHAR);
 			World world = Bukkit.getWorld(bounds[0]);
 			double x = Double.parseDouble(bounds[1]);
@@ -129,8 +115,6 @@ public class TablePlayersStructure extends TableStructure {
 			double pitch = Double.parseDouble(bounds[5]);
 			return new Location(world, x, y, z, (float) yaw, (float) pitch);
 		case STRING_LIST:
-			if(sqlValue.isEmpty())
-				return new ArrayList<String>();
 			return Arrays.asList(sqlValue.split(MULTI_CHAR));
 		case STRING:
 			return sqlValue;
