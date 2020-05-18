@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.sql.temporary.Saver;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 
 /**
  * Handle all {@link fr.jamailun.halystia.players.PlayerData PlayerData} in the game.
@@ -20,9 +20,9 @@ public class ClasseManager {
 	
 	private Map<UUID, PlayerData> data;
 	
-	private final Saver bdd;
+	private final DataHandler bdd;
 	
-	public ClasseManager(HalystiaRPG main, Saver bdd) {
+	public ClasseManager(HalystiaRPG main, DataHandler bdd) {
 		this.bdd = bdd;
 		data = new TreeMap<>();
 		

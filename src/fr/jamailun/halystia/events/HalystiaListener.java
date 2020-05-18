@@ -4,12 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.sql.temporary.Saver;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 
 abstract class HalystiaListener implements Listener {
 
 	protected final HalystiaRPG main;
-	protected final Saver bdd;
+	protected final DataHandler bdd;
 	
 	public HalystiaListener(HalystiaRPG main) {
 		this.main = main;

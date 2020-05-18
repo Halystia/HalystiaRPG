@@ -16,10 +16,10 @@ import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
-import fr.jamailun.halystia.sql.temporary.Saver;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 import fr.jamailun.halystia.titles.Title;
 
-public class HalystiaDataBase extends DataBase implements Saver {
+public class HalystiaDataBase extends DataBase implements DataHandler {
 	
 	//TODO déplacer la config
 	public static final String COL_UUID = "uuid";

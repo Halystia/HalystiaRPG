@@ -40,7 +40,7 @@ import fr.jamailun.halystia.shops.TradeManager;
 import fr.jamailun.halystia.spells.SpellManager;
 import fr.jamailun.halystia.sql.HalystiaDataBase;
 import fr.jamailun.halystia.sql.temporary.FileSaver;
-import fr.jamailun.halystia.sql.temporary.Saver;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 import fr.jamailun.halystia.titles.TitleHolder;
 import fr.jamailun.halystia.titles.TitlesManager;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -76,7 +76,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	private static HalystiaRPG instance;
 	
 	// bdd
-	private Saver bdd;
+	private DataHandler bdd;
 	
 	//Managers
 	private ClasseManager classesMgr;
@@ -276,18 +276,18 @@ public final class HalystiaRPG extends JavaPlugin {
 
 	/**
 	 * Get the plugin's database.
-	 * @return the current {@link fr.jamailun.halystia.sql.temporary.Saver bdd} of the plugin.
-	 * @see #setDataBase(Saver)
+	 * @return the current {@link fr.jamailun.halystia.sql.temporary.DataHandler bdd} of the plugin.
+	 * @see #setDataBase(DataHandler)
 	 */
-	public Saver getDataBase() {
+	public DataHandler getDataBase() {
 		return bdd;
 	}
 	
 	/**
 	 * Change the current database system. Use SQL if you need to.
-	 * @param saver new Saver manager.
+	 * @param saver new DataHandler manager.
 	 */
-	public void setDataBase(Saver saver) {
+	public void setDataBase(DataHandler saver) {
 		this.bdd = saver;
 		console.sendMessage(PREFIX + ChatColor.YELLOW + "BDD has been updated."); 
 	}

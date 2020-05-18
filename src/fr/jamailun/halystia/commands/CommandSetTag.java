@@ -17,13 +17,13 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.sql.temporary.Saver;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 
 public class CommandSetTag extends HalystiaCommand {
 	
-	private final Saver bdd;
+	private final DataHandler bdd;
 	
-	public CommandSetTag(HalystiaRPG main, Saver bdd) {
+	public CommandSetTag(HalystiaRPG main, DataHandler bdd) {
 		super(main, "set-tag");
 		this.bdd = bdd;
 	}

@@ -35,12 +35,12 @@ import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.quests.QuestManager;
-import fr.jamailun.halystia.sql.temporary.Saver;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 import fr.jamailun.halystia.titles.TitlesManager;
 
 public class CommandsManager {
 
-	public CommandsManager(HalystiaRPG main, Saver bdd, JobsManager jobs, TitlesManager titleMgr, DonjonManager donjonsMgr, NpcManager npcMgr, QuestManager questsMgr, MobManager mobMgr, MobSpawnerManager spawnerMgr) {
+	public CommandsManager(HalystiaRPG main, DataHandler bdd, JobsManager jobs, TitlesManager titleMgr, DonjonManager donjonsMgr, NpcManager npcMgr, QuestManager questsMgr, MobManager mobMgr, MobSpawnerManager spawnerMgr) {
 		new CommandClasse(main);
 		new CommandQuests(main);
 		new CommandTitle(main);

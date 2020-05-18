@@ -14,7 +14,7 @@ import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
 import fr.jamailun.halystia.titles.Title;
 
-public interface Saver {
+public interface DataHandler {
 	
 	public boolean createPlayerTableClass();
 	

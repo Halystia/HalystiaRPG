@@ -10,16 +10,16 @@ import org.bukkit.entity.Player;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.ClasseManager;
 import fr.jamailun.halystia.players.PlayerData;
-import fr.jamailun.halystia.sql.temporary.Saver;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
 public class TitleHolder extends PlaceholderExpansion {
 
 	private final TitlesManager titles;
-	private final Saver bdd;
+	private final DataHandler bdd;
 	private final ClasseManager players;
 	
-	public TitleHolder(TitlesManager titles, Saver bdd, ClasseManager players) {
+	public TitleHolder(TitlesManager titles, DataHandler bdd, ClasseManager players) {
 		this.titles = titles;
 		this.bdd = bdd;
 		this.players = players;
