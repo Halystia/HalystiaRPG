@@ -2,6 +2,7 @@ package fr.jamailun.halystia.events;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
@@ -30,5 +31,12 @@ public class ConsumeItemListener extends HalystiaListener {
 				return;
 			} catch(NullPointerException ee) {}
 		}
+	}
+	
+	@EventHandler
+	public void leaveDecayEvent(LeavesDecayEvent e) {
+		if( ! HalystiaRPG.isRpgWorld(e.getBlock().getWorld()))
+			return;
+		e.setCancelled(true);
 	}
 }
