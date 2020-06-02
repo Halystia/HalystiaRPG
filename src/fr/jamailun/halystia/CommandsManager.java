@@ -12,6 +12,7 @@ import fr.jamailun.halystia.commands.CommandGiveCanne;
 import fr.jamailun.halystia.commands.CommandGiveItems;
 import fr.jamailun.halystia.commands.CommandGivePotion;
 import fr.jamailun.halystia.commands.CommandGiveSpell;
+import fr.jamailun.halystia.commands.CommandGiveWater;
 import fr.jamailun.halystia.commands.CommandPing;
 import fr.jamailun.halystia.commands.CommandPurge;
 import fr.jamailun.halystia.commands.CommandQuests;
@@ -49,6 +50,9 @@ public class CommandsManager {
 		main.getCommand("create-shop-classe").setExecutor(new CommandCreateShop(main));
 		main.getCommand("reload-shop-classe").setExecutor(new CommandReloadShops(main));
 		new CommandPurge(main);
+		
+
+		new CommandGiveWater(main);
 		
 		new CommandEditMobs(main);
 		new CommandEditChunks(main);

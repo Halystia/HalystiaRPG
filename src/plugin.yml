@@ -1,5 +1,5 @@
 name: HalystiaRPG
-version: 4.3.2
+version: 4.4.0
 main: fr.jamailun.halystia.HalystiaRPG
 authors: [jamailun]
 depend: [Citizens, Sentinel]
@@ -167,6 +167,10 @@ commands:
   donjonBoss:
     usage: §4/donjonBoss <donjon-name>
     description: Summon boss's donjon (CMD BLOCK ONLY)
+  givewater:
+    permission: halystia.rpg.master
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    
 
 permissions:
   halystia.rpg.*:
