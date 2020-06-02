@@ -15,16 +15,16 @@ import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
 
 public class Vague extends Spell {
 
-	public final static double RANGE = 3;
+	public final static double RANGE = 2.3;
 	public final static double POWER = 1.5;
 	
 	@Override
 	public boolean cast(Player p) {
-		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 9*2, 12, false, false);
+		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 9*2, 10, false, false);
 		spell.setDamages(4);
-		spell.setYForce(.7);
+		spell.setYForce(.2);
 		Vector dir = p.getLocation().getDirection();
-		Vector dirr = dir.multiply(1.1);
+		Vector dirr = dir.multiply(1.5);
 		spell.setDirection(dirr);
 		spell.addParticleEffect(Particle.WATER_SPLASH, 450, RANGE/2, RANGE/4, .1);
 		spell.addSoundEffect(Sound.AMBIENT_UNDERWATER_ENTER, .5f, 1.5f);
@@ -71,7 +71,7 @@ public class Vague extends Spell {
 
 	@Override
 	public int getCooldown() {
-		return 4;
+		return 5;
 	}
 
 }

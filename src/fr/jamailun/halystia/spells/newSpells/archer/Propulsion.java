@@ -23,7 +23,7 @@ public class Propulsion extends Spell {
 		}
 		Vector vec = p.getLocation().getDirection();
 		
-		vec = vec.multiply(2.3);
+		vec = vec.multiply(2);
 		double vy = vec.getY();
 		if(vy > 0.9)
 			vy = 0.9;
