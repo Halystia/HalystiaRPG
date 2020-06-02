@@ -17,7 +17,7 @@ import fr.jamailun.halystia.quests.Quest;
 public final class QuestStepInteract extends QuestStep {
 	
 	private final Location location;
-	private final String blockName;
+	private String blockName;
 	
 	public static void serialize(Location location, String blockName, ConfigurationSection section) {
 		section.set("where", location);
@@ -30,6 +30,8 @@ public final class QuestStepInteract extends QuestStep {
 		super(section, quest, step, npcs, mobs);
 		location = section.getLocation("where");
 		blockName = ChatColor.translateAlternateColorCodes('&', section.getString("what"));
+		if(blockName.isEmpty())
+			blockName = location.getBlock().getType().toString().replaceAll("_", " ");
 		loot = section.getItemStack("loot");
 	}
 	
