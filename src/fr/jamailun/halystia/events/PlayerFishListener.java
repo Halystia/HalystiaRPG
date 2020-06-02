@@ -6,6 +6,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
@@ -23,6 +24,8 @@ public class PlayerFishListener extends HalystiaListener {
 			return;
 		e.setExpToDrop(0);
 		if(e.getCaught() == null)
+			return;
+		if ( e.getState() != State.BITE && e.getState() != State.CAUGHT_FISH)
 			return;
 		Player p = e.getPlayer();
 		
