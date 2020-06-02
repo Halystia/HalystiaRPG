@@ -80,9 +80,11 @@ class PlayerBanque extends FileDataRPG {
 			return;
 		}
 		level = config.getInt("level");
-		inv = Bukkit.createInventory(null, 9*(2+Math.min(level, 4)), ChatColor.DARK_BLUE + "Banque - " + p.getName());
+		inv = Bukkit.createInventory(null, 9*(2+Math.min(Math.max(1, level), 4)), ChatColor.DARK_BLUE + "Banque - " + p.getName());
 		for(int slotValue : content.keySet()) {
 			int slot = slotValue - page * 100;
+			if(slot >= inv.getSize())
+				continue;
 			inv.setItem(slot, content.get(slotValue));
 		}
 		p.openInventory(inv);
