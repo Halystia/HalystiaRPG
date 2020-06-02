@@ -21,14 +21,14 @@ public class ExuvationComplexe extends Spell {
 	@Override
 	public boolean cast(Player p) {
 		p.addPotionEffect(effect);
-		Player pl = getClosestPlayerAtRange(p.getLocation(), RANGE);
+		Player pl = getClosestPlayerAtRange(p, RANGE);
 		if(pl == null) {
-			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "L'exuvation n'a eu d'effet que sur vous.");
+			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.YELLOW + "L'exuvation n'a eu d'effet que sur vous.");
 			return true;
 		}
 		pl.addPotionEffect(effect);
 		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "L'exuvation a aussi eu un effet sur " + ChatColor.GOLD + pl.getName() + ChatColor.GREEN + ".");
-		pl.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "Vous recevez un bonus de force II grâce à " + ChatColor.GOLD + p.getName() + ChatColor.GREEN + ".");
+		pl.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "Vous recevez un bonus de force grâce à " + ChatColor.GOLD + p.getName() + ChatColor.GREEN + ".");
 		return true;
 	}
 
@@ -68,12 +68,12 @@ public class ExuvationComplexe extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 18;
+		return 40;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 3;
 	}
 
 }

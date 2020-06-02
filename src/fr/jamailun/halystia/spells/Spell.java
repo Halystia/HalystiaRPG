@@ -326,4 +326,19 @@ public abstract class Spell {
 		return p;
 	}
 	
+	protected Player getClosestPlayerAtRange(Player source, double range) {
+		Player p = null;
+		double dist = 10000;
+		for(Player pl : source.getLocation().getWorld().getPlayers()) {
+			if(pl.getUniqueId().equals(source.getUniqueId()))
+				continue;
+			double distance = pl.getLocation().distance(source.getLocation());
+			if(distance < range && distance < dist) {
+				p = pl;
+				dist = distance;
+			}
+		}
+		return p;
+	}
+	
 }

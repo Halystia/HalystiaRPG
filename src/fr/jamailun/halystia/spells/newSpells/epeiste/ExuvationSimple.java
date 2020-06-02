@@ -16,14 +16,14 @@ public class ExuvationSimple extends Spell {
 
 	public final static double RANGE = 50;
 	
-	private final PotionEffect effect = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*30, 0);
+	private final PotionEffect effect = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*8, 0);
 	
 	@Override
 	public boolean cast(Player p) {
 		p.addPotionEffect(effect);
-		Player pl = getClosestPlayerAtRange(p.getLocation(), RANGE);
+		Player pl = getClosestPlayerAtRange(p, RANGE);
 		if(pl == null) {
-			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "L'exuvation n'a eu d'effet que sur vous.");
+			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.YELLOW + "L'exuvation n'a eu d'effet que sur vous.");
 			return true;
 		}
 		pl.addPotionEffect(effect);
@@ -67,7 +67,7 @@ public class ExuvationSimple extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 3;
+		return 7;
 	}
 
 	@Override
