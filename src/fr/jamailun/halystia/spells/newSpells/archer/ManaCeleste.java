@@ -77,7 +77,7 @@ public class ManaCeleste extends Spell {
 
 	@Override
 	public int getCooldown() {
-		return 8;
+		return 3;
 	}
 
 }

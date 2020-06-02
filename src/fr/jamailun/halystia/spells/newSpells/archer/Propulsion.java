@@ -23,7 +23,12 @@ public class Propulsion extends Spell {
 		}
 		Vector vec = p.getLocation().getDirection();
 		
-		p.setVelocity(vec.multiply(3.2));
+		vec = vec.multiply(2.3);
+		double vy = vec.getY();
+		if(vy > 0.9)
+			vy = 0.9;
+		vec = vec.setY(vy);
+		p.setVelocity(vec);
 		
 		return true;
 	}
@@ -63,12 +68,12 @@ public class Propulsion extends Spell {
 	
 	@Override
 	public int getManaCost() {
-		return 12;
+		return 14;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 2;
+		return 3;
 	}
 
 }
