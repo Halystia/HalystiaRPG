@@ -14,6 +14,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.donjons.DonjonI;
@@ -93,6 +94,14 @@ public class PlayerDeathListener extends HalystiaListener {
 		else
 			p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu es mort. "+GREEN+"Mais ayant toutes tes âmes, tu n'as perdu aucun stuff.");
 		main.getDataBase().looseSoul(p);
+		main.getClasseManager().getPlayerData(p).fullMana();
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				p.spigot().respawn();
+			}
+		}.runTaskLater(main, 5L);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

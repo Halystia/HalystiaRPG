@@ -160,8 +160,11 @@ public class ItemBuilder {
      * Sets an item as Unbreakable
      */
     public ItemBuilder setUnbreakable() {
-    	if(is.hasItemMeta())
-    		is.getItemMeta().setUnbreakable(true);
+    	if(is.hasItemMeta()) {
+    		ItemMeta meta = is.getItemMeta();
+    		meta.setUnbreakable(true);
+    		is.setItemMeta(meta);
+    	}
         return this;
     }
     /**

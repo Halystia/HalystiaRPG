@@ -25,7 +25,7 @@ public class PlayerFishListener extends HalystiaListener {
 		e.setExpToDrop(0);
 		if(e.getCaught() == null)
 			return;
-		if ( e.getState() != State.BITE && e.getState() != State.CAUGHT_FISH)
+		if ( e.getState() != State.CAUGHT_FISH)
 			return;
 		Player p = e.getPlayer();
 		

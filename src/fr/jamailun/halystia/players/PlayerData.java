@@ -327,4 +327,8 @@ public class PlayerData {
 	public boolean isPlayerValid() {
 		return playerValid;
 	}
+
+	public void fullMana() {
+		mana = maxMana;
+	}
 }
