@@ -75,7 +75,7 @@ public class SoinsPerfectionnes extends Spell {
 
 	@Override
 	public int getManaCost() {
-		return 25;
+		return 20;
 	}
 
 	@Override

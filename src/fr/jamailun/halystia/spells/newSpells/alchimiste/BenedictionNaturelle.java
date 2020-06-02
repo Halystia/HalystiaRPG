@@ -5,11 +5,9 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.Spell;
@@ -29,35 +27,23 @@ public class BenedictionNaturelle extends Spell {
 	
 	@Override
 	public synchronized boolean cast(Player p) {
-		Player target = super.getClosestPlayerAtRange(p.getLocation(), 5);
+		Player target = null;
+		double min = 100;
+		for ( Player pl : super.getPlayersAroundPlayer(p, 5, false) )  {
+			double dd = pl.getLocation().distance(p.getLocation());
+			if(dd < min) {
+				target = pl;
+				min = dd;
+			}
+		}
 		if(target == null) {
 			p.sendMessage(ChatColor.RED + "Il faut un joueur à proximité !");
 			return false;
 		}
+		
 		for(PotionEffect eff : effects)
 			target.addPotionEffect(eff);
-		
-		for(Player pl : getPlayersAround(target.getLocation(), 100)) {
-			pl.playSound(target.getLocation(), Sound.ENTITY_ENDERMAN_STARE, .2f, 1.7f);
-			spawnParticles(pl, target.getLocation(), Particle.DRAGON_BREATH, 200, .25, .25, .1);
-		}
-		
-		new BukkitRunnable() {
-			private long PASSED = 0L;
-			@Override
-			public void run() {
-				if(!target.isValid()) {
-					cancel();
-					return;
-				}
-				PASSED += PERIOD;
-				spawnParticles(target.getLocation(), Particle.WATER_SPLASH, 30, .2, .2, .2);
-				if(PASSED >= TOTAL_TIME) {
-					cancel();
-					return;
-				}
-			}
-		}.runTaskTimer(main, 0L, PERIOD);
+		spawnParticles(target.getLocation(), Particle.DRAGON_BREATH, 200, .1, .1, .09);
 		
 		return true;
 	}

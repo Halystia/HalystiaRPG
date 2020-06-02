@@ -11,13 +11,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.Spell;
 
 public class ManaCeleste extends Spell {
 	
 	private final List<PotionEffect> effects = Arrays.asList(new PotionEffect(PotionEffectType.SLOW, 9, 8*20, false, false, true));
-	public final static int MANA = 10;
+	public final static int MANA = 15;
 	
 	@Override
 	public boolean cast(Player p) {
@@ -25,6 +26,7 @@ public class ManaCeleste extends Spell {
 			spawnParticles(pl, p.getLocation(), Particle.FALLING_WATER, 600, 9, .5, .3);
 			pl.playSound(p.getLocation(), Sound.BLOCK_CONDUIT_ACTIVATE, 4f, .8f);
 			p.sendMessage(ChatColor.GREEN + "Vous sentez un peu de mana affluer en vous.");
+			HalystiaRPG.getInstance().getClasseManager().getPlayerData(pl).addManaRegen(MANA);
 		}
 		for(PotionEffectType effect : new PotionEffectType[] {PotionEffectType.SLOW, PotionEffectType.SPEED, PotionEffectType.JUMP})
 			if(p.getPotionEffect(effect) != null)
@@ -70,7 +72,7 @@ public class ManaCeleste extends Spell {
 	
 	@Override
 	public int getManaCost() {
-		return 0;
+		return 5;
 	}
 
 	@Override
