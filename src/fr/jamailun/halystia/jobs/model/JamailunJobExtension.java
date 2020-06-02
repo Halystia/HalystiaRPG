@@ -83,13 +83,13 @@ public class JamailunJobExtension {
 		jobs.registerJob(mineur);
 		
 		JobBlockManager blocs = jobs.getBlocsManager();
-		blocs.registerContent(new JobBlock(mineur, 1, Material.COBBLESTONE, item("cobble"), 5, 30));
-		blocs.registerContent(new JobBlock(mineur, 1, Material.GRAVEL, item("gravel"), 2, 45));
-		blocs.registerContent(new JobBlock(mineur, 1, Material.COAL_ORE, item("coal"), 8, 90));
-		blocs.registerContent(new JobBlock(mineur, 2, Material.IRON_ORE, item("iron"), 14, 180));
-		blocs.registerContent(new JobBlock(mineur, 3, Material.GOLD_ORE, item("gold"), 21, 230));
-		blocs.registerContent(new JobBlock(mineur, 4, Material.NETHER_QUARTZ_ORE, item("quartz"), 27, 180));
-		blocs.registerContent(new JobBlock(mineur, 5, Material.DIAMOND_ORE, item("diams"), 35, 300));
+		blocs.registerContent(new JobBlock(mineur, 1, Material.COBBLESTONE, item("cobble"), 1, 70));
+		blocs.registerContent(new JobBlock(mineur, 1, Material.GRAVEL, item("gravel"), 1, 90));
+		blocs.registerContent(new JobBlock(mineur, 1, Material.COAL_ORE, item("coal"), 2, 120));
+		blocs.registerContent(new JobBlock(mineur, 2, Material.IRON_ORE, item("iron"), 3, 180));
+		blocs.registerContent(new JobBlock(mineur, 3, Material.GOLD_ORE, item("gold"), 5, 230));
+		blocs.registerContent(new JobBlock(mineur, 4, Material.NETHER_QUARTZ_ORE, item("quartz"), 7, 3000));
+		blocs.registerContent(new JobBlock(mineur, 5, Material.DIAMOND_ORE, item("diams"), 8, 380));
 		
 		JobCraftsManager crafts = jobs.getCraftsManager();
 		crafts.registerContent(new JobCraft(mineur, 1, item("stone", 4), 1, 	item("cobble", 5), item("water")));
@@ -123,11 +123,11 @@ public class JamailunJobExtension {
 		jobs.registerJob(bucheron);
 		
 		JobBlockManager blocs = jobs.getBlocsManager();
-		blocs.registerContent(new JobBlock(bucheron, 1, Material.OAK_LOG, item("oak"), 5, 30));
-		blocs.registerContent(new JobBlock(bucheron, 2, Material.BIRCH_LOG, item("birch"), 10, 90));
-		blocs.registerContent(new JobBlock(bucheron, 3, Material.SPRUCE_LOG, item("spruce"), 30, 180));
-		blocs.registerContent(new JobBlock(bucheron, 4, Material.DARK_OAK_LOG, item("dark"), 50, 230));
-		blocs.registerContent(new JobBlock(bucheron, 5, Material.ACACIA_LOG, item("acacia"), 100, 300));
+		blocs.registerContent(new JobBlock(bucheron, 1, Material.OAK_LOG, item("oak"), 1, 60));
+		blocs.registerContent(new JobBlock(bucheron, 2, Material.BIRCH_LOG, item("birch"), 2, 90));
+		blocs.registerContent(new JobBlock(bucheron, 3, Material.SPRUCE_LOG, item("spruce"), 5, 180));
+		blocs.registerContent(new JobBlock(bucheron, 4, Material.DARK_OAK_LOG, item("dark"), 7, 230));
+		blocs.registerContent(new JobBlock(bucheron, 5, Material.ACACIA_LOG, item("acacia"), 9, 300));
 		
 		JobCraftsManager crafts = jobs.getCraftsManager();
 		crafts.registerContent(new JobCraft(bucheron, 1, item("oak1", 5), 1, 		item("oak", 5), item("water")));
@@ -156,15 +156,15 @@ public class JamailunJobExtension {
 		jobs.registerJob(agriculteur);
 		
 		JobBlockManager blocs = jobs.getBlocsManager();
-		blocs.registerContent(new JobBlock(agriculteur, 1, Material.WHEAT, item("blé"), 3, 40));
-		blocs.registerContent(new JobBlock(agriculteur, 2, Material.BEETROOTS, item("bettrave"), 9, 90));
-		blocs.registerContent(new JobBlock(agriculteur, 2, Material.POTATOES, item("patate"), 11, 150));
+		blocs.registerContent(new JobBlock(agriculteur, 1, Material.WHEAT, item("blé"), 1, 110));
+		blocs.registerContent(new JobBlock(agriculteur, 2, Material.BEETROOTS, item("bettrave"), 2, 190));
+		blocs.registerContent(new JobBlock(agriculteur, 2, Material.POTATOES, item("patate"), 2, 150));
 		
-		blocs.registerContent(new JobBlock(agriculteur, 3, Material.SUGAR_CANE, item("canna"), 30, 180));
-		blocs.registerContent(new JobBlock(agriculteur, 3, Material.CARROT, item("carotte"), 30, 180));
+		blocs.registerContent(new JobBlock(agriculteur, 3, Material.SUGAR_CANE, item("canna"), 3, 210));
+		blocs.registerContent(new JobBlock(agriculteur, 3, Material.CARROT, item("carotte"), 3, 212));
 		
-		blocs.registerContent(new JobBlock(agriculteur, 4, Material.PUMPKIN, item("citrouille"), 50, 230));
-		blocs.registerContent(new JobBlock(agriculteur, 5, Material.MELON, item("melon"), 100, 300));
+		blocs.registerContent(new JobBlock(agriculteur, 4, Material.PUMPKIN, item("citrouille"), 5, 300));
+		blocs.registerContent(new JobBlock(agriculteur, 5, Material.MELON, item("melon"), 8, 360));
 		
 		JobCraftsManager crafts = jobs.getCraftsManager();
 		crafts.registerContent(new JobCraft(agriculteur, 1, item("farine1", 1), 4, 	item("blé", 6), item("cobble")));

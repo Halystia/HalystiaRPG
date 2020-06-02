@@ -303,8 +303,11 @@ public class Donjon extends FileDataRPG implements DonjonI, Reloadable {
 		return exit;
 	}
 	
-	public static void removeKeysFromPlayer(Player player) {
-		Arrays.asList(player.getInventory().getContents()).stream().filter(i -> Trade.areItemsTheSame(i, EnemyMob.DONJON_KEY)).forEach(i -> i.setAmount(0));
+	public synchronized static void removeKeysFromPlayer(Player player) {
+		Arrays.asList(player.getInventory().getContents())
+			.stream()
+			.filter(i -> Trade.areItemsTheSame(i, EnemyMob.DONJON_KEY))
+			.forEach(i -> i.setAmount(0));
 	}
 
 	@Override

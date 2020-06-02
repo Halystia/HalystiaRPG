@@ -102,13 +102,13 @@ public class JobType extends FileDataRPG {
 	}
 	
 	public int getLevel(int exp) {
-		if(exp < 600)
+		if(exp < 1200)
 			return 1;
-		if(exp < 2500)
+		if(exp < 5000)
 			return 2;
-		if(exp < 6000)
-			return 3;
 		if(exp < 16000)
+			return 3;
+		if(exp < 50000)
 			return 4;
 		return 5;
 	}
@@ -116,10 +116,10 @@ public class JobType extends FileDataRPG {
 	public int getXpRequired(int level) {
 		switch (level) {
 		case 1: return 1;
-		case 2: return 600;
-		case 3: return 2500;
-		case 4: return 6000;
-		case 5: return 16000;
+		case 2: return 1200;
+		case 3: return 5000;
+		case 4: return 16000;
+		case 5: return 50000;
 		default: return level*1500;
 		}
 	}

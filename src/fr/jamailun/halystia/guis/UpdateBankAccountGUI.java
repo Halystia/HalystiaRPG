@@ -43,6 +43,7 @@ public class UpdateBankAccountGUI extends MenuGUI {
 			}
 			addOption(builder.toItemStack(), 12+i);
 		}
+		show(p);
 	}
 
 	@Override

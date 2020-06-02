@@ -27,6 +27,14 @@ class PlayerBanque extends FileDataRPG {
 		this.uuid = uuid;
 		content = new HashMap<>();
 		for(String key : config.getKeys(false)) { // key = page#slot
+			if(key.equals("level")) {
+				try {
+					level = Integer.parseInt(key);
+				} catch ( NumberFormatException e ) {
+					Bukkit.getLogger().log(Level.SEVERE, "level key ["+key+"] in file ["+uuid.toString()+".yml] not valid.");
+				}
+				continue;
+			}
 			try {
 				int slotValue =Integer.parseInt(key);
 				content.put(slotValue, config.getItemStack(key));
