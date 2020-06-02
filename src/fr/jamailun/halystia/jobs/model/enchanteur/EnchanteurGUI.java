@@ -72,9 +72,9 @@ public class EnchanteurGUI extends JobCraftGUI {
 	public ItemStack enchantItem(Player p, ItemStack item, Attribute attribut) {
 		
 		int level = job.getPlayerLevel(p);
-		double karma = Math.random() - 0.6 + (0.11*level);
+		double karma = Math.random() - 0.6 + (0.05*level);
 
-		job.addExp((int)Math.abs((karma*50)), p);
+		job.addExp((int)Math.abs((karma*40)), p);
 		
 		Operation op = Operation.ADD_SCALAR;
 		if(attribut == Attribute.GENERIC_ARMOR || attribut == Attribute.GENERIC_MAX_HEALTH)

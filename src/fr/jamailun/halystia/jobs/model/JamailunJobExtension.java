@@ -218,8 +218,8 @@ public class JamailunJobExtension {
 		crafts.registerContent(new JobCraft(forgeron, 1, item("neopL"), 70, 	item("iron2", 20), item("coal2"), item("string")));
 		crafts.registerContent(new JobCraft(forgeron, 1, item("neopB"), 40, 	item("iron2", 16), item("coal2"), item("string")));
 		crafts.registerContent(new JobCraft(forgeron, 1, item("neopE"), 60, 	item("iron2", 3), item("coal2", 2), item("string", 4), item("stick", 40)));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("hache1"), 40, 	item("iron2", 15), item("coal2"), item("string"), item("stick", 20)));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("pioche1"), 40, 	item("iron2", 15), item("coal2"), item("string"), item("stick", 20)));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("hache1"), 60, 	item("iron2", 15), item("coal2"), item("string"), item("stick", 20)));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("pioche1"), 60, 	item("iron2", 15), item("coal2"), item("string"), item("stick", 20)));
 		
 		crafts.registerContent(new JobCraft(forgeron, 2, item("peleH"), 90, 	item("iron2", 10), item("coal2", 4), item("spruce2", 3)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("peleC"), 110, 	item("iron2", 16), item("coal2", 8), item("spruce2", 4)));
@@ -231,8 +231,8 @@ public class JamailunJobExtension {
 		crafts.registerContent(new JobCraft(forgeron, 2, item("voyaL"), 120, 	item("acier", 7), item("coal2", 14), item("spruce2", 7)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("voyaB"), 100, 	item("acier", 4), item("coal2", 12), item("spruce2", 6)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("voyaE"), 130, 	item("acier", 6), item("coal2", 18), item("oak2", 15), item("spruce2", 3)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("hache2"), 80, 	item("acier", 15), item("coal2", 4), item("string", 10), item("stick", 30)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("pioche2"), 80, 	item("acier", 15), item("coal2", 4), item("string", 10), item("stick", 30)));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("hache2"), 180, 	item("acier", 15), item("coal2", 4), item("string", 10), item("stick", 30)));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("pioche2"), 180, 	item("acier", 15), item("coal2", 4), item("string", 10), item("stick", 30)));
 		
 		crafts.registerContent(new JobCraft(forgeron, 3, item("explH"), 130, 	item("gold1", 15), item("coal2", 15), item("dark2", 2)));
 		crafts.registerContent(new JobCraft(forgeron, 3, item("explC"), 160, 	item("gold1", 24), item("coal2", 24), item("dark2", 4)));
