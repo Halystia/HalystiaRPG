@@ -187,6 +187,8 @@ public class Trade implements Comparable<Trade> {
 	 * @return true if both items are considered as the sames.
 	 */
 	public static boolean areItemsTheSame(ItemStack a, ItemStack b) {
+		if(b == null || a == null)
+			return false;
 		if(a.getType() != b.getType())
 			return false;
 		if(a.hasItemMeta() != b.hasItemMeta())
