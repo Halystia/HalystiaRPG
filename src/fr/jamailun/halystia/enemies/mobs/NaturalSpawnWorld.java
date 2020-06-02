@@ -107,7 +107,7 @@ public class NaturalSpawnWorld {
 	}
 	
 	private boolean isSolidBlock(Block b) {
-		return b.getType().isSolid() && b.getType().isOccluding();
+		return (b.getType().isSolid() && b.getType().isOccluding()) || (b.getType() == Material.SNOW || b.getType() == Material.GRASS_PATH);
 	}
 	
 	private boolean isValidBlock(Block b) {
