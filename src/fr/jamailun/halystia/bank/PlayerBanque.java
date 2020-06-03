@@ -29,7 +29,7 @@ class PlayerBanque extends FileDataRPG {
 		for(String key : config.getKeys(false)) { // key = page#slot
 			if(key.equals("level")) {
 				try {
-					level = Integer.parseInt(key);
+					level = config.getInt(key); //trop chelou ce que j'ai fait ici xD
 				} catch ( NumberFormatException e ) {
 					Bukkit.getLogger().log(Level.SEVERE, "level key ["+key+"] in file ["+uuid.toString()+".yml] not valid.");
 				}

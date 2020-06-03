@@ -34,11 +34,11 @@ public class UpdateBankAccountGUI extends MenuGUI {
 				continue;
 			}
 			ItemBuilder builder = new ItemBuilder(Material.GRAY_DYE).setName(GRAY+"Niveau " + GOLD+i).setLore(RED+"Non possédé");
-			if(HalystiaRPG.getInstance().getBanque().getCurrentRules().getCost(currentLevel).isEmpty()) {
+			if(HalystiaRPG.getInstance().getBanque().getCurrentRules().getCost(i).isEmpty()) {
 				builder.addLoreLine(GREEN+"Gratuit !");
 			} else {
 				builder.addLoreLine(GRAY+"Prix :");
-				for(ItemStack item : HalystiaRPG.getInstance().getBanque().getCurrentRules().getCost(currentLevel))
+				for(ItemStack item : HalystiaRPG.getInstance().getBanque().getCurrentRules().getCost(i))
 					builder.addLoreLine(GRAY+"-"+(item.hasItemMeta() ? item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType() : item.getType())+GRAY+" x"+item.getAmount());
 			}
 			addOption(builder.toItemStack(), 12+i);
