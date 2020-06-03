@@ -3,6 +3,8 @@ package fr.jamailun.halystia.jobs.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -31,12 +33,12 @@ public class JamailunJobExtension {
 		
 		items = registerItems();
 		try {
+			registerEnchanteur();
 			registerMineur();
 			registerBucheron();
 			registerFogeron();
 			registerPhytomancien();
 			registerPaysan();
-			registerEnchanteur();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}
@@ -57,6 +59,10 @@ public class JamailunJobExtension {
 	}
 	
 	private ItemStack item(String index, int amount) {
+		if(items.get(index) == null) {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "ERREUR : index ("+index+") not found.");
+			return new ItemBuilder(Material.BARRIER).setName("§c§lERREUR").toItemStack();
+		}
 		return new ItemBuilder(items.get(index)).setAmount(amount).toItemStack();
 	}
 
@@ -194,6 +200,22 @@ public class JamailunJobExtension {
 		phyto.setIcon(5, Material.BREWING_STAND);
 		
 		jobs.registerJob(phyto);
+
+		JobCraftsManager crafts = jobs.getCraftsManager();
+
+		crafts.registerContent(new JobCraft(phyto, 1, item("réceptacle", 1), 15, 			item("stone", 3), item("oak1", 4)));
+		crafts.registerContent(new JobCraft(phyto, 1, item("bouteille", 1), 15, 			item("stone", 4), item("oak1", 3)));
+		
+		crafts.registerContent(new JobCraft(phyto, 1, item("potion_abso1", 1), 40, 			item("bouteille"), item("oak2", 16), item("iron1")));
+		crafts.registerContent(new JobCraft(phyto, 1, item("potion_resis1", 1), 40, 		item("bouteille"), item("os1", 10)));
+		crafts.registerContent(new JobCraft(phyto, 1, item("potion_atterissage", 1), 40, 	item("bouteille"), item("eye", 3), item("string", 5)));
+		
+		crafts.registerContent(new JobCraft(phyto, 2, item("source_vie", 1), 55, 		item("réceptacle"), item("vésiculePokoi", 5), item("chair", 3), item("perlimpimpim")));
+		crafts.registerContent(new JobCraft(phyto, 2, item("source_sang", 1), 50, 		item("réceptacle"), item("iron2", 2), item("perlimpimpim")));
+		crafts.registerContent(new JobCraft(phyto, 2, item("source_défense", 1), 50, 	item("réceptacle"), item("stone2"), item("perlimpimpim")));
+		crafts.registerContent(new JobCraft(phyto, 2, item("source_terre", 1), 50, 		item("réceptacle"), item("birch2"), item("perlimpimpim")));
+		crafts.registerContent(new JobCraft(phyto, 2, item("source_puissance", 1), 50, 	item("réceptacle"), item("farine3"), item("perlimpimpim")));
+		crafts.registerContent(new JobCraft(phyto, 2, item("source_vitesse", 1), 50, 	item("réceptacle"), item("silex1"), item("perlimpimpim")));
 		
 		phyto.changeCraftGUI(Material.BREWING_STAND, new JobCraftGUI(phyto));
 	}

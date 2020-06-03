@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.potion.PotionEffectType;
 
 import fr.jamailun.halystia.utils.ItemBuilder;
 
@@ -32,8 +33,14 @@ class JamailunItemExtension extends JamailunItemModel {
 		
 		items.put("miel", new ItemBuilder(Material.HONEY_BOTTLE).setName(c()+"Fiole de miel").toItemStack());
 		items.put("chair", new ItemBuilder(Material.ROTTEN_FLESH).setName(c()+"Chair décomposée").toItemStack());
+		items.put("chairSub", new ItemBuilder(Material.ROTTEN_FLESH).shine().setName(r()+"Chair sublimée").toItemStack());
 		items.put("vésiculePokoi", new ItemBuilder(Material.PURPLE_DYE).setName(c()+"Vésicule de pokoï").toItemStack());
-
+		items.put("os1", new ItemBuilder(Material.BONE).setName(c()+"Vieil os").toItemStack());
+		items.put("os2", new ItemBuilder(Material.BONE).setName(r()+"Os ancestral").toItemStack());
+		items.put("eye", new ItemBuilder(Material.SPIDER_EYE).setName(c()+"Oeil de tarentule").toItemStack());
+		
+		
+		
 		//CRAFTS MINEUR
 		items.put("stone", new ItemBuilder(Material.STONE).setName(c() + "Pierre lisse").toItemStack());
 		items.put("silex", new ItemBuilder(Material.FLINT).setName(c() + "Silex").toItemStack());
@@ -86,6 +93,16 @@ class JamailunItemExtension extends JamailunItemModel {
 		items.put("sucre1", new ItemBuilder(Material.SUGAR).setName(c()+"Sucre grossier").toItemStack());
 		items.put("sucre2", new ItemBuilder(Material.SUGAR).shine().setName(c()+"Sucre rafiné").toItemStack());
 		items.put("carottedorée", new ItemBuilder(Material.GOLDEN_CARROT).setName(c()+"Carotte dorée").toItemStack());
-				
+		
+		
+		//CRAFTS phyto
+		items.put("réceptacle", new ItemBuilder(Material.WHITE_STAINED_GLASS).setName(c()+"Réceptable").toItemStack());
+		items.put("bouteille", new ItemBuilder(Material.GLASS_BOTTLE).setName(c() + "Bouteille à potion").toItemStack());
+		
+		items.put("potion_abso1", new ItemBuilder(PotionEffectType.ABSORPTION, 60, 0, Color.YELLOW, false, 1).setName(c() + "Potion d'absorption I").toItemStack());
+		items.put("potion_resis1", new ItemBuilder(PotionEffectType.DAMAGE_RESISTANCE, 10, 0, Color.SILVER, false, 1).setName(c() + "Potion de résistance I").toItemStack());
+		items.put("potion_atterissage", new ItemBuilder(PotionEffectType.JUMP, 10, 255, Color.OLIVE, false, 1).setName(c() + "Potion de pieds-durs").addItemFlag(ItemFlag.HIDE_POTION_EFFECTS).toItemStack());
+		
+		
 	}
 }
