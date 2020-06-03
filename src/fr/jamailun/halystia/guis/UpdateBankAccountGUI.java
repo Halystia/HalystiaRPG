@@ -2,6 +2,7 @@ package fr.jamailun.halystia.guis;
 
 import static org.bukkit.ChatColor.*;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -38,8 +39,17 @@ public class UpdateBankAccountGUI extends MenuGUI {
 				builder.addLoreLine(GREEN+"Gratuit !");
 			} else {
 				builder.addLoreLine(GRAY+"Prix :");
-				for(ItemStack item : HalystiaRPG.getInstance().getBanque().getCurrentRules().getCost(i))
-					builder.addLoreLine(GRAY+"-"+(item.hasItemMeta() ? item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType() : item.getType())+GRAY+" x"+item.getAmount());
+				for(ItemStack item : HalystiaRPG.getInstance().getBanque().getCurrentRules().getCost(i)) {
+					String name = "";
+					if(item.getType() == Material.EMERALD) {
+						name = ChatColor.GOLD + "" + item.getAmount() + " émeraude"+(item.getAmount() > 1 ? "s":"");
+					} else if(item.getType() == Material.EMERALD_BLOCK) {
+						name = ChatColor.GOLD + "" + item.getAmount() + " bloc"+(item.getAmount() > 1 ? "s":"")+" d'émeraude";
+					} else {
+						name = ""+(item.hasItemMeta() ? item.getItemMeta().hasDisplayName() ? item.getItemMeta().getDisplayName() : item.getType() : item.getType())+GRAY+" x"+item.getAmount();
+					}
+					builder.addLoreLine(GRAY+"-"+name);
+				}
 			}
 			addOption(builder.toItemStack(), 12+i);
 		}

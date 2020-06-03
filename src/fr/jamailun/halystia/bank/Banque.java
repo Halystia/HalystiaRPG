@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.shops.Trade;
 
 public class Banque {
@@ -24,7 +25,7 @@ public class Banque {
 	private final String path;
 	private BanqueRules rules;
 	
-	public Banque(String path) {
+	public Banque(String path, JobsManager jobs) {
 		this.path = path;
 		viewers = new HashMap<>();
 		data = new HashMap<>();
@@ -40,8 +41,8 @@ public class Banque {
 		rules = new BanqueRules()
 				.changeCostForLevel(1, new ArrayList<>())
 				.changeCostForLevel(2, new ItemStack(Material.EMERALD_BLOCK, 16))
-				.changeCostForLevel(3, new ItemStack(Material.EMERALD_BLOCK, 32))
-				.changeCostForLevel(4, new ItemStack(Material.EMERALD_BLOCK, 64), new ItemStack(Material.EMERALD_BLOCK, 64));
+				.changeCostForLevel(3, jobs.getItemManager().getWithKey("gold2", 32), new ItemStack(Material.EMERALD_BLOCK, 32))
+				.changeCostForLevel(4, jobs.getItemManager().getWithKey("gold2", 64), new ItemStack(Material.EMERALD_BLOCK, 64));
 	}
 	
 	public BanqueRules getCurrentRules() {

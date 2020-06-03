@@ -28,11 +28,6 @@ class PlayerBanque extends FileDataRPG {
 		content = new HashMap<>();
 		for(String key : config.getKeys(false)) { // key = page#slot
 			if(key.equals("level")) {
-				try {
-					level = config.getInt(key); //trop chelou ce que j'ai fait ici xD
-				} catch ( NumberFormatException e ) {
-					Bukkit.getLogger().log(Level.SEVERE, "level key ["+key+"] in file ["+uuid.toString()+".yml] not valid.");
-				}
 				continue;
 			}
 			try {
@@ -42,6 +37,9 @@ class PlayerBanque extends FileDataRPG {
 				Bukkit.getLogger().log(Level.SEVERE, "keyInfo ["+key+"] in file ["+uuid.toString()+".yml] not correct.");
 			}
 		}
+		level = config.getInt("level");
+		if(level < 1)
+			level = 1;
 	}
 	
 	void saveInventory() {
@@ -70,6 +68,7 @@ class PlayerBanque extends FileDataRPG {
 	void improveLevel() {
 		synchronized (file) {
 			level = Math.min(Math.max(0, level + 1), 4);
+			config.set("level", level);
 			save();
 		}
 	}

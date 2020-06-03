@@ -203,12 +203,12 @@ public class JamailunJobExtension {
 
 		JobCraftsManager crafts = jobs.getCraftsManager();
 
-		crafts.registerContent(new JobCraft(phyto, 1, item("réceptacle", 1), 15, 			item("stone", 3), item("oak1", 4)));
-		crafts.registerContent(new JobCraft(phyto, 1, item("bouteille", 1), 15, 			item("stone", 4), item("oak1", 3)));
+		crafts.registerContent(new JobCraft(phyto, 1, item("réceptacle", 1), 15, 		item("stone", 3), item("oak1", 4)));
+		crafts.registerContent(new JobCraft(phyto, 1, item("bouteille", 1), 15, 		item("stone", 4), item("oak1", 3)));
 		
-		crafts.registerContent(new JobCraft(phyto, 1, item("potion_abso1", 1), 40, 			item("bouteille"), item("oak2", 16), item("iron1")));
-		crafts.registerContent(new JobCraft(phyto, 1, item("potion_resis1", 1), 40, 		item("bouteille"), item("os1", 10)));
-		crafts.registerContent(new JobCraft(phyto, 1, item("potion_atterissage", 1), 40, 	item("bouteille"), item("eye", 3), item("string", 5)));
+		crafts.registerContent(new JobCraft(phyto, 1, item("potion_abso1", 1), 40, 		item("bouteille"), item("oak2", 16), item("iron1")));
+		crafts.registerContent(new JobCraft(phyto, 1, item("potion_resis1", 1), 40, 	item("bouteille"), item("os1", 10)));
+		crafts.registerContent(new JobCraft(phyto, 1, item("potion_jump1", 1), 40,	 	item("bouteille"), item("eye", 3), item("string", 5)));
 		
 		crafts.registerContent(new JobCraft(phyto, 2, item("source_vie", 1), 55, 		item("réceptacle"), item("vésiculePokoi", 5), item("chair", 3), item("perlimpimpim")));
 		crafts.registerContent(new JobCraft(phyto, 2, item("source_sang", 1), 50, 		item("réceptacle"), item("iron2", 2), item("perlimpimpim")));

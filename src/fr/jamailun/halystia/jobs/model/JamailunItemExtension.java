@@ -101,7 +101,7 @@ class JamailunItemExtension extends JamailunItemModel {
 		
 		items.put("potion_abso1", new ItemBuilder(PotionEffectType.ABSORPTION, 60, 0, Color.YELLOW, false, 1).setName(c() + "Potion d'absorption I").toItemStack());
 		items.put("potion_resis1", new ItemBuilder(PotionEffectType.DAMAGE_RESISTANCE, 10, 0, Color.SILVER, false, 1).setName(c() + "Potion de résistance I").toItemStack());
-		items.put("potion_atterissage", new ItemBuilder(PotionEffectType.JUMP, 10, 255, Color.OLIVE, false, 1).setName(c() + "Potion de pieds-durs").addItemFlag(ItemFlag.HIDE_POTION_EFFECTS).toItemStack());
+		items.put("potion_jump1", new ItemBuilder(PotionEffectType.JUMP, 15, 1, Color.OLIVE, false, 1).setName(c() + "Potion de saut I").toItemStack());
 		
 		
 	}
