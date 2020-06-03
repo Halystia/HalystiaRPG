@@ -67,7 +67,7 @@ public class ItemBuilder {
     	is = new ItemStack(splash ? Material.SPLASH_POTION : Material.POTION, amount);
     	PotionMeta meta = (PotionMeta) is.getItemMeta();
     	meta.setColor(color);
-    	meta.addCustomEffect(new PotionEffect(type, duration, amplifier), true);
+    	meta.addCustomEffect(new PotionEffect(type, duration*20, amplifier), true);
     	meta.setDisplayName(ChatColor.WHITE + "Potion of " + type.getName().toLowerCase());
     	is.setItemMeta(meta);
     }
