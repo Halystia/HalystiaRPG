@@ -6,6 +6,8 @@ import java.util.Set;
 
 import org.bukkit.inventory.ItemStack;
 
+import fr.jamailun.halystia.utils.ItemBuilder;
+
 public class JobsItemManager {
 
 	private final Map<String, ItemStack> items;
@@ -32,6 +34,10 @@ public class JobsItemManager {
 
 	public ItemStack getWithKey(String key) {
 		return items.get(key);
+	}
+	
+	public ItemStack getWithKey(String key, int amount) {
+		return new ItemBuilder(items.get(key)).setAmount(amount).toItemStack();
 	}
 	
 }

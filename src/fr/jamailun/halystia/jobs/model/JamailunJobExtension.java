@@ -109,9 +109,11 @@ public class JamailunJobExtension {
 		crafts.registerContent(new JobCraft(mineur, 2, item("iron2", 1), 10, 	item("iron1", 12), item("coal1", 5)));
 		
 		crafts.registerContent(new JobCraft(mineur, 3, item("stone2", 1), 13, 	item("stone1", 64), item("silex1", 3), item("iron2"), item("coal2", 3)));
-		crafts.registerContent(new JobCraft(mineur, 4, item("gold1", 2), 4, 	item("gold", 3), item("coal1", 3)));
-		crafts.registerContent(new JobCraft(mineur, 4, item("gold2", 1), 12, 	item("gold1", 12), item("coal2", 3)));
+		crafts.registerContent(new JobCraft(mineur, 3, item("gold1", 2), 4, 	item("gold", 3), item("coal1", 3)));
+		crafts.registerContent(new JobCraft(mineur, 3, item("gold2", 1), 12, 	item("gold1", 12), item("coal2", 3)));
+		
 		crafts.registerContent(new JobCraft(mineur, 4, item("acier", 2), 10, 	item("iron2", 1), item("gold1", 3), item("lava", 1)));
+		
 		crafts.registerContent(new JobCraft(mineur, 5, item("diams1", 2), 4, 	item("diams", 3), item("coal2", 2)));
 		crafts.registerContent(new JobCraft(mineur, 5, item("diams2", 1), 12, 	item("diams1", 12), item("coal2", 6), item("lava", 2)));
 		crafts.registerContent(new JobCraft(mineur, 5, item("tasei", 1), 40, 	item("diams2", 2), item("acier", 2), item("stone2", 5), item("lava", 4)));
@@ -230,42 +232,49 @@ public class JamailunJobExtension {
 		jobs.registerJob(forgeron);
 		
 		JobCraftsManager crafts = jobs.getCraftsManager();
-		crafts.registerContent(new JobCraft(forgeron, 1, item("visiH"), 25, 	item("iron1", 5), item("coal1")));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("visiC"), 40, 	item("iron1", 8), item("coal1", 2)));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("visiL"), 35, 	item("iron1", 7), item("coal1")));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("visiB"), 20, 	item("iron1", 4), item("coal1")));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("visiH"), 20, 	item("iron1", 5), item("coal1")));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("visiC"), 35, 	item("iron1", 8), item("coal1", 2)));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("visiL"), 30, 	item("iron1", 7), item("coal1")));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("visiB"), 15, 	item("iron1", 4), item("coal1")));
 		crafts.registerContent(new JobCraft(forgeron, 1, item("visiE"), 30, 	item("iron1", 3), item("coal1"), item("stick", 10)));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("neopH"), 50, 	item("iron2", 18), item("coal2"), item("string")));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("neopC"), 80, 	item("iron2", 22), item("coal2", 2), item("string")));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("neopL"), 70, 	item("iron2", 20), item("coal2"), item("string")));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("neopB"), 40, 	item("iron2", 16), item("coal2"), item("string")));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("neopE"), 60, 	item("iron2", 3), item("coal2", 2), item("string", 4), item("stick", 40)));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("hache1"), 60, 	item("iron2", 15), item("coal2"), item("string"), item("stick", 20)));
-		crafts.registerContent(new JobCraft(forgeron, 1, item("pioche1"), 60, 	item("iron2", 15), item("coal2"), item("string"), item("stick", 20)));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("noviH"), 30, 	item("iron1", 12), item("coal1", 2)));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("noviC"), 45, 	item("iron1", 16), item("coal1", 4)));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("noviL"), 40, 	item("iron1", 13), item("coal1", 2)));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("noviB"), 30, 	item("iron1", 10), item("coal1", 2)));
+		crafts.registerContent(new JobCraft(forgeron, 1, item("noviE"), 45, 	item("iron1", 8), item("coal1", 2), item("stick", 20), item("silex1")));
+		
+		crafts.registerContent(new JobCraft(forgeron, 2, item("neopH"), 50, 	item("iron2", 18), item("coal2", 2), item("string")));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("neopC"), 80, 	item("iron2", 22), item("coal2", 4), item("string")));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("neopL"), 70, 	item("iron2", 20), item("coal2", 2), item("string")));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("neopB"), 40, 	item("iron2", 16), item("coal2", 2), item("string")));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("neopE"), 60, 	item("iron2", 3), item("coal2", 2), item("string", 4), item("stick", 40)));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("hache1"), 60, 	item("iron2", 15), item("coal2", 2), item("string"), item("stick", 20)));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("pioche1"), 60, 	item("iron2", 15), item("coal2", 2), item("string"), item("stick", 20)));
 		
 		crafts.registerContent(new JobCraft(forgeron, 2, item("peleH"), 90, 	item("iron2", 10), item("coal2", 4), item("spruce2", 3)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("peleC"), 110, 	item("iron2", 16), item("coal2", 8), item("spruce2", 4)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("peleL"), 100, 	item("iron2", 14), item("coal2", 7), item("spruce2", 3)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("peleB"), 80, 	item("iron2", 8), item("coal2", 4), item("spruce2", 2)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("peleE"), 90, 	item("iron2", 10), item("coal2", 5), item("oak2", 15), item("spruce2", 3)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("voyaH"), 110, 	item("acier", 5), item("coal2", 10), item("spruce2", 5)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("voyaC"), 140, 	item("acier", 8), item("coal2", 16), item("spruce2", 8)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("voyaL"), 120, 	item("acier", 7), item("coal2", 14), item("spruce2", 7)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("voyaB"), 100, 	item("acier", 4), item("coal2", 12), item("spruce2", 6)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("voyaE"), 130, 	item("acier", 6), item("coal2", 18), item("oak2", 15), item("spruce2", 3)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("hache2"), 180, 	item("acier", 15), item("coal2", 4), item("string", 10), item("stick", 30)));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("pioche2"), 180, 	item("acier", 15), item("coal2", 4), item("string", 10), item("stick", 30)));
 		
+		crafts.registerContent(new JobCraft(forgeron, 3, item("voyaH"), 110, 	item("acier", 5), item("coal2", 10), item("spruce2", 5)));
+		crafts.registerContent(new JobCraft(forgeron, 3, item("voyaC"), 140, 	item("acier", 8), item("coal2", 16), item("spruce2", 8)));
+		crafts.registerContent(new JobCraft(forgeron, 3, item("voyaL"), 120, 	item("acier", 7), item("coal2", 14), item("spruce2", 7)));
+		crafts.registerContent(new JobCraft(forgeron, 3, item("voyaB"), 100, 	item("acier", 4), item("coal2", 12), item("spruce2", 6)));
+		crafts.registerContent(new JobCraft(forgeron, 3, item("voyaE"), 130, 	item("acier", 6), item("coal2", 18), item("oak2", 15), item("spruce2", 3)));
+		crafts.registerContent(new JobCraft(forgeron, 3, item("hache2"), 180, 	item("acier", 15), item("coal2", 4), item("string", 10), item("stick", 30)));
+		crafts.registerContent(new JobCraft(forgeron, 3, item("pioche2"), 180, 	item("acier", 15), item("coal2", 4), item("string", 10), item("stick", 30)));
 		crafts.registerContent(new JobCraft(forgeron, 3, item("explH"), 130, 	item("gold1", 15), item("coal2", 15), item("dark2", 2)));
 		crafts.registerContent(new JobCraft(forgeron, 3, item("explC"), 160, 	item("gold1", 24), item("coal2", 24), item("dark2", 4)));
 		crafts.registerContent(new JobCraft(forgeron, 3, item("explL"), 150, 	item("gold1", 21), item("coal2", 21), item("dark2", 3)));
 		crafts.registerContent(new JobCraft(forgeron, 3, item("explB"), 120, 	item("gold1", 12), item("coal2", 12), item("dark2", 3)));
 		crafts.registerContent(new JobCraft(forgeron, 3, item("explE"), 140, 	item("gold1", 18), item("coal2", 18), item("oak2", 20), item("birch2", 10), item("spruce2", 5), item("dark2", 1)));
-		crafts.registerContent(new JobCraft(forgeron, 3, item("conqH"), 170, 	item("gold2", 12), item("coal2", 20), item("dark2", 2)));
-		crafts.registerContent(new JobCraft(forgeron, 3, item("conqC"), 200, 	item("gold2", 20), item("coal2", 29), item("dark2", 4)));
-		crafts.registerContent(new JobCraft(forgeron, 3, item("conqL"), 180, 	item("gold2", 17), item("coal2", 25), item("dark2", 3)));
-		crafts.registerContent(new JobCraft(forgeron, 3, item("conqB"), 150, 	item("gold2", 9), item("coal2", 17), item("dark2", 3)));
-		crafts.registerContent(new JobCraft(forgeron, 3, item("conqE"), 160, 	item("gold2", 14), item("coal2", 22), item("oak2", 40), item("birch2", 20), item("spruce2", 10), item("dark2", 5)));
+		
+		crafts.registerContent(new JobCraft(forgeron, 4, item("conqH"), 170, 	item("gold2", 12), item("coal2", 20), item("dark2", 2)));
+		crafts.registerContent(new JobCraft(forgeron, 4, item("conqC"), 200, 	item("gold2", 20), item("coal2", 29), item("dark2", 4)));
+		crafts.registerContent(new JobCraft(forgeron, 4, item("conqL"), 180, 	item("gold2", 17), item("coal2", 25), item("dark2", 3)));
+		crafts.registerContent(new JobCraft(forgeron, 4, item("conqB"), 150, 	item("gold2", 9), item("coal2", 17), item("dark2", 3)));
+		crafts.registerContent(new JobCraft(forgeron, 4, item("conqE"), 160, 	item("gold2", 14), item("coal2", 22), item("oak2", 40), item("birch2", 20), item("spruce2", 10), item("dark2", 5)));
 		
 		
 		forgeron.changeCraftGUI(Material.ANVIL, new JobCraftGUI(forgeron));
