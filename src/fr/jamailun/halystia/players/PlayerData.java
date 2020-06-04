@@ -33,10 +33,10 @@ public class PlayerData {
 	/**
 	 * How much mana will be given to a player per second.
 	 */
-	public static final int MANA_REFILL_PER_SECOND = 10;
+	public final static int MANA_REFILL_PER_SECOND = 10;
 	
 	private Classe classe; // very static lul
-	private int exp, level; // on stocke le niveau pour pas le recalculer toutes les 10 secondes.
+	private int exp, level, karma; // on stocke le niveau pour pas le recalculer toutes les 10 secondes.
 	private Player player; // Assossiated player. (tampon)
 	private boolean playerValid; // If the player is valid. (tampon)
 	private double maxMana; // Calculated at every levelup.
@@ -48,10 +48,11 @@ public class PlayerData {
 	 * @param exp : experiences points of the player
 	 * @param p : {@link org.bukkit.entity.Player Player} who connected.
 	 */
-	public PlayerData(Classe classe, int exp, Player player) {
+	public PlayerData(Classe classe, int exp, Player player, int karma) {
 		this.classe = classe;
 		this.exp = exp;
 		this.player = player;
+		this.karma = karma;
 		
 		level = -1;
 		playerValid = true;
@@ -313,6 +314,26 @@ public class PlayerData {
 		else if(souls == 3)
 			color = ChatColor.GREEN;
 		return color +""+ ChatColor.BOLD + "Âmes : " +color+ souls + ChatColor.DARK_AQUA + ",   ";
+	}
+	
+	public int getCurrentKarma() {
+		return karma;
+	}
+	
+	public String getNiceKarma() {
+		return getKarmaColor()+ karma;
+	}
+	
+	public String getKarmaColor() {
+		if(karma <= 300)
+			return ChatColor.RED +"";
+		if(karma >= 300)
+			return ChatColor.GREEN +"";
+		return ChatColor.WHITE +"";
+	}
+	
+	public void deltaKarma(int delta) {
+		karma += karma;
 	}
 	
 	void reconnect(Player player) {

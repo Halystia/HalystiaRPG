@@ -76,7 +76,7 @@ public class SQLite extends Database implements DataHandler {
 		int id = getClasseID(player);
 		Classe classe = Classe.getClasseWithId(id);
 		int exp = getRawExp(player);
-		return new PlayerData(classe, exp, player);
+		return new PlayerData(classe, exp, player, 0);
 	}
 	
 	private int getRawExp(Player player) {
@@ -364,18 +364,6 @@ public class SQLite extends Database implements DataHandler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public int getKarma(Player p) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void setKarma(Player p, int karma) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }

@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import fr.jamailun.halystia.bank.Banque;
 import fr.jamailun.halystia.chunks.ChunkCreator;
 import fr.jamailun.halystia.chunks.ChunkManager;
+import fr.jamailun.halystia.custom.PlayerEffectsManager;
 import fr.jamailun.halystia.custom.boats.CustomBoatManager;
 import fr.jamailun.halystia.custom.potions.PotionManager;
 import fr.jamailun.halystia.donjons.DonjonManager;
@@ -97,6 +98,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	private DonjonManager donjonsMgr;
 	private QuestManager questsMgr;
 	private NpcManager npcMgr;
+	private PlayerEffectsManager effMgr;
 	
 	//Usefull things
 	private ChooseClasseGui classeGui;
@@ -143,6 +145,7 @@ public final class HalystiaRPG extends JavaPlugin {
 			return;
 		}
 		//MANAGERS
+		effMgr = new PlayerEffectsManager(this);
 		classesMgr = new ClasseManager(this, bdd);
 		shopMgr = new ShopManager(PATH, "shopsData");
 		tradeMgr = new TradeManager(PATH, "tradeData");
@@ -272,6 +275,10 @@ public final class HalystiaRPG extends JavaPlugin {
 	 */
 	public DonjonManager getDonjonManager() {
 		return donjonsMgr;
+	}
+	
+	public PlayerEffectsManager getPlayerEffectsManager() {
+		return effMgr;
 	}
 
 	/**
