@@ -365,5 +365,17 @@ public class SQLite extends Database implements DataHandler {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public int getKarma(Player p) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setKarma(Player p, int karma) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

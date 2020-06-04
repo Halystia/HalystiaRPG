@@ -30,6 +30,7 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 	private final static String TAGS = ".tags";
 	private final static String TITLE = ".title";
 	private final static String SPAWN = ".spawn";
+	private final static String KARMA = ".karma";
 	
 	public FileSaver(String path, String fileName) {
 		super(path, fileName);
@@ -318,6 +319,23 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 	public void updateSpawnLocation(Player player, Location location) {
 		synchronized (file) {
 			config.set(player.getUniqueId().toString() + SPAWN, location);
+			save();
+		}
+	}
+
+	@Override
+	public int getKarma(Player p) {
+		synchronized (file) {
+			if( ! config.contains(p.getUniqueId().toString() + KARMA))
+				return 0;
+			return config.getInt(p.getUniqueId().toString() + KARMA);
+		}
+	}
+
+	@Override
+	public void setKarma(Player p, int karma) {
+		synchronized (file) {
+			config.set(p.getUniqueId().toString() + KARMA, karma);
 			save();
 		}
 	}

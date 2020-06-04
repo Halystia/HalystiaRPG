@@ -26,6 +26,7 @@ import fr.jamailun.halystia.spells.newSpells.epeiste.AcierBrut;
 import fr.jamailun.halystia.spells.newSpells.epeiste.AcierPrecis;
 import fr.jamailun.halystia.spells.newSpells.epeiste.Damocles;
 import fr.jamailun.halystia.spells.spellEntity.InvocationsManager;
+import fr.jamailun.halystia.utils.PlayerUtils;
 import net.citizensnpcs.api.CitizensAPI;
 
 public class EntityDamageOtherListener extends HalystiaListener {
@@ -124,9 +125,8 @@ public class EntityDamageOtherListener extends HalystiaListener {
 					return;
 				}
 			}
-			
-			
 		}
+		
 		if(CitizensAPI.getNPCRegistry().isNPC(e.getDamager())) {
 			if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
 				if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
@@ -135,7 +135,6 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			}
 			return;
 		}
-		
 		
 		if(e.getDamager() instanceof Arrow) {
 			Arrow arrow = (Arrow) e.getDamager();
@@ -151,6 +150,35 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		if( ! (e.getDamager() instanceof Player))
 			return;
 		Player p = (Player) e.getDamager();
+		
+		Classe classe = main.getClasseManager().getPlayerData(p).getClasse();
+		if(p.getInventory().getItemInMainHand() != null) {
+			Classe ob = main.getTradeManager().getClasseOfItem(p.getInventory().getItemInMainHand());
+			if(classe != ob && ob != Classe.NONE) {
+				e.setCancelled(true);
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée au maniement de cet objet !");
+				return;
+			}
+		}
+		
+		if(p.getInventory().getItemInOffHand() != null) {
+			Classe ob = main.getTradeManager().getClasseOfItem(p.getInventory().getItemInOffHand());
+			if(classe != ob && ob != Classe.NONE) {
+				e.setCancelled(true);
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée au maniement de cet objet !");
+				return;
+			}
+		}
+		
+		
+		if(e.getEntity() instanceof Player) {
+			int karma = main.getDataBase().getKarma(p) - 2;
+			if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
+				karma -= 100;
+			}
+			main.getDataBase().setKarma(p, karma);
+			new PlayerUtils(p).sendActionBar(ChatColor.DARK_RED + "Vous venez de perdre " + ChatColor.BOLD + karma + ChatColor.DARK_RED + " points de karma.");
+		}
 		
 		if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
 			if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
@@ -181,24 +209,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		
 		if(p.getGameMode() == GameMode.CREATIVE)
 			return;
-		Classe classe = main.getClasseManager().getPlayerData(p).getClasse();
-		if(p.getInventory().getItemInMainHand() != null) {
-			Classe ob = main.getTradeManager().getClasseOfItem(p.getInventory().getItemInMainHand());
-			if(classe != ob && ob != Classe.NONE) {
-				e.setCancelled(true);
-				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée au maniement de cet objet !");
-				return;
-			}
-		}
 		
-		if(p.getInventory().getItemInOffHand() != null) {
-			Classe ob = main.getTradeManager().getClasseOfItem(p.getInventory().getItemInOffHand());
-			if(classe != ob && ob != Classe.NONE) {
-				e.setCancelled(true);
-				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée au maniement de cet objet !");
-				return;
-			}
-		}
 		
 		if(main.getSuperMobManager().damageMob(e.getEntity(), p.getUniqueId(), e.getDamage())) {
 			e.setCancelled(true);

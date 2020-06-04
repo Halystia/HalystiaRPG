@@ -70,4 +70,8 @@ public interface DataHandler {
 	public String getCurrentTitleOfPlayer(Player p);
 	public void setCurrentTitleOfPlayer(Player p, Title title);
 	
+	//KARMA
+	public int getKarma(Player p);
+	public void setKarma(Player p, int karma);
+	
 }
