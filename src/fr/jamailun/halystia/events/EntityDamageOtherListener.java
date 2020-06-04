@@ -20,6 +20,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.custom.PlayerEffectsManager;
 import fr.jamailun.halystia.enemies.mobs.EnemyMob;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.newSpells.epeiste.AcierBrut;
@@ -32,10 +33,12 @@ import net.citizensnpcs.api.CitizensAPI;
 public class EntityDamageOtherListener extends HalystiaListener {
 
 	private final InvocationsManager invocs;
+	private final PlayerEffectsManager effects;
 	
 	public EntityDamageOtherListener(HalystiaRPG main) {
 		super(main);
 		invocs = main.getSpellManager().getInvocationsManager();
+		effects = main.getPlayerEffectsManager();
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -138,6 +141,9 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		
 		if(e.getDamager() instanceof Arrow) {
 			Arrow arrow = (Arrow) e.getDamager();
+			if(arrow.hasMetadata("damages")) {
+				e.setDamage(arrow.getMetadata("damages").get(0).asDouble());
+			}
 			if(main.getDonjonManager().getBossManager().isBoss(e.getEntity())) {
 				if(arrow.getShooter() != null && arrow.getShooter() instanceof Player)
 					main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), ((Player)arrow.getShooter()).getUniqueId(), e.getDamage());
@@ -172,12 +178,12 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		
 		
 		if(e.getEntity() instanceof Player) {
-			int karma = main.getDataBase().getKarma(p) - 2;
+			int karma = - 2;
 			if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
 				karma -= 100;
 			}
-			main.getDataBase().setKarma(p, karma);
-			new PlayerUtils(p).sendActionBar(ChatColor.DARK_RED + "Vous venez de perdre " + ChatColor.BOLD + karma + ChatColor.DARK_RED + " points de karma.");
+			main.getClasseManager().getPlayerData(p).deltaKarma(karma);
+			new PlayerUtils(p).sendActionBar(ChatColor.DARK_RED + "Vous venez de perdre " + ChatColor.BOLD + Math.abs(karma) + ChatColor.DARK_RED + " points de karma.");
 		}
 		
 		if(e.getEntity() instanceof Player && ! CitizensAPI.getNPCRegistry().isNPC(e.getEntity())) {
@@ -186,21 +192,23 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			}
 		}
 		
-		if(Damocles.damoclers.contains(p.getUniqueId())) {
+		if(effects.hasEffect(Damocles.EFFECT_NAME, p)) {
 			e.setDamage(e.getDamage() * 2);
 			p.damage(Damocles.DAMAGES);
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_DESTROY, .6f, .8f);
 			if(e.getEntity() instanceof Player)
 				((Player)e.getEntity()).playSound(p.getLocation(), Sound.BLOCK_ANVIL_DESTROY, 2f, .8f);
 		}
-		if(AcierPrecis.ralentisseurs.contains(p.getUniqueId())) {
-			p.playSound(p.getLocation(), Sound.ITEM_SHIELD_BREAK, 1f, .5f);
-			((LivingEntity)e.getEntity()).addPotionEffect(AcierPrecis.effect);
-		}
-		if(AcierBrut.empoisoners.contains(p.getUniqueId())) {
+		
+		if(effects.hasEffect(AcierBrut.EFFECT_NAME, p)) {
 			p.playSound(p.getLocation(), Sound.ENTITY_PARROT_IMITATE_SPIDER, 1f, .5f);
 			for(PotionEffect effect : AcierBrut.effects)
 				((LivingEntity)e.getEntity()).addPotionEffect(effect);
+		}
+		
+		if(effects.hasEffect(AcierPrecis.EFFECT_NAME, p)) {
+			p.playSound(p.getLocation(), Sound.ITEM_SHIELD_BREAK, 1f, .5f);
+			((LivingEntity)e.getEntity()).addPotionEffect(AcierPrecis.effect);
 		}
 		
 		if(main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), e.getDamager().getUniqueId(), e.getDamage())) {
