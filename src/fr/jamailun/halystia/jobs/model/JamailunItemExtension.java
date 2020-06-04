@@ -39,8 +39,6 @@ class JamailunItemExtension extends JamailunItemModel {
 		items.put("os2", new ItemBuilder(Material.BONE).setName(r()+"Os ancestral").toItemStack());
 		items.put("eye", new ItemBuilder(Material.SPIDER_EYE).setName(c()+"Oeil de tarentule").toItemStack());
 		
-		
-		
 		//CRAFTS MINEUR
 		items.put("stone", new ItemBuilder(Material.STONE).setName(c() + "Pierre lisse").toItemStack());
 		items.put("silex", new ItemBuilder(Material.FLINT).setName(c() + "Silex").toItemStack());
@@ -70,6 +68,7 @@ class JamailunItemExtension extends JamailunItemModel {
 		items.put("dark2", new ItemBuilder(Material.STRIPPED_DARK_OAK_WOOD).shine().setName(c() + "Essence de bois maudit").toItemStack());
 		items.put("acacia1", new ItemBuilder(Material.ACACIA_PLANKS).setName(c() + "Planches de bois sacré").toItemStack());
 		items.put("acacia2", new ItemBuilder(Material.STRIPPED_ACACIA_WOOD).shine().setName(c() + "Essence de bois sacré").toItemStack());
+		
 		//PAYSAN
 		items.put("blé", new ItemBuilder(Material.WHEAT).setName(c()+"Blé doré").toItemStack());
 		items.put("bettrave", new ItemBuilder(Material.BEETROOT).setName(c()+"Betterave nouvelle").toItemStack());
@@ -78,7 +77,6 @@ class JamailunItemExtension extends JamailunItemModel {
 		items.put("carotte", new ItemBuilder(Material.CARROT).setName(c()+"Carotte").toItemStack());
 		items.put("citrouille", new ItemBuilder(Material.PUMPKIN).setName(c()+"Belle citwouille").toItemStack());
 		items.put("melon", new ItemBuilder(Material.MELON).setName(c()+"Gros melon").toItemStack());
-
 		items.put("farine1", new ItemBuilder(Material.LIGHT_GRAY_DYE).setName(c()+"Farine grossière").toItemStack());
 		items.put("farine2", new ItemBuilder(Material.LIGHT_GRAY_DYE).setName(c()+"Farine rafinée").toItemStack());
 		items.put("farine3", new ItemBuilder(Material.LIGHT_GRAY_DYE).setName(c()+"Farine enchantée").shine().toItemStack());
@@ -87,13 +85,10 @@ class JamailunItemExtension extends JamailunItemModel {
 		items.put("bakedpotato", new ItemBuilder(Material.BAKED_POTATO).setName(c()+"Patate cuite").toItemStack());
 		items.put("soupe1", new ItemBuilder(Material.BEETROOT_SOUP).setName(c()+"Soupe de betteraves").toItemStack());
 		items.put("soupe2", new ItemBuilder(Material.MUSHROOM_STEW).setName(c()+"Soupe lourde").addLoreLine(ChatColor.RED+"+3 ❤").toItemStack());
-
 		items.put("perlimpimpim", new ItemBuilder(Material.LIGHT_BLUE_DYE).setName(c()+"Poudre de perlimpimpim").toItemStack());
-
 		items.put("sucre1", new ItemBuilder(Material.SUGAR).setName(c()+"Sucre grossier").toItemStack());
 		items.put("sucre2", new ItemBuilder(Material.SUGAR).shine().setName(c()+"Sucre rafiné").toItemStack());
 		items.put("carottedorée", new ItemBuilder(Material.GOLDEN_CARROT).setName(c()+"Carotte dorée").toItemStack());
-		
 		
 		//CRAFTS phyto
 		items.put("réceptacle", new ItemBuilder(Material.WHITE_STAINED_GLASS).setName(c()+"Réceptable").toItemStack());
@@ -101,7 +96,12 @@ class JamailunItemExtension extends JamailunItemModel {
 		
 		items.put("potion_abso1", new ItemBuilder(PotionEffectType.ABSORPTION, 60, 0, Color.YELLOW, false, 1).setName(c() + "Potion d'absorption I").toItemStack());
 		items.put("potion_resis1", new ItemBuilder(PotionEffectType.DAMAGE_RESISTANCE, 10, 0, Color.SILVER, false, 1).setName(c() + "Potion de résistance I").toItemStack());
-		items.put("potion_jump1", new ItemBuilder(PotionEffectType.JUMP, 15, 1, Color.OLIVE, false, 1).setName(c() + "Potion de saut I").toItemStack());
+		items.put("potion_jump1", new ItemBuilder(PotionEffectType.JUMP, 15, 1, Color.GREEN, false, 1).setName(c() + "Potion de saut I").toItemStack());
+		
+		items.put("potion_poison1", new ItemBuilder(PotionEffectType.POISON, 12, 0, Color.OLIVE, true, 1).setName(c() + "Potion de poison I").toItemStack());
+		items.put("potion_lévi1", new ItemBuilder(PotionEffectType.LEVITATION, 6, 0, Color.TEAL, true, 1).setName(c() + "Potion de lévitation I").toItemStack());
+		items.put("potion_faim1", new ItemBuilder(PotionEffectType.HUNGER, 12, 0, Color.MAROON, true, 1).setName(c() + "Potion d'affamement I").toItemStack());
+		items.put("potion_glow1", new ItemBuilder(PotionEffectType.GLOWING, 20, 0, Color.YELLOW, true, 1).setName(c() + "Potion de signalement I").toItemStack());
 		
 		
 	}
