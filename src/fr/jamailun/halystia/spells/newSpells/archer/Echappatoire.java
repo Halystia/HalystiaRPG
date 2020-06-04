@@ -16,7 +16,7 @@ import fr.jamailun.halystia.spells.Spell;
 
 public class Echappatoire extends Spell {
 	
-	private final List<PotionEffect> effects = Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 8*20, 1, true, true, true));
+	private final List<PotionEffect> effects = Arrays.asList(new PotionEffect(PotionEffectType.SPEED, 8*20, 0, true, true, true));
 	
 	@Override
 	public boolean cast(Player p) {

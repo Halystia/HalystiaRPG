@@ -19,7 +19,7 @@ public class VitesseExtreme extends Spell {
 	public final static int DURATION_SECONDS = 20;
 	
 	private final List<PotionEffect> effects = Arrays.asList(
-				new PotionEffect(PotionEffectType.SPEED, 20*20, 1, true, true, true),
+				new PotionEffect(PotionEffectType.SPEED, 20*20, 2, true, true, true),
 				new PotionEffect(PotionEffectType.FAST_DIGGING, 20*20, 2, true, true, false)
 			);
 	
@@ -89,12 +89,12 @@ public class VitesseExtreme extends Spell {
 	
 	@Override
 	public int getManaCost() {
-		return 18;
+		return 22;
 	}
 
 	@Override
 	public int getCooldown() {
-		return 8;
+		return 3;
 	}
 	
 }

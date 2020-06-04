@@ -28,7 +28,7 @@ public class Toxine extends Spell {
 	@Override
 	public synchronized boolean cast(Player p) {
 		
-		EffectSpellEntity spell = new EffectSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 4*2, effects, .6, false);
+		EffectSpellEntity spell = new EffectSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 4*2, effects, .9, false);
 		
 		Vector dir = p.getLocation().getDirection();
 		Vector dirr = dir.multiply(.7);

@@ -23,7 +23,8 @@ public class Disparition extends Spell {
 		List<PotionEffect> effects = Arrays.asList(
 			new PotionEffect(PotionEffectType.INVISIBILITY, 20*20, 0, false, true, true),
 			new PotionEffect(PotionEffectType.SPEED, 20*20, 0, false, true, true),
-			new PotionEffect(PotionEffectType.SLOW_DIGGING, 20*20, 2, false, true, true)
+			new PotionEffect(PotionEffectType.SLOW_DIGGING, 20*20, 2, false, true, true),
+			new PotionEffect(PotionEffectType.WEAKNESS, 20*20, 2, false, true, true)
 		);
 		//PotionEffect blind = new PotionEffect(PotionEffectType.BLINDNESS, 6*20, 0, true, true, true);
 

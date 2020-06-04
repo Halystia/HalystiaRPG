@@ -43,7 +43,7 @@ public class Corruption extends InvocationSpell {
 				
 				Location loc = p.getLocation();
 
-				LivingEntity en = (LivingEntity) p.getWorld().spawnEntity(loc, type);
+				LivingEntity en = (LivingEntity) p.getWorld().spawnEntity(loc.add(Math.random() * 3 - 1.5, 0.1, Math.random() * 3 - 1.5), type);
 				en.setCustomName(ChatColor.RED + "Créature de " + ChatColor.GOLD +  p.getName());
 				
 				en.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(CREATURE_HEALTH);
@@ -88,8 +88,8 @@ public class Corruption extends InvocationSpell {
 		return Arrays.asList(
 			ChatColor.GRAY + "Conjure les forces obscure pour faire corrompre",
 			ChatColor.GRAY + "les alentours. Une armée ténébreuse apparait.",
-			ChatColor.GRAY + "Créature : " + ChatColor.RED + "10 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "10 dmgs" + ChatColor.GRAY + ".",
-			ChatColor.GRAY + "Durée des invocations : " + ChatColor.GREEN + (30) + "s" + ChatColor.GRAY + "."
+			ChatColor.GRAY + "Créature : " + ChatColor.RED + CREATURE_HEALTH + " PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + CREATURE_DAMAGES +" dmgs" + ChatColor.GRAY + ".",
+			ChatColor.GRAY + "Durée des invocations : " + ChatColor.GREEN + (20) + "s" + ChatColor.GRAY + "."
 		);
 	}
 
@@ -100,7 +100,7 @@ public class Corruption extends InvocationSpell {
 
 	@Override
 	public int getManaCost() {
-		return 25;
+		return 26;
 	}
 
 	@Override

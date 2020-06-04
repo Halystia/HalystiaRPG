@@ -42,8 +42,7 @@ public class PotionManager {
 				return -1;
 			String[] words = lore.get(lore.size() - 2).split(" ");
 			return Integer.parseInt(words[2]);
-		} catch (NullPointerException | IndexOutOfBoundsException | NumberFormatException e) {
-			System.out.println(">ERREUR MANA BOTTLE :" + e.getMessage());}
+		} catch (NullPointerException | IndexOutOfBoundsException | NumberFormatException ignored) {}
 		return -1;
 	}
 	
