@@ -59,7 +59,7 @@ public class TitleHolder extends PlaceholderExpansion {
         		return ChatColor.GRAY + "[0] ";
         	int level = pc.getLevel();
         	p.setLevel(level);
-        	return (pc.getClasse() == Classe.NONE) ? GRAY+"[0] " : Classe.getColor(level)+(level>=100?BOLD+"":"")+"["+level+"] ";
+        	return (pc.getClasse() == Classe.NONE) ? GRAY+"[0] " : Classe.getColor(level)+(level>=100?BOLD+"":"")+"["+level+"] " + pc.getKarmaColor();
         }
         
         if ( identifier.equals("barText") ) {

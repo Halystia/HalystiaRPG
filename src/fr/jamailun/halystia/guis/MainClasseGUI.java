@@ -74,6 +74,12 @@ public class MainClasseGUI extends MenuGUI {
 			head.addLoreLine(BLUE + "Niveau : " + DARK_PURPLE + lvl);
 			head.addLoreLine(DARK_GRAY + "Expérience : " + pc.getExpAmount() + "/" + pc.getExpRequired(lvl+1));
 			head.addLoreLine(pc.getExpBar(20));
+			head.addLoreLine(" ");
+			head.addLoreLine(LIGHT_PURPLE + "Karma : " + pc.getNiceKarma() + " points");
+			if(pc.getCurrentKarma() <= -300)
+				head.addLoreLine(RED + "Vous êtes un criminel.");
+			else if(pc.getCurrentKarma() >= 300)
+					head.addLoreLine(GREEN + "Vous êtes un bienfaiteur.");
 			
 		} else {
 			head.addLoreLine(GRAY + "Aucune classe");

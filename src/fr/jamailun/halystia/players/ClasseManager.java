@@ -39,6 +39,7 @@ public class ClasseManager {
 				saveCounter++;
 				if(saveCounter >= saveFrequence) {
 					saveCounter = 0;
+					data.values().forEach(d -> d.tryImproveKarma());
 					saveData(true);
 				}
 			}
