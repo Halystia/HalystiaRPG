@@ -14,8 +14,8 @@ import fr.jamailun.halystia.spells.Spell;
 
 public class Damocles extends Spell {
 	
-	public final static int DURATION = 30;
-	public static final double DAMAGES = 6;
+	public final static int DURATION = 10;
+	public static final double DAMAGES = 10;
 
 	public final static String EFFECT_NAME = "damocles";
 	@Override

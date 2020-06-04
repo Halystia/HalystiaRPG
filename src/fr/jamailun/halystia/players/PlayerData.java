@@ -325,7 +325,7 @@ public class PlayerData {
 	}
 	
 	public String getKarmaColor() {
-		if(karma <= 300)
+		if(karma <= -300)
 			return ChatColor.RED +"";
 		if(karma >= 300)
 			return ChatColor.GREEN +"";
@@ -350,9 +350,9 @@ public class PlayerData {
 			return;
 		}
 		if(delta > 0)
-			new PlayerUtils(player).sendActionBar(ChatColor.DARK_GREEN + "Vous venez de gagner " + ChatColor.BOLD + karma + ChatColor.DARK_GREEN + " points de karma. Total : " + karma+".");
+			new PlayerUtils(player).sendActionBar(ChatColor.DARK_GREEN + "Vous venez de gagner " + ChatColor.BOLD + karma + ChatColor.DARK_GREEN + " point"+(delta>1?"s":"")+" de karma. Total : " + karma+".");
 		else if(delta < 0)
-			new PlayerUtils(player).sendActionBar(ChatColor.DARK_RED + "Vous venez de perdre " + ChatColor.BOLD + (-karma) + ChatColor.DARK_RED + " points de karma. Total : " + karma+".");
+			new PlayerUtils(player).sendActionBar(ChatColor.DARK_RED + "Vous venez de perdre " + ChatColor.BOLD + (-karma) + ChatColor.DARK_RED + " point"+(delta<-1?"s":"")+" de karma. Total : " + karma+".");
 		
 		if(old < -300 && karma >= -300) {
 			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Votre karma a dépassé les -300 points. Vous êtes un "+ChatColor.YELLOW+"BIENFAITEUR"+ChatColor.GRAY+".");
@@ -369,6 +369,10 @@ public class PlayerData {
 		if(old > -300 && karma <= -300) {
 			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Votre karma est passé en dessous des -300 points. Vous êtes un "+ChatColor.DARK_RED+"CRIMINEL"+ChatColor.RED+".");
 		}
+	}
+	
+	public void forceKarma(int karma) {
+		this.karma = Math.max(-500, Math.min(500, karma));
 	}
 	
 	void reconnect(Player player) {

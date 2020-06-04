@@ -211,7 +211,7 @@ public class JamailunJobExtension {
 		crafts.registerContent(new JobCraft(phyto, 1, item("potion_resis1", 1), 40, 	item("bouteille"), item("os1", 5)));
 		crafts.registerContent(new JobCraft(phyto, 1, item("potion_jump1", 1), 40,	 	item("bouteille"), item("string", 2)));
 		crafts.registerContent(new JobCraft(phyto, 1, item("potion_poison1", 1), 40, 	item("bouteille"), item("eye", 4)));
-		crafts.registerContent(new JobCraft(phyto, 1, item("potion_lévi1", 1), 40, 		item("bouteille"), item("silex2", 10)));
+		crafts.registerContent(new JobCraft(phyto, 1, item("potion_lévi1", 1), 40, 		item("bouteille"), item("silex1", 10)));
 		crafts.registerContent(new JobCraft(phyto, 1, item("potion_faim1", 1), 40,	 	item("bouteille"), item("chair", 3)));
 		crafts.registerContent(new JobCraft(phyto, 1, item("potion_glow1", 1), 40,	 	item("bouteille"), item("carotte", 3)));
 		
