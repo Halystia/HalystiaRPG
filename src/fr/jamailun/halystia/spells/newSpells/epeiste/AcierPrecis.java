@@ -1,10 +1,7 @@
 package fr.jamailun.halystia.spells.newSpells.epeiste;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -20,31 +17,26 @@ import fr.jamailun.halystia.spells.Spell;
 public class AcierPrecis extends Spell {
 
 	public final static int DURATION = 35;
-	public final static Set<UUID> ralentisseurs = new HashSet<>();
 	public static final PotionEffect effect = new PotionEffect(PotionEffectType.SLOW, 20*10, 0);
+	
+	public final static String EFFECT_NAME = "acierPrecis";
+	@Override
+	public void init() {
+		main.getPlayerEffectsManager().registerNewEffect(EFFECT_NAME);
+	}
 	
 	@Override
 	public boolean cast(Player p) {
 		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "Vos attaquent infligent du slowness durant les "+DURATION+" prochaines secondes.");
-		ralentisseurs.add(p.getUniqueId());
+		main.getPlayerEffectsManager().applyEffect(EFFECT_NAME, p, DURATION);
 		new BukkitRunnable() {
-			private int time = 0;
 			@Override
 			public void run() {
-				if(!p.isValid()) {
-					stop();
-					return;
-				}
-				time += 1;
-				if(time >= DURATION) {
-					stop();
+				if(!main.getPlayerEffectsManager().hasEffect(EFFECT_NAME, p)) {
+					cancel();
 					return;
 				}
 				spawnParticles(p.getLocation(), Particle.DRAGON_BREATH, 20, 0.2, 0.2, .5);
-			}
-			private void stop() {
-				cancel();
-				ralentisseurs.remove(p.getUniqueId());
 			}
 		}.runTaskTimer(HalystiaRPG.getInstance(), 0, 20L);
 		return true;

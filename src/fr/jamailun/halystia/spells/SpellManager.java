@@ -72,6 +72,8 @@ public class SpellManager {
 		addSpell(InvocationArmee.class);
 		addSpell(CatapulteCeleste.class);
 
+		addSpell(ProtectionElementaire.class);
+
 		// Spells pout archer
 		addSpell(PluieAceree.class);
 		addSpell(Echappatoire.class);
@@ -111,7 +113,7 @@ public class SpellManager {
 			spells.add(instance);
 			return true;
 		} catch (InstantiationException | IllegalAccessException e) {
-			Bukkit.getLogger().log(Level.SEVERE, "Spell's class could not be loaded.");
+			Bukkit.getLogger().log(Level.SEVERE, "Spell's class ("+spell+") could not be loaded.");
 			return false;
 		}
 	}
