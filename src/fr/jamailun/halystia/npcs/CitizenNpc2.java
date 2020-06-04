@@ -385,6 +385,7 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 
 	public void deleteData() {
 		despawn();
+		forgot();
 		super.delete();
 		npc = null;
 	}
