@@ -39,15 +39,16 @@ public class EnemyMob implements Enemy {
 	private String customName;
 	
 	public static final List<MetaTag> metaDatas = Arrays.asList(
-		new MetaTag("max-health", Type.DOUBLE)			// Max health of entity
-		,new MetaTag("invisibility", Type.BOOLEAN)		// Is invisible ?
-		,new MetaTag("speed", Type.DOUBLE)				// Speed value
-		,new MetaTag("attack", Type.DOUBLE)				// Damage per hit
-		,new MetaTag("baby", Type.BOOLEAN)				// Is baby ? Zombie only
-		,new MetaTag("king", Type.BOOLEAN)				// Is worldboss ?
-		,new MetaTag("poison", Type.BOOLEAN)			// Deals poison ?
-		,new MetaTag("wither", Type.BOOLEAN)			// Deals wither ?
-		,new MetaTag("firer", Type.BOOLEAN)		// Is fire resistant ?
+		 new MetaTag("max-health",	Type.DOUBLE	)	// Max health of entity
+		,new MetaTag("invisibility",Type.BOOLEAN)	// Is invisible ?
+		,new MetaTag("speed", 		Type.DOUBLE	)	// Speed value
+		,new MetaTag("attack", 		Type.DOUBLE	)	// Damage per hit
+		,new MetaTag("kbres",		Type.DOUBLE	)	// Knockback resistance
+		,new MetaTag("baby",		Type.BOOLEAN)	// Is baby ? Zombie only
+		,new MetaTag("king",		Type.BOOLEAN)	// Is worldboss ?
+		,new MetaTag("poison",		Type.BOOLEAN)	// Deals poison ?
+		,new MetaTag("wither",		Type.BOOLEAN)	// Deals wither ?
+		,new MetaTag("firer",		Type.BOOLEAN)	// Is fire resistant ?
 	);
 	
 	public static MetaTag getTag(String name) {
@@ -159,6 +160,18 @@ public class EnemyMob implements Enemy {
 		
 		if(config.contains(name+".attack")) {
 			damages = config.getDouble(name+".attack");
+		}
+		
+		if(config.contains(name+".kbres")) {
+			AttributeInstance ai = entity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+			if(ai != null) {
+				double kbres = config.getDouble(name+".kbres");
+				if(kbres > 0) {
+					ai.setBaseValue(kbres);
+				} else {
+					System.err.println("Mauvaise data de kbres pour le mob ["+name+"]");
+				}
+			}
 		}
 		
 		if(config.contains(name+".baby")) {
