@@ -79,7 +79,7 @@ public class MainClasseGUI extends MenuGUI {
 			if(pc.getCurrentKarma() <= -300)
 				head.addLoreLine(RED + "Vous êtes un criminel.");
 			else if(pc.getCurrentKarma() >= 300)
-					head.addLoreLine(GREEN + "Vous êtes un bienfaiteur.");
+				head.addLoreLine(GREEN + "Vous êtes un bienfaiteur.");
 			
 		} else {
 			head.addLoreLine(GRAY + "Aucune classe");

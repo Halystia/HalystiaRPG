@@ -19,6 +19,7 @@ import fr.jamailun.halystia.commands.CommandQuests;
 import fr.jamailun.halystia.commands.CommandReloadShops;
 import fr.jamailun.halystia.commands.CommandSetChunk;
 import fr.jamailun.halystia.commands.CommandSetJob;
+import fr.jamailun.halystia.commands.CommandSetKarma;
 import fr.jamailun.halystia.commands.CommandSetRoi;
 import fr.jamailun.halystia.commands.CommandSetSpawner;
 import fr.jamailun.halystia.commands.CommandSetTag;
@@ -63,6 +64,7 @@ public class CommandsManager {
 		
 		new CommandSetRoi(main);
 		new CommandSetXp(main);
+		new CommandSetKarma(main);
 		new CommandSetTag(main, bdd);
 		new CommandSetChunk(main);
 		new CommandSetSpawner(main, mobMgr, spawnerMgr);

@@ -1,6 +1,6 @@
 package fr.jamailun.halystia.events;
 
-import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,6 +10,7 @@ import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -52,6 +53,16 @@ public class EntityDamageOtherListener extends HalystiaListener {
 					e.setCancelled(false);
 			return;
         }
+		
+		if(e.getDamager() instanceof Player) {
+			int karma = main.getClasseManager().getPlayerData((Player)e.getDamager()).getCurrentKarma();
+			if(karma <= -300)
+				if(e.getEntity() instanceof Player)
+					((EntityDamageEvent)e).setDamage(e.getDamage() * 1.1);
+			if(karma >= 300)
+				if(e.getEntity() instanceof Monster)
+					((EntityDamageEvent)e).setDamage(e.getDamage() * 1.1);
+		}
 		
 		if(main.getSuperMobManager().damageMob(e.getEntity(), e.getDamager().getUniqueId(), 0)) {
 			e.setCancelled(true);
@@ -186,10 +197,10 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				if(((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
 					karma -= 100;
 				}
-				if(targetKarma <= 300) {
+				if(targetKarma <= -300) {
 					karma *= -1;
 					targetData.deltaKarma(karma/2);
-					if(playerKarma < 300)
+					if(playerKarma < -300)
 						karma /= 2;
 				}
 				main.getClasseManager().getPlayerData(p).deltaKarma(karma);

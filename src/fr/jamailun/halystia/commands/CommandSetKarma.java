@@ -1,10 +1,6 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.DARK_RED;
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.YELLOW;
+import static org.bukkit.ChatColor.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,10 +14,10 @@ import org.bukkit.entity.Player;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.PlayerData;
 
-public class CommandSetXp extends HalystiaCommand {
+public class CommandSetKarma extends HalystiaCommand {
 	
-	public CommandSetXp(HalystiaRPG main) {
-		super(main, "set-xp");
+	public CommandSetKarma(HalystiaRPG main) {
+		super(main, "set-karma");
 	}
 	
 	@Override
@@ -45,36 +41,22 @@ public class CommandSetXp extends HalystiaCommand {
 		}
 		
 		if(args.length == 1) {
-			sender.sendMessage(HalystiaRPG.PREFIX + GREEN + "(" + YELLOW + args[0] + GREEN + " est niveau " + GOLD + data.getLevel() + GREEN + ", et possède " + YELLOW + data.getExpAmount() + GREEN + "xp.");
+			sender.sendMessage(HalystiaRPG.PREFIX + GREEN + "(" + YELLOW + args[0] + GREEN + ") a " + data.getNiceKarma() + GREEN + " pts de karma.");
 			return true;
 		}
 		
-		int xp = -1;
+		int karma = -1;
 		try {
-			if(args[1].endsWith("L")) {
-				String levelS = args[1].replace("L", "");
-				int level = Integer.parseInt(levelS);
-				if(level > PlayerData.LEVEL_MAX)
-					level = PlayerData.LEVEL_MAX;
-				if(level < 0)
-					level = 0;
-				xp = data.getExpRequired(level);
-			} else {
-				xp = Integer.parseInt(args[1]);
-			}
+			karma = Integer.parseInt(args[1]);
 		} catch (IllegalArgumentException e) {
 			sender.sendMessage(HalystiaRPG.PREFIX + RED + "Nombre incorrect : " + DARK_RED + args[1] + RED + ".");
 			return true;
 		}
 		
-		if(xp < 0) {
-			sender.sendMessage(HalystiaRPG.PREFIX + RED+"L'xp ne peut pas être négatif !");
-			return true;
-		}
-		
-		data.forceXp(xp);
-		
-		sender.sendMessage(HalystiaRPG.PREFIX + GREEN+"Succès ! Le joueur " + YELLOW + args[0] + GREEN + " est désormais niveau "+GOLD+data.getLevel()+GREEN+".");
+		data.forceKarma(karma);
+
+		sender.sendMessage(HalystiaRPG.PREFIX + GREEN+"Succès ! Le joueur " + YELLOW + args[0] + GREEN + " a désormais "+data.getNiceKarma()+GREEN+" pts de karma.");
+		cible.sendMessage(HalystiaRPG.PREFIX + GREEN+"Un administrateur a fixé votre karma a "+data.getNiceKarma()+GREEN+" points.");
 		
 		return true;
 	}

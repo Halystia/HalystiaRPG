@@ -1,5 +1,5 @@
 name: HalystiaRPG
-version: 4.5
+version: 4.5.1
 main: fr.jamailun.halystia.HalystiaRPG
 authors: [jamailun]
 depend: [Citizens, Sentinel]
@@ -96,10 +96,15 @@ commands:
     permission-message: §cIl te faut le droit de manipuler le monde RPG !
     description: Edite le bloc ciblé en spawner ou non.
   set-xp:
-    usage: /set-xp <player> xp
+    usage: /set-xp <player> <xp>
     permission: halystia.rpg.master
     permission-message: §cIl faut que tu sois un maître du jeu du RPG.
     description: Set de l'exp pour un joueur.
+  set-karma:
+    usage: /set-karma <player> <karma>
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Set du karma d'un joueur.
   set-tag:
     usage: /set-tag <player> <add/list/remove/clear> [tag]
     permission: halystia.rpg.master
