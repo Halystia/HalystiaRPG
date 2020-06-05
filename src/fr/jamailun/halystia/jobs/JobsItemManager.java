@@ -1,8 +1,9 @@
 package fr.jamailun.halystia.jobs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -28,8 +29,8 @@ public class JobsItemManager {
 		this.items.putAll(items);
 	}
 
-	public Set<String> getAllKeys() {
-		return items.keySet();
+	public List<String> getAllKeys() {
+		return new ArrayList<>(items.keySet());
 	}
 
 	public ItemStack getWithKey(String key) {

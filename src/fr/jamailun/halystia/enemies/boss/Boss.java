@@ -319,6 +319,7 @@ public abstract class Boss implements Enemy, Invocator {
 			Player pl = Bukkit.getPlayer(id);
 			double xp = ((double)getXp()) * percent;
 			if(pl != null) {
+				
 				for(ItemStack loot : getLoots()) {
 					pl.getInventory().addItem(loot);
 					pl.sendMessage(HalystiaRPG.PREFIX + GREEN + "" + BOLD + "Vous recevez " + loot.getAmount() + "x " + 
@@ -326,10 +327,12 @@ public abstract class Boss implements Enemy, Invocator {
 				}
 				pl.sendMessage(HalystiaRPG.PREFIX + GREEN + "" + BOLD + "Vous gagnez " + ChatColor.GOLD + (int)xp + "xp" + GREEN + "" + BOLD + ".");
 				PlayerData plc = HalystiaRPG.getInstance().getClasseManager().getPlayerData(pl);
-				if(plc != null)
+				if(plc != null) {
 					plc.addXp((int)xp);
-				else
+					plc.deltaKarma(20);
+				} else {
 					pl.sendMessage(HalystiaRPG.PREFIX + RED + "Une erreur est survenue. Tu aurais dû gagner " + (int)xp + " xp. Signalez vite ce message.");
+				}
 			}
 		});
 	}

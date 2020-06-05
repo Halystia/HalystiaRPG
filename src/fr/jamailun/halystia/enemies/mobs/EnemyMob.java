@@ -144,7 +144,7 @@ public class EnemyMob implements Enemy {
 				System.err.println("Mauvaise data de king pour le mob ["+name+"]");
 			}
 		}
-		
+		healthData = 20;
 		if(config.contains(name+".max-health")) {
 			AttributeInstance ai = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
 			if(ai != null) {
@@ -152,6 +152,7 @@ public class EnemyMob implements Enemy {
 				if(health > 0) {
 					ai.setBaseValue(health);
 					entity.setHealth(health);
+					healthData = health;
 				} else {
 					System.err.println("Mauvaise data de max-health pour le mob ["+name+"]");
 				}
@@ -259,6 +260,11 @@ public class EnemyMob implements Enemy {
 	@Override
 	public int getXp() {
 		return xp;
+	}
+	
+	private double healthData;
+	public double getRegisteredHealth() {
+		return healthData;
 	}
 	
 	private boolean poison = false;

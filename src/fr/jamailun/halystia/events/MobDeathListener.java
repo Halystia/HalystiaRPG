@@ -45,20 +45,13 @@ public class MobDeathListener extends HalystiaListener {
 		if(e.getEntity().getKiller() == null)
 			return;
 		if(CitizensAPI.getNPCRegistry().isNPC(e.getEntity().getKiller())) {
-			/*
-			 * RpgNpc npc = main.getNpcManager().getNpc(CitizensAPI.getNPCRegistry().getNPC(e.getEntity().getKiller()));
-			if(npc == null || npc.getNPC() == null)
-				return;
-			SentinelTrait trait = npc.getNPC().getTrait(SentinelTrait.class);
-			if(trait.chasing == null && npc.getNPC().getEntity().getLocation().distance(npc.getLocation()) > .1) {
-				trait.pathTo(npc.getLocation());
-			}
-			*/
 			return;
 		}
 		PlayerData pc = main.getClasseManager().getPlayerData(((Player)e.getEntity().getKiller()));
 		if(pc != null) {
 			pc.addXp(mob.getXp());
+			if(Math.random() > (0.8 - ((mob.getRegisteredHealth() / 10) * 0.02) ))
+				pc.deltaKarma(1);
 			for(QuestStep questStep : main.getDataBase().getOnGoingQuestSteps(pc.getPlayer())) {
 				if(questStep instanceof QuestStepKill) {
 					QuestStepKill step = (QuestStepKill) questStep;
