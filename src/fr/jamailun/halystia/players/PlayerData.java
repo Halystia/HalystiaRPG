@@ -350,9 +350,9 @@ public class PlayerData {
 			return;
 		}
 		if(delta > 0)
-			new PlayerUtils(player).sendActionBar(ChatColor.DARK_GREEN + "Vous venez de gagner " + ChatColor.BOLD + karma + ChatColor.DARK_GREEN + " point"+(delta>1?"s":"")+" de karma. Total : " + karma+".");
+			new PlayerUtils(player).sendActionBar(ChatColor.DARK_GREEN + "Vous venez de gagner " + ChatColor.BOLD + delta + ChatColor.DARK_GREEN + " point"+(delta>1?"s":"")+" de karma. Total : " + karma+".");
 		else if(delta < 0)
-			new PlayerUtils(player).sendActionBar(ChatColor.DARK_RED + "Vous venez de perdre " + ChatColor.BOLD + (-karma) + ChatColor.DARK_RED + " point"+(delta<-1?"s":"")+" de karma. Total : " + karma+".");
+			new PlayerUtils(player).sendActionBar(ChatColor.DARK_RED + "Vous venez de perdre " + ChatColor.BOLD + (-delta) + ChatColor.DARK_RED + " point"+(delta<-1?"s":"")+" de karma. Total : " + karma+".");
 		
 		if(old < -300 && karma >= -300) {
 			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Votre karma a dépassé les -300 points. Vous êtes un "+ChatColor.YELLOW+"BIENFAITEUR"+ChatColor.GRAY+".");
