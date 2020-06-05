@@ -2,6 +2,8 @@ package fr.jamailun.halystia.events;
 
 import static org.bukkit.ChatColor.*;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -17,6 +19,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -54,6 +57,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			return;
         }
 		
+		//avec le karma on change le montant de dégats.
 		if(e.getDamager() instanceof Player) {
 			int karma = main.getClasseManager().getPlayerData((Player)e.getDamager()).getCurrentKarma();
 			if(karma <= -300)
@@ -134,8 +138,8 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				LivingEntity liv = (LivingEntity) e.getEntity();
 				if(liv.getHealth() - e.getDamage() <= 0) {
 					//L'invocation tue une saloperie ! Et elle tue un enemymob !
-					
-					
+					liv.setLastDamageCause(new EntityDamageEvent(Bukkit.getEntity(invocs.getMasterOf(liv.getUniqueId())), DamageCause.CUSTOM, e.getDamage()));
+					Bukkit.getPluginManager().callEvent(new EntityDeathEvent(liv, new ArrayList<>(), 0)); //TODO tester si aucun effet secondaire !
 					return;
 				}
 			}

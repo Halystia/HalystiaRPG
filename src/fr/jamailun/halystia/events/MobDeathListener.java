@@ -3,6 +3,7 @@ package fr.jamailun.halystia.events;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -58,7 +59,10 @@ public class MobDeathListener extends HalystiaListener {
 		}
 		PlayerData pc = main.getClasseManager().getPlayerData(((Player)e.getEntity().getKiller()));
 		if(pc != null) {
-			pc.addXp(mob.getXp());
+			int xp = mob.getXp();
+			if(e.getEntity().getLastDamageCause().getCause() == DamageCause.CUSTOM)
+				xp /= 2;
+			pc.addXp(xp);
 			for(QuestStep questStep : main.getDataBase().getOnGoingQuestSteps(pc.getPlayer())) {
 				if(questStep instanceof QuestStepKill) {
 					QuestStepKill step = (QuestStepKill) questStep;
