@@ -35,7 +35,7 @@ public class JamailunJobExtension {
 			registerEnchanteur();
 			registerMineur();
 			registerBucheron();
-			registerFogeron();
+			registerForgeron();
 			registerPhytomancien();
 			registerPaysan();
 		} catch (IllegalArgumentException e) {
@@ -225,7 +225,7 @@ public class JamailunJobExtension {
 		phyto.changeCraftGUI(Material.BREWING_STAND, new JobCraftGUI(phyto));
 	}
 	
-	private void registerFogeron() {
+	private void registerForgeron() {
 		JobType forgeron = new JobType(path, "forgeron", JobCategory.CRAFT, jobs);
 		forgeron.setIcon(1, Material.BRICK);
 		forgeron.setIcon(2, Material.IRON_INGOT);

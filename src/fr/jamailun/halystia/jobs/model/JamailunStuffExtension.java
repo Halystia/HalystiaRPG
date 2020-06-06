@@ -8,8 +8,10 @@ import static org.bukkit.inventory.EquipmentSlot.HAND;
 import static org.bukkit.inventory.EquipmentSlot.HEAD;
 import static org.bukkit.inventory.EquipmentSlot.LEGS;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.enchantments.Enchantment;
 
 import fr.jamailun.halystia.utils.ItemBuilder;
@@ -77,6 +79,55 @@ class JamailunStuffExtension extends JamailunItemModel {
 		items.put("pioche3", new ItemBuilder(Material.IRON_PICKAXE).addEnchant(Enchantment.DIG_SPEED, 4).setUnbreakable().addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1, ADD_NUMBER, HAND).setName(c() + "Pioche parfaite").toItemStack());
 		items.put("hache3", new ItemBuilder(Material.IRON_AXE).addEnchant(Enchantment.DIG_SPEED, 4).setUnbreakable().addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 1, ADD_NUMBER, HAND).setName(c() + "Hache parfaite").toItemStack());
 
+		items.put("emeraudeH", new ItemBuilder(Material.LEATHER_HELMET).setName(r()+"Casque d'émeraude")
+				.addAttribute(Attribute.GENERIC_ARMOR, 11, Operation.ADD_NUMBER, HEAD).addAttribute(Attribute.GENERIC_MAX_HEALTH, 2, Operation.ADD_NUMBER, HEAD)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 1, Operation.ADD_NUMBER, HEAD).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.01, Operation.ADD_SCALAR, HEAD)
+				.shine().setUnbreakable().setLeatherArmorColor(Color.LIME)
+				.toItemStack());
+		items.put("emeraudeC", new ItemBuilder(Material.LEATHER_CHESTPLATE).setName(r()+"Plastron d'émeraude")
+				.addAttribute(Attribute.GENERIC_ARMOR, 13, Operation.ADD_NUMBER, CHEST).addAttribute(Attribute.GENERIC_MAX_HEALTH, 2, Operation.ADD_NUMBER, CHEST)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 2, Operation.ADD_NUMBER, CHEST).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.02, Operation.ADD_SCALAR, CHEST)
+				.shine().setUnbreakable().setLeatherArmorColor(Color.LIME)
+				.toItemStack());
+		items.put("emeraudeL", new ItemBuilder(Material.LEATHER_LEGGINGS).setName(r()+"Jambières d'émeraude")
+				.addAttribute(Attribute.GENERIC_ARMOR, 12, Operation.ADD_NUMBER, LEGS).addAttribute(Attribute.GENERIC_MAX_HEALTH, 1, Operation.ADD_NUMBER, LEGS)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 1, Operation.ADD_NUMBER, LEGS).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.02, Operation.ADD_SCALAR, LEGS)
+				.shine().setUnbreakable().setLeatherArmorColor(Color.LIME)
+				.toItemStack());
+		items.put("emeraudeB", new ItemBuilder(Material.LEATHER_BOOTS).setName(r()+"Bottes d'émeraude")
+				.addAttribute(Attribute.GENERIC_ARMOR, 10, Operation.ADD_NUMBER, FEET).addAttribute(Attribute.GENERIC_MAX_HEALTH, 1, Operation.ADD_NUMBER, FEET)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 1, Operation.ADD_NUMBER, FEET).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.01, Operation.ADD_SCALAR, FEET)
+				.shine().setUnbreakable().setLeatherArmorColor(Color.LIME)
+				.toItemStack());
+		
+		items.put("rubisH", new ItemBuilder(Material.LEATHER_HELMET).setName(l()+"Casque de rubis")
+				.addAttribute(Attribute.GENERIC_ARMOR, 13, Operation.ADD_NUMBER, HEAD).addAttribute(Attribute.GENERIC_MAX_HEALTH, 2, Operation.ADD_NUMBER, HEAD)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 1, Operation.ADD_NUMBER, HEAD).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.02, Operation.ADD_SCALAR, HEAD)
+				.addAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.02, Operation.ADD_SCALAR, HEAD).shine().setUnbreakable().setLeatherArmorColor(Color.RED)
+				.toItemStack());
+		items.put("rubisC", new ItemBuilder(Material.LEATHER_CHESTPLATE).setName(l()+"Plastron de rubis")
+				.addAttribute(Attribute.GENERIC_ARMOR, 15, Operation.ADD_NUMBER, CHEST).addAttribute(Attribute.GENERIC_MAX_HEALTH, 2, Operation.ADD_NUMBER, CHEST)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 2, Operation.ADD_NUMBER, CHEST).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.04, Operation.ADD_SCALAR, CHEST)
+				.addAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.04, Operation.ADD_SCALAR, CHEST).shine().setUnbreakable().setLeatherArmorColor(Color.RED)
+				.toItemStack());
+		items.put("rubisL", new ItemBuilder(Material.LEATHER_LEGGINGS).setName(l()+"Jambières de rubis")
+				.addAttribute(Attribute.GENERIC_ARMOR, 14, Operation.ADD_NUMBER, LEGS).addAttribute(Attribute.GENERIC_MAX_HEALTH, 1, Operation.ADD_NUMBER, LEGS)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 1, Operation.ADD_NUMBER, LEGS).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.03, Operation.ADD_SCALAR, LEGS)
+				.addAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.03, Operation.ADD_SCALAR, LEGS).shine().setUnbreakable().setLeatherArmorColor(Color.RED)
+				.toItemStack());
+		items.put("rubisB", new ItemBuilder(Material.LEATHER_BOOTS).setName(l()+"Bottes de rubis")
+				.addAttribute(Attribute.GENERIC_ARMOR, 12, Operation.ADD_NUMBER, FEET).addAttribute(Attribute.GENERIC_MAX_HEALTH, 1, Operation.ADD_NUMBER, FEET)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 1, Operation.ADD_NUMBER, FEET).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.02, Operation.ADD_SCALAR, FEET)
+				.addAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.01, Operation.ADD_SCALAR, FEET ).shine().setUnbreakable().setLeatherArmorColor(Color.RED)
+				.toItemStack());
+		
+		
+		items.put("ancestralC", new ItemBuilder(Material.LEATHER_CHESTPLATE).setName(u()+"Plastron ancestral")
+				.addAttribute(Attribute.GENERIC_ARMOR, 16, Operation.ADD_NUMBER, CHEST).addAttribute(Attribute.GENERIC_MAX_HEALTH, 6, Operation.ADD_NUMBER, CHEST)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 3, Operation.ADD_NUMBER, CHEST).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.05, Operation.ADD_SCALAR, CHEST)
+				.addAttribute(Attribute.GENERIC_ATTACK_SPEED, 0.05, Operation.ADD_SCALAR, CHEST).addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 0.05, Operation.ADD_SCALAR, CHEST)
+				.addEnchant(Enchantment.ARROW_DAMAGE, 2).addEnchant(Enchantment.PROTECTION_FIRE, 2).shine().setUnbreakable().setLeatherArmorColor(Color.PURPLE)
+				.toItemStack());
 	}
 
 }
