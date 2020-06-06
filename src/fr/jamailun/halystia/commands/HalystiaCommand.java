@@ -2,6 +2,8 @@ package fr.jamailun.halystia.commands;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,8 +17,12 @@ abstract class HalystiaCommand implements CommandExecutor, TabCompleter {
 	
 	public HalystiaCommand(HalystiaRPG main, String command) {
 		this.main = main;
-		main.getCommand(command).setExecutor(this);
-		main.getCommand(command).setTabCompleter(this);
+		try {
+			main.getCommand(command).setExecutor(this);
+			main.getCommand(command).setTabCompleter(this);
+		} catch(NullPointerException e) {
+			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Command ["+command+"] is undefined.");
+		}
 	}
 	
 	@Override
