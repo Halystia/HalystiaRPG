@@ -17,7 +17,7 @@ import fr.jamailun.halystia.custom.enchantment.EnchantmentReader;
 public class CommandCustomEnchant extends HalystiaCommand {
 	
 	public CommandCustomEnchant(HalystiaRPG main) {
-		super(main, "edit-item");
+		super(main, "enchant-item");
 	}
 
 	@Override

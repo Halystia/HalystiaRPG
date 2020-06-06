@@ -73,6 +73,11 @@ commands:
     permission: halystia.rpg.world
     permission-message: §cIl te faut le droit de manipuler le monde RPG !
     description: Editer les titres du jeu.
+  enchant-item:
+    usage: /enchant-item <args>
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Encanter du jeu.
   edit-donjons:
     aliases: [donjons, djs]
     usage: /edit-donjons <args>
