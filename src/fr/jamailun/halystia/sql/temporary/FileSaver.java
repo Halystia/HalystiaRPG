@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.players.SkillSet;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
@@ -31,6 +32,7 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 	private final static String TITLE = ".title";
 	private final static String SPAWN = ".spawn";
 	private final static String KARMA = ".karma";
+	private final static String SKILLS = ".srl-skills";
 	
 	public FileSaver(String path, String fileName) {
 		super(path, fileName);
@@ -321,6 +323,23 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 	public void updateSpawnLocation(Player player, Location location) {
 		synchronized (file) {
 			config.set(player.getUniqueId().toString() + SPAWN, location);
+			save();
+		}
+	}
+
+	@Override
+	public SkillSet getSkillSet(Player player) {
+		synchronized (file) {
+			if( ! config.contains(player.getUniqueId().toString() + SKILLS) )
+				return new SkillSet(config.getString(player.getUniqueId().toString() + SKILLS));
+			return new SkillSet();
+		}
+	}
+
+	@Override
+	public void updateSkillSet(Player player, SkillSet skillSet) {
+		synchronized (file) {
+			config.set(player.getUniqueId().toString() + SPAWN, skillSet.serialize());
 			save();
 		}
 	}

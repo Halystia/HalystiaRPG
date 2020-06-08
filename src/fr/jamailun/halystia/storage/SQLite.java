@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.players.SkillSet;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
@@ -364,6 +365,18 @@ public class SQLite extends Database implements DataHandler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public SkillSet getSkillSet(Player player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateSkillSet(Player player, SkillSet skillSet) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

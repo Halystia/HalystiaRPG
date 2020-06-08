@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.players.SkillSet;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
@@ -32,6 +33,10 @@ public interface DataHandler {
 	public Location getSpawnLocation(Player player);
 	
 	public void updateSpawnLocation(Player player, Location location);
+	
+	public SkillSet getSkillSet(Player player);
+	
+	public void updateSkillSet(Player player, SkillSet skillSet);
 	
 	/**
 	 * @return Le royaume dont le joueur est ROI.

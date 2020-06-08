@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.players.SkillSet;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
@@ -337,6 +338,18 @@ public class HalystiaDataBase extends DataBase implements DataHandler {
 
 	@Override
 	public void updateSpawnLocation(Player player, Location location) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public SkillSet getSkillSet(Player player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateSkillSet(Player player, SkillSet skillSet) {
 		// TODO Auto-generated method stub
 		
 	}
