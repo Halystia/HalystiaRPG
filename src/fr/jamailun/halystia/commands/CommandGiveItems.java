@@ -84,16 +84,16 @@ public class CommandGiveItems extends HalystiaCommand {
 			public void onClick(InventoryClickEvent e) {
 				if(e.getCurrentItem() == null)
 					return;
-				int pageSlot = (nbPerPage * page) + e.getSlot();
+				int pageSlot = (nbPerPage * (page-1)) + e.getSlot();
 				if(e.getSlot() < nbPerPage) {
 					givePlayerItem(player, keys.get(pageSlot));
 					return;
 				}
-				if(e.getSlot() == nbPerPage+1 && e.getCurrentItem().getType() == Material.ARROW) {
+				if(e.getSlot() == nbPerPage && e.getCurrentItem().getType() == Material.ARROW) {
 					openGUI(player, page - 1);
 					return;
 				}
-				if(e.getSlot() == getSize() && e.getCurrentItem().getType() == Material.ARROW) {
+				if(e.getSlot() == getSize()-1 && e.getCurrentItem().getType() == Material.ARROW) {
 					openGUI(player, page + 1);
 					return;
 				}
@@ -102,19 +102,20 @@ public class CommandGiveItems extends HalystiaCommand {
 		
 		
 		for(int i = 0; i < keys.size(); i++) {
-			if(i >= gui.getSize() - 9)
+			if(i >= nbPerPage)
 				break;
 			int index = ( (page-1) * nbPerPage ) + i;
-			gui.addOption(items.getWithKey(keys.get(index)), i);
+			String key = keys.get(index);
+			gui.addOption(new ItemBuilder(items.getWithKey(key)).addLoreLine(ChatColor.GRAY+"Id: ["+key+"]").toItemStack(), i);
 		}
 		
-		for(int i = nbPerPage+1; i < gui.getSize(); i++)
+		for(int i = nbPerPage; i < gui.getSize(); i++)
 			gui.addOption(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(ChatColor.BLUE + "").toItemStack(), i);
 		
 		if(page > 1)
-			gui.addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE + "Page précédente").toItemStack(), nbPerPage + 1);
+			gui.addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE + "Page précédente").toItemStack(), nbPerPage);
 		if(page < maxPages)
-			gui.addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE + "Page suivante").toItemStack(), gui.getSize());
+			gui.addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE + "Page suivante").toItemStack(), gui.getSize()-1);
 		
 		gui.show(player);
 	}
