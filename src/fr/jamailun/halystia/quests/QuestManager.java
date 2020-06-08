@@ -17,6 +17,7 @@ import fr.jamailun.halystia.donjons.DonjonManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
+import fr.jamailun.halystia.npcs.traits.HalystiaRpgTrait;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.quests.steps.QuestStepBring;
 import fr.jamailun.halystia.quests.steps.QuestStepDonjon;
@@ -68,6 +69,20 @@ public class QuestManager {
 	}
 	
 	public void removeQuest(Quest quest) {
+		for(RpgNpc npc : npcs.getNpcs()) {
+			if( ! npc.getNPC().hasTrait(HalystiaRpgTrait.class) ) {
+				main.getConsole().sendMessage(ChatColor.RED + "Attention ! Le NPC (id="+npc.getConfigId()+") n'as pas le trait rpg !");
+				continue;
+			}
+			HalystiaRpgTrait trait = npc.getNPC().getTrait(HalystiaRpgTrait.class);
+			if( ! trait.hasQuest() )
+				continue;
+			if(trait.getQuestName().equals(quest.getID())) {
+				trait.resetQuest();
+				main.getConsole().sendMessage(ChatColor.GREEN + "Le NPC (id="+npc.getConfigId()+") était porteur de la quete '"+quest.getID()+"'. Il en a été libéré.");
+				break;
+			}
+		}
 		quest.deleteData();
 		quests.remove(quest);
 	}
