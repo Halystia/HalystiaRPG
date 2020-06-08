@@ -100,6 +100,18 @@ class JamailunStuffExtension extends JamailunItemModel {
 				.shine().setUnbreakable().setLeatherArmorColor(Color.LIME)
 				.toItemStack());
 		
+		items.put("epeeDure", new ItemBuilder(Material.STONE_SWORD).setName(r()+"Épée colossale")
+				.addAttribute(Attribute.GENERIC_ARMOR, -4, Operation.ADD_NUMBER, HAND).addAttribute(Attribute.GENERIC_ATTACK_SPEED, -.9, Operation.ADD_SCALAR, HAND)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, -2, Operation.ADD_NUMBER, HAND).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, -1, Operation.ADD_SCALAR, HAND)
+				.addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, 0.5, Operation.ADD_SCALAR, HAND).shine().setUnbreakable()
+				.toItemStack());
+		
+		items.put("epeeRapide", new ItemBuilder(Material.STONE_SWORD).setName(r()+"Épée rapide")
+				.addAttribute(Attribute.GENERIC_ARMOR, -4, Operation.ADD_NUMBER, HAND).addAttribute(Attribute.GENERIC_ATTACK_SPEED, 1, Operation.ADD_SCALAR, HAND)
+				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, -2, Operation.ADD_NUMBER, HAND).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, .1, Operation.ADD_SCALAR, HAND)
+				.addAttribute(Attribute.GENERIC_ATTACK_DAMAGE, -.6, Operation.ADD_SCALAR, HAND).shine().setUnbreakable()
+				.toItemStack());
+		
 		items.put("rubisH", new ItemBuilder(Material.LEATHER_HELMET).setName(l()+"Casque de rubis")
 				.addAttribute(Attribute.GENERIC_ARMOR, 13, Operation.ADD_NUMBER, HEAD).addAttribute(Attribute.GENERIC_MAX_HEALTH, 2, Operation.ADD_NUMBER, HEAD)
 				.addAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS, 1, Operation.ADD_NUMBER, HEAD).addAttribute(Attribute.GENERIC_MOVEMENT_SPEED, 0.02, Operation.ADD_SCALAR, HEAD)
