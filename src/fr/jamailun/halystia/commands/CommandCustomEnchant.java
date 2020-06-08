@@ -22,7 +22,7 @@ public class CommandCustomEnchant extends HalystiaCommand {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args) {
-		if((sender instanceof Player)) {
+		if( ! (sender instanceof Player)) {
 			sender.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut être un joueur.");
 			return true;
 		}
