@@ -35,7 +35,7 @@ public class ClasseManager {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				data.forEach((uuid, data) -> {data.refillMana(0.2);});
+				data.values().forEach(PlayerData::refillMana);
 				saveCounter++;
 				if(saveCounter >= saveFrequence) {
 					saveCounter = 0;

@@ -5,15 +5,18 @@ import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockFadeEvent;
 import org.bukkit.event.block.LeavesDecayEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.players.SkillSet;
 
 public class ConsumeItemListener extends HalystiaListener {
 
@@ -54,6 +57,21 @@ public class ConsumeItemListener extends HalystiaListener {
 		e.setCancelled(true);
 	}
 	
+	@EventHandler
+	public void foodLevelChange(FoodLevelChangeEvent e) {
+		if( ! HalystiaRPG.isInRpgWorld(e.getEntity()))
+			return;
+		if( ! (e.getEntity() instanceof Player))
+			return;
+		Player p = (Player) e.getEntity();
+		if(p.getFoodLevel() >= e.getFoodLevel()) //osef des cas où on gagne de la bouffe
+			return;
+		PlayerData pc = main.getClasseManager().getPlayerData(p);
+		if(pc == null) // sécu
+			return;
+		if(Math.random() < 0.02 * pc.getSkillSetInstance().getLevel(SkillSet.SKILL_CONSTITUTION))
+			e.setCancelled(true);
+	}
 	
 	@EventHandler
 	public void farmDepopEvent(BlockFadeEvent e) {

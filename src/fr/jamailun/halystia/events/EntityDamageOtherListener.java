@@ -5,6 +5,7 @@ import static org.bukkit.ChatColor.RED;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
@@ -26,10 +27,12 @@ import fr.jamailun.halystia.custom.PlayerEffectsManager;
 import fr.jamailun.halystia.enemies.mobs.EnemyMob;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.players.SkillSet;
 import fr.jamailun.halystia.spells.newSpells.epeiste.AcierBrut;
 import fr.jamailun.halystia.spells.newSpells.epeiste.AcierPrecis;
 import fr.jamailun.halystia.spells.newSpells.epeiste.Damocles;
 import fr.jamailun.halystia.spells.spellEntity.InvocationsManager;
+import fr.jamailun.halystia.utils.PlayerUtils;
 import net.citizensnpcs.api.CitizensAPI;
 
 public class EntityDamageOtherListener extends HalystiaListener {
@@ -57,18 +60,41 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		
 		//avec le karma on change le montant de dégats.
 		if(e.getDamager() instanceof Player) {
-			int karma = main.getClasseManager().getPlayerData((Player)e.getDamager()).getCurrentKarma();
-			if(karma <= -300)
-				if(e.getEntity() instanceof Player)
+			PlayerData pc = main.getClasseManager().getPlayerData((Player)e.getDamager());
+			int karma = pc.getCurrentKarma();
+			Player cible = null;
+			if(karma <= -300) {
+				if(e.getEntity() instanceof Player) {
 					((EntityDamageEvent)e).setDamage(e.getDamage() * 1.1);
+					cible = (Player) e.getEntity();
+				}
+			}
 			if(karma >= 300)
 				if(e.getEntity() instanceof Monster)
 					((EntityDamageEvent)e).setDamage(e.getDamage() * 1.1);
+			// Add the % of critical hit
+			if ( Math.random() < 0.01 * pc.getSkillSetInstance().getLevel(SkillSet.SKILL_FORCE) ) {
+				e.setDamage(e.getDamage() * 1.5);
+				if(cible != null)
+					cible.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Votre agresseur vous a assené un coup critique. +50% de dégâts.");
+				new PlayerUtils(pc.getPlayer()).sendActionBar(ChatColor.GOLD + "Coup critique !"+ChatColor.BOLD+" +50% de dégâts.");
+			}
+		}
+		
+		if(e.getEntity() instanceof Player) {
+			PlayerData pc = main.getClasseManager().getPlayerData((Player)e.getEntity());
+			// Add the % of dodge
+			if ( Math.random() < 0.01 * pc.getSkillSetInstance().getLevel(SkillSet.SKILL_AGILITE) ) {
+				e.setDamage(0);
+				new PlayerUtils(pc.getPlayer()).sendActionBar(ChatColor.GOLD + ""+ChatColor.BOLD+"Esquive !");
+				e.getEntity().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, e.getEntity().getLocation(), 50);
+			}
 		}
 		
 		if(main.getSuperMobManager().damageMob(e.getEntity(), e.getDamager().getUniqueId(), 0)) {
 			e.setCancelled(true);
 		}
+		
 		if(main.getDonjonManager().getBossManager().isBoss(e.getDamager())) {
 			if(e.getEntity() instanceof Player && ((LivingEntity)e.getEntity()).getHealth() <= ((EntityDamageEvent)e).getFinalDamage()) {
 				alertDeathPlayer((Player)e.getEntity(), "le "+main.getDonjonManager().getBossManager().getBoss(e.getDamager()).getCustomName());

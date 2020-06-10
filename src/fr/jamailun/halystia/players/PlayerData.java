@@ -237,7 +237,9 @@ public class PlayerData {
 		return this.mana >= mana;
 	}
 	
-	public void refillMana(double mana) {
+	public void refillMana() {
+		double mana = 0.2 + (0.1 * skills.getLevel(SkillSet.SKILL_INTELLIGENCE));
+		
 		if(mana < 0)
 			mana = 0;
 		if(manaToRefill < MANA_REFILL_PER_SECOND) {
