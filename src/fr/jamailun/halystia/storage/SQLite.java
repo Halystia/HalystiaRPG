@@ -77,7 +77,7 @@ public class SQLite extends Database implements DataHandler {
 		int id = getClasseID(player);
 		Classe classe = Classe.getClasseWithId(id);
 		int exp = getRawExp(player);
-		return new PlayerData(classe, exp, player, 0);
+		return new PlayerData(classe, exp, player, 0, new SkillSet());
 	}
 	
 	private int getRawExp(Player player) {
@@ -367,16 +367,4 @@ public class SQLite extends Database implements DataHandler {
 		}
 	}
 
-	@Override
-	public SkillSet getSkillSet(Player player) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateSkillSet(Player player, SkillSet skillSet) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

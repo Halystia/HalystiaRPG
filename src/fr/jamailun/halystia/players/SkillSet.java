@@ -62,6 +62,15 @@ public class SkillSet {
 		return true;
 	}
 	
+	public int getLevel(String skill) {
+		for(int i = 0; i < skillArray.length; i++) {
+			if(skillArray[i].equals(skill)) {
+				return skills[i];
+			}
+		}
+		return -1;
+	}
+	
 	public int[] getLevels() {
 		return Arrays.copyOf(skills, skills.length);
 	}

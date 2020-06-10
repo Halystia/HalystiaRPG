@@ -125,7 +125,7 @@ public class HalystiaDataBase extends DataBase implements DataHandler {
 			int exp = rs.getInt(COL_CLASS_EXP);
 			Classe classe = Classe.getClasseWithId(classeId);
 			
-			return new PlayerData(classe, exp, player, 0);
+			return new PlayerData(classe, exp, player, 0, new SkillSet());
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -338,18 +338,6 @@ public class HalystiaDataBase extends DataBase implements DataHandler {
 
 	@Override
 	public void updateSpawnLocation(Player player, Location location) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public SkillSet getSkillSet(Player player) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void updateSkillSet(Player player, SkillSet skillSet) {
 		// TODO Auto-generated method stub
 		
 	}

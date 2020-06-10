@@ -38,6 +38,7 @@ public class PlayerData {
 	private Classe classe; // very static lul
 	private int exp, level, karma; // on stocke le niveau pour pas le recalculer toutes les 10 secondes.
 	private Player player; // Assossiated player. (tampon)
+	private SkillSet skills; // même chose que pour exp,level,karma.
 	private boolean playerValid; // If the player is valid. (tampon)
 	private double maxMana; // Calculated at every levelup.
 	private double mana, manaToRefill; // Mobile values
@@ -48,11 +49,12 @@ public class PlayerData {
 	 * @param exp : experiences points of the player
 	 * @param p : {@link org.bukkit.entity.Player Player} who connected.
 	 */
-	public PlayerData(Classe classe, int exp, Player player, int karma) {
+	public PlayerData(Classe classe, int exp, Player player, int karma, SkillSet skills) {
 		this.classe = classe;
 		this.exp = exp;
 		this.player = player;
 		this.karma = karma;
+		this.skills = skills;
 		
 		level = -1;
 		playerValid = true;
@@ -106,6 +108,10 @@ public class PlayerData {
 	 */
 	public Classe getClasse() {
 		return classe;
+	}
+	
+	public SkillSet getSkillSetInstance() {
+		return skills;
 	}
 	
 	/**

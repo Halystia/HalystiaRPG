@@ -67,6 +67,7 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 				String uuid = playerData.getPlayerUUID().toString();
 				config.set(uuid+CLASSE_XP, playerData.getExpAmount());
 				config.set(uuid+KARMA, playerData.getCurrentKarma());
+				config.set(uuid+SKILLS, playerData.getSkillSetInstance().serialize());
 			});
 			save();
 		}
@@ -80,7 +81,10 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 			Classe classe = Classe.getClasseWithId(id);
 			int exp = config.getInt(uuid+CLASSE_XP);
 			int karma = config.getInt(uuid+KARMA);
-			return new PlayerData(classe, exp, player, karma);
+			SkillSet skills = new SkillSet();
+			if(config.contains(uuid+SKILLS))
+				skills = new SkillSet(config.getString(uuid+SKILLS));
+			return new PlayerData(classe, exp, player, karma, skills);
 		}
 	}
 
@@ -327,21 +331,4 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 		}
 	}
 
-	@Override
-	public SkillSet getSkillSet(Player player) {
-		synchronized (file) {
-			if( ! config.contains(player.getUniqueId().toString() + SKILLS) )
-				return new SkillSet(config.getString(player.getUniqueId().toString() + SKILLS));
-			return new SkillSet();
-		}
-	}
-
-	@Override
-	public void updateSkillSet(Player player, SkillSet skillSet) {
-		synchronized (file) {
-			config.set(player.getUniqueId().toString() + SPAWN, skillSet.serialize());
-			save();
-		}
-	}
-	
 }
