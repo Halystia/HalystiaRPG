@@ -1,5 +1,5 @@
 name: HalystiaRPG
-version: 4.5.1
+version: 4.5.3
 main: fr.jamailun.halystia.HalystiaRPG
 authors: [jamailun]
 depend: [Citizens, Sentinel]
@@ -27,6 +27,11 @@ commands:
     permission: halystia.rpg.player
     permission-message: §cTu n'es pas considéré comme étant un joueur !
     description: Ouvre une GUI pour choisir ton titre affiché.
+  skills:
+    usage: /skills
+    permission: halystia.rpg.player
+    permission-message: §cTu n'es pas considéré comme étant un joueur !
+    description: Ouvre une GUI pour sélectionner les skills passifs.
   ping:
     usage: /ping
     permission: halystia.rpg.player

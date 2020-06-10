@@ -18,7 +18,6 @@ import static org.bukkit.ChatColor.WHITE;
 import static org.bukkit.ChatColor.YELLOW;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
@@ -35,6 +34,7 @@ import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.jobs.JobType;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.players.SkillSet;
 import fr.jamailun.halystia.players.SoulManager;
 import fr.jamailun.halystia.shops.Trade;
 import fr.jamailun.halystia.titles.Title;
@@ -48,6 +48,7 @@ public class MainClasseGUI extends MenuGUI {
 	public final static int SLOT_AMES = 11;
 	public final static int SLOT_QUESTS = 12;
 	public final static int SLOT_TITLES = 13;
+	public final static int SLOT_SKILLS = 14;
 
 	public final static int SLOT_JOBS1 = 15;
 	
@@ -125,6 +126,18 @@ public class MainClasseGUI extends MenuGUI {
 		}
 		addOption(titles.toItemStack(), SLOT_TITLES);
 		
+		//Skills
+		int allPoints = pc.getLevel() / 2;
+		SkillSet skillSet = pc.getSkillSetInstance();
+		int remaining = allPoints - skillSet.getTotalPoints();
+		ItemBuilder skills = new ItemBuilder(Material.ENCHANTED_GOLDEN_APPLE).setName(LIGHT_PURPLE+""+BOLD+"Skills passifs");
+		skills.addLoreLine(GRAY+"Points : " + (remaining > 0 ? GREEN : RED) + remaining +GRAY+"/"+allPoints);
+		skills.addLoreLine(DARK_GRAY+"Force : " + GOLD + skillSet.getLevel(SkillSet.SKILL_FORCE));
+		skills.addLoreLine(DARK_GRAY+"Intelligence : " + GOLD + skillSet.getLevel(SkillSet.SKILL_INTELLIGENCE));
+		skills.addLoreLine(DARK_GRAY+"Constitution : " + GOLD + skillSet.getLevel(SkillSet.SKILL_CONSTITUTION));
+		skills.addLoreLine(DARK_GRAY+"Agilité : " + GOLD + skillSet.getLevel(SkillSet.SKILL_AGILITE));
+		addOption(skills.toItemStack(), SLOT_SKILLS);
+		
 		//JOBS
 		int jobSlot = SLOT_JOBS1;
 		for(JobType job : HalystiaRPG.getInstance().getJobManager().getJobsOfPlayer(p)) {
@@ -193,7 +206,16 @@ public class MainClasseGUI extends MenuGUI {
 			}
 		} else {
 			if(e.getSlot() == SLOT_CLASSE) {
-				Trade trade = new Trade("null",
+				Trade trade = new Trade( new ItemBuilder(Material.PAPER)
+								.setName(YELLOW+"Reçu d'oubli de classe")
+								.addLoreLine(GRAY+"Classe oubliée : " + WHITE + classe.getName())
+								.addLoreLine(GRAY+"Expérience perdue : " + WHITE + HalystiaRPG.getInstance().getClasseManager().getPlayerData(p).getExpAmount())
+								.addLoreLine(GRAY+"Signé le : " + WHITE + new SimpleDateFormat("dd/MM/yyyy").format(new Date()))
+								.addLoreLine(GRAY+"Signé par : " + WHITE + p.getName())
+								.toItemStack(),
+								new ItemStack(Material.EMERALD_BLOCK, 10)
+							);
+				/*Trade trade = new Trade("null",
 						classe, 
 						new ItemBuilder(Material.PAPER)
 								.setName(YELLOW+"Reçu d'oubli de classe")
@@ -202,9 +224,9 @@ public class MainClasseGUI extends MenuGUI {
 								.addLoreLine(GRAY+"Signé le : " + WHITE + new SimpleDateFormat("dd/MM/yyyy").format(new Date()))
 								.addLoreLine(GRAY+"Signé par : " + WHITE + p.getName())
 								.toItemStack(),
-						Arrays.asList(new ItemStack(Material.EMERALD_BLOCK, SLOT_CLASSE)),
+						Arrays.asList(new ItemStack(Material.EMERALD_BLOCK, 10)),
 						0
-				);
+				);*/
 				if(trade.canAfford(p)) {
 					openQuitClasseGUI(trade);
 					return;
@@ -216,6 +238,8 @@ public class MainClasseGUI extends MenuGUI {
 			new MainQuestsGUI(p);
 		else if(e.getSlot() == SLOT_TITLES)
 			new MainTitlesGUI(p);
+		else if(e.getSlot() == SLOT_SKILLS)
+			new SkillsGUI(p);
 		else if(e.getSlot() == SLOT_JOBS1 && j1 != null )
 			new MainJobGUI(p, j1, HalystiaRPG.getInstance().getJobManager());
 		else if(e.getSlot() == SLOT_JOBS1 + 1 && j2 != null )

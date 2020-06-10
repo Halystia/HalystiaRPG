@@ -25,6 +25,7 @@ import fr.jamailun.halystia.commands.CommandSetRoi;
 import fr.jamailun.halystia.commands.CommandSetSpawner;
 import fr.jamailun.halystia.commands.CommandSetTag;
 import fr.jamailun.halystia.commands.CommandSetXp;
+import fr.jamailun.halystia.commands.CommandSkills;
 import fr.jamailun.halystia.commands.CommandSummonMob;
 import fr.jamailun.halystia.commands.CommandTitle;
 import fr.jamailun.halystia.commands.ModifyOeilAntiqueCommand;
@@ -48,6 +49,7 @@ public class CommandsManager {
 		new CommandQuests(main);
 		new CommandTitle(main);
 		new CommandPing(main);
+		new CommandSkills(main);
 		
 		main.getCommand("create-shop-classe").setExecutor(new CommandCreateShop(main));
 		main.getCommand("reload-shop-classe").setExecutor(new CommandReloadShops(main));
