@@ -42,6 +42,7 @@ import fr.jamailun.halystia.utils.FileDataRPG;
  */
 public class Quest extends FileDataRPG {
 	
+	private String npcID;
 	private final String id;
 	private String name;
 	private int xp, level;
@@ -57,14 +58,16 @@ public class Quest extends FileDataRPG {
 	private final MobManager mobs;
 	private final DonjonManager donjons;
 	
-	public Quest(String path, String id, HalystiaRPG main, NpcManager npcs, MobManager mobs, DonjonManager donjons) {
+	public Quest(String path, RpgNpc npc, String id, HalystiaRPG main, NpcManager npcs, MobManager mobs, DonjonManager donjons) {
 		super(path, id);
 		this.main = main;
 		this.id = id;
 		this.npcs = npcs;
 		this.mobs = mobs;
 		this.donjons = donjons;
-		loadData();
+		if(npc != null)
+			npcID = npc.getConfigId();
+		loadData(npc);
 	}
 	
 	public String getDisplayName() {
@@ -81,8 +84,12 @@ public class Quest extends FileDataRPG {
 		return "Quest[id="+id+"]";
 	}
 	
-	private void loadData() {
-		preloadData();
+	public String getNPCId() {
+		return npcID;
+	}
+	
+	private void loadData(RpgNpc npc) {
+		preloadData(npc);
 		name = config.getString("name");
 		level = config.getInt("level");
 		xp = config.getInt("gifts.xp");
@@ -97,6 +104,8 @@ public class Quest extends FileDataRPG {
 			steps[i] = QuestStep.factory(config.getConfigurationSection("steps."+i), this, i, npcs, mobs, donjons);
 		intro = new Messages(config.getStringList("intro"));
 		
+		if(npc == null)
+			npcID = config.getString("starts");
 	}
 
 	public int getXp() {
@@ -115,7 +124,10 @@ public class Quest extends FileDataRPG {
 		return Arrays.asList(loots);
 	}
 	
-	private void preloadData() {
+	private void preloadData(RpgNpc npc) {
+		if(!config.contains("starts") && npc != null)
+			config.set("starts", npc.getConfigId());
+		
 		if(!config.contains("name"))
 			config.set("name", id);
 		if(!config.contains("level"))
@@ -286,7 +298,7 @@ public class Quest extends FileDataRPG {
 	}
 
 	public void stepOver(Player p, int step) {
-		main.getDataBase().updateStepInQuest(p, this, step+1);
+		main.getQuestManager().getPlayerData(p).updateStepInQuest(this, step+1);
 		if(step >= getHowManySteps() - 1)
 			completed(p);
 		else
@@ -322,7 +334,7 @@ public class Quest extends FileDataRPG {
 	}
 
 	public void updateDataForPlayer(Player p, int killed) {
-		main.getDataBase().updateDataInQuest(p, this, killed);
+		main.getQuestManager().getPlayerData(p).updateDataInQuest(this, killed);
 	}
 
 	public QuestStep[] getSteps() {
@@ -340,7 +352,7 @@ public class Quest extends FileDataRPG {
 			System.err.println("ERREUR POUR LA CLASSE");
 			return false;
 		}
-		if(main.getDataBase().getAllQuests(p).contains(this))
+		if(main.getQuestManager().getPlayerData(p).getAllQuests().contains(this))
 			return false;
 		if(level < 0)
 			return false;
@@ -376,7 +388,7 @@ public class Quest extends FileDataRPG {
 			return;
 		}
 		p.sendMessage(DARK_PURPLE + "" + BOLD + "QUÊTE OBTENUE : " + getDisplayName() + DARK_PURPLE + " !");
-		main.getDataBase().updateStepInQuest(p, this, 0);
+		main.getQuestManager().getPlayerData(p).updateStepInQuest(this, 0);
 		p.sendMessage(steps[0].getObjectiveDescription());
 	}
 

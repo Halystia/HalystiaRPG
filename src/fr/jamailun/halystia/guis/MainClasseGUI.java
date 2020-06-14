@@ -105,7 +105,7 @@ public class MainClasseGUI extends MenuGUI {
 		
 		//Quetes
 		ItemBuilder quests = new ItemBuilder(Material.BOOKSHELF).setName(YELLOW+""+BOLD+"Quêtes");
-		int currents = HalystiaRPG.getInstance().getDataBase().getOnGoingQuests(p).size();
+		int currents = HalystiaRPG.getInstance().getQuestManager().getPlayerData(p).getOnGoingQuests().size();
 		if(currents == 0)
 			quests.setLore(GRAY+""+ITALIC+"Aucune quête en cours.");
 		else

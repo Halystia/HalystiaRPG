@@ -1,10 +1,7 @@
 package fr.jamailun.halystia.sql.temporary;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -15,7 +12,6 @@ import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.players.SkillSet;
 import fr.jamailun.halystia.quests.Quest;
-import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
 import fr.jamailun.halystia.titles.Title;
 import fr.jamailun.halystia.utils.FileDataRPG;
@@ -186,14 +182,14 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 		}
 	}
 
-	@Override
+	/*@Override
 	public Set<Quest> getAllQuests(Player p) {
 		synchronized (file) {
 			if(! config.contains(p.getUniqueId().toString() + QUESTS))
 				return new HashSet<>();
 			return HalystiaRPG.getInstance().getQuestManager().getAllQuests().stream().filter(quest -> config.contains(p.getUniqueId().toString() + QUESTS + "." + quest.getID())).collect(Collectors.toSet());
 		}
-	}
+	}*/
 
 	@Override
 	public int getStepInQuest(Player p, Quest quest) {
@@ -211,7 +207,7 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 			return config.getInt(p.getUniqueId().toString() + QUESTS + "." + quest.getID() + ".data");
 		}
 	}
-
+/*
 	@Override
 	public Set<Quest> getOnGoingQuests(Player p) {
 		synchronized (file) {
@@ -257,7 +253,7 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 			}
 			return steps;
 		}
-	}
+	}*/
 
 	@Override
 	public boolean playerHasTag(Player p, String tag) {

@@ -94,7 +94,7 @@ public abstract class Boss implements Enemy, Invocator {
 			}
 		}.runTaskLater(HalystiaRPG.getInstance(), 50L);
 		
-		for(QuestStep step : HalystiaRPG.getInstance().getDataBase().getOnGoingQuestSteps(p)) {
+		for(QuestStep step : HalystiaRPG.getInstance().getQuestManager().getPlayerData(p).getOnGoingQuestSteps()) {
 			if(step instanceof QuestStepDonjon) {
 				QuestStepDonjon real = (QuestStepDonjon) step;
 				if(this.donjon.getConfigName().equals(real.getDonjonID())) {

@@ -73,7 +73,7 @@ public class NpcInteractionListener extends HalystiaListener {
 		}
 		
 		//1 : valider le step !
-		for(QuestStep step : main.getDataBase().getOnGoingQuestSteps(p)) {
+		for(QuestStep step : main.getQuestManager().getPlayerData(p).getOnGoingQuestSteps()) {
 			if(step instanceof QuestStepSpeak) {
 				QuestStepSpeak realStep = (QuestStepSpeak) step;
 				if(realStep.getTarget().equals(npc)) {
@@ -139,7 +139,7 @@ public class NpcInteractionListener extends HalystiaListener {
 			return;
 		}
 		// 3 : Quête non terminée : mais toujours truc
-		if(main.getDataBase().getOnGoingQuests(p).contains(quest)) {
+		if(main.getQuestManager().getPlayerData(p).getOnGoingQuests().contains(quest)) {
 			npc.speak(p);
 			npc.free(p);
 			return;

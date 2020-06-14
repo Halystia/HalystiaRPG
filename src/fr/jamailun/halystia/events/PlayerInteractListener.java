@@ -62,7 +62,7 @@ public class PlayerInteractListener extends HalystiaListener {
 					lastones.remove(p.getUniqueId());
 				}
 			}.runTaskLater(main, 20L);
-			for(QuestStep step : HalystiaRPG.getInstance().getDataBase().getOnGoingQuestSteps(p)) {
+			for(QuestStep step : HalystiaRPG.getInstance().getQuestManager().getPlayerData(p).getOnGoingQuestSteps()) {
 				if(step instanceof QuestStepInteract) {
 					QuestStepInteract real = (QuestStepInteract) step;
 					if(real.getTargettedBlock().getLocation().equals(e.getClickedBlock().getLocation())) {

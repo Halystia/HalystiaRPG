@@ -23,6 +23,7 @@ import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.quests.Quest;
+import fr.jamailun.halystia.quests.players.QuestsAdvancement;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.quests.steps.QuestStepInteract;
 import fr.jamailun.halystia.quests.steps.QuestStepKill;
@@ -36,8 +37,9 @@ public class MainQuestsGUI extends MenuGUI {
 		super(ChatColor.DARK_AQUA + "Avancement des quêtes", 9*6, HalystiaRPG.getInstance());
 		this.p = p;
 		
-		final Set<Quest> quests = HalystiaRPG.getInstance().getDataBase().getAllQuests(p);
-		final Set<QuestStep> steps = HalystiaRPG.getInstance().getDataBase().getOnGoingQuestSteps(p);
+		final QuestsAdvancement playerAdv = HalystiaRPG.getInstance().getQuestManager().getPlayerData(p);
+		final Set<Quest> quests = playerAdv.getAllQuests();
+		final Set<QuestStep> steps = playerAdv.getOnGoingQuestSteps();
 		
 		ItemStack mur = new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName(" ").toItemStack();
 		for(int i = 1; i <= 9*6 - 1; i++)
@@ -107,7 +109,7 @@ public class MainQuestsGUI extends MenuGUI {
 			slot++;
 		}
 		
-		int completed = HalystiaRPG.getInstance().getDataBase().getAllQuests(p).size() - steps.size();
+		int completed = HalystiaRPG.getInstance().getQuestManager().getPlayerData(p).getAllQuests().size() - steps.size();
 		
 		addOption(new ItemBuilder(Material.BOOKSHELF).setName(BLUE+"Vous avez complété : " + completed + " quête" + (completed >1?"s":"")).toItemStack(), getSize()-2);
 		addOption(new ItemBuilder(Material.ARROW).setName(BLUE+"Retour").toItemStack(), getSize()-1);

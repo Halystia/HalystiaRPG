@@ -109,7 +109,7 @@ public class CommandEditQuests extends HalystiaCommand {
 				p.sendMessage(ChatColor.RED + "Le NPC (" + args[2] + ") lance déjà une quête !");
 				return true;
 			}
-			Quest quest = quests.createQuest(args[1]);
+			Quest quest = quests.createQuest(args[1], npc);
 			if ( quest != null ) {
 				npc.changeQuest(quest);
 				p.sendMessage(ChatColor.GREEN + "La quête ["+args[1]+"] a été créé avec succès !");
@@ -127,7 +127,7 @@ public class CommandEditQuests extends HalystiaCommand {
 		}
 		
 		if(args[0].equals("reset")) {
-			HalystiaRPG.getInstance().getDataBase().updateStepInQuest(p, quest, -1);
+			quests.getPlayerData(p).resetQuest(quest);
 			p.sendMessage(ChatColor.GREEN + "ok !");
 			return true;
 		}

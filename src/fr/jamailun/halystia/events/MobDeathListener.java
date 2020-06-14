@@ -52,7 +52,7 @@ public class MobDeathListener extends HalystiaListener {
 			pc.addXp(mob.getXp());
 			if(Math.random() > (0.8 - ((mob.getRegisteredHealth() / 10) * 0.02) ))
 				pc.deltaKarma(1);
-			for(QuestStep questStep : main.getDataBase().getOnGoingQuestSteps(pc.getPlayer())) {
+			for(QuestStep questStep : main.getQuestManager().getPlayerData(pc.getPlayer()).getOnGoingQuestSteps()) {
 				if(questStep instanceof QuestStepKill) {
 					QuestStepKill step = (QuestStepKill) questStep;
 					if(step.getMobName().equals(mob.getConfigName()))

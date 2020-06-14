@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
+import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.donjons.DonjonManager;
@@ -18,12 +19,16 @@ import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
 import fr.jamailun.halystia.npcs.traits.HalystiaRpgTrait;
+import fr.jamailun.halystia.quests.players.QuestState;
+import fr.jamailun.halystia.quests.players.QuestState.QuestStatus;
+import fr.jamailun.halystia.quests.players.QuestsAdvancement;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.quests.steps.QuestStepBring;
 import fr.jamailun.halystia.quests.steps.QuestStepDonjon;
 import fr.jamailun.halystia.quests.steps.QuestStepInteract;
 import fr.jamailun.halystia.quests.steps.QuestStepKill;
 import fr.jamailun.halystia.quests.steps.QuestStepSpeak;
+import fr.jamailun.halystia.sql.temporary.DataHandler;
 
 public class QuestManager {
 
@@ -34,7 +39,9 @@ public class QuestManager {
 	private final MobManager mobs;
 	private final DonjonManager donjons;
 	
-	public QuestManager(String path, HalystiaRPG main, NpcManager npcs, MobManager mobs, DonjonManager donjons) {
+	private Set<QuestsAdvancement> playersAdvancements;
+	
+	public QuestManager(String path, HalystiaRPG main, NpcManager npcs, MobManager mobs, DonjonManager donjons, DataHandler bdd) {
 		this.path = path;
 		this.main = main;
 		this.npcs = npcs;
@@ -42,6 +49,35 @@ public class QuestManager {
 		this.donjons = donjons;
 		quests = new HashSet<>();
 		reload();
+		
+		playersAdvancements = new HashSet<>();
+		
+	}
+	
+	public boolean hasDataAbout(Player player) {
+		return playersAdvancements.stream().anyMatch(adv -> adv.owns(player));
+	}
+	
+	public QuestsAdvancement generateDataAbout(Player player) {
+		if(hasDataAbout(player))
+			return getPlayerData(player);
+		Set<QuestState> states = new HashSet<>();
+		for(Quest quest : quests) {
+			int step = main.getDataBase().getStepInQuest(player, quest);
+			if(step > -1) {
+				if(step >= quest.getHowManySteps()) {
+					states.add(new QuestState(quest.getID(), step, 0, QuestStatus.FINISHED));
+					continue;
+				}
+				int data = main.getDataBase().getDataInQuest(player, quest);
+				states.add(new QuestState(quest.getID(), step, data));
+				continue;
+			}
+			states.add(new QuestState(quest.getID(), -1, 0, QuestStatus.NOT_STARTED));
+		}
+		QuestsAdvancement adv = new QuestsAdvancement(player.getUniqueId(), states);
+		playersAdvancements.add(adv);
+		return adv;
 	}
 	
 	public Set<Quest> getAllQuests() {
@@ -60,11 +96,16 @@ public class QuestManager {
 		}
 	}
 	
-	public Quest createQuest(String idName) {
+	public Quest createQuest(String idName, RpgNpc npc) {
 		if(getQuestById(idName) != null)
 			return null;
-		Quest quest = new Quest(path, idName, main, npcs, mobs, donjons);
+		Quest quest = new Quest(path, npc, idName, main, npcs, mobs, donjons);
 		quests.add(quest);
+		
+		for(QuestsAdvancement adv : playersAdvancements) {
+			adv.questAdded(new QuestState(quest.getID(), 0, 0, QuestStatus.NOT_STARTED));
+		}
+		
 		return quest;
 	}
 	
@@ -83,6 +124,11 @@ public class QuestManager {
 				break;
 			}
 		}
+		
+		for(QuestsAdvancement adv : playersAdvancements) {
+			adv.questRemoved(quest.getID());
+		}
+		
 		quest.deleteData();
 		quests.remove(quest);
 	}
@@ -92,7 +138,7 @@ public class QuestManager {
 		try {
 			Files.walk(Paths.get(path)).filter(Files::isRegularFile).forEach(f -> {
 				String name = FilenameUtils.removeExtension(f.toFile().getName());
-				quests.add(new Quest(path, name, main, npcs, mobs, donjons));
+				quests.add(new Quest(path, null, name, main, npcs, mobs, donjons));
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -129,6 +175,14 @@ public class QuestManager {
 					
 				}
 			}
+		}
+	}
+
+	public QuestsAdvancement getPlayerData(Player player) {
+		try {
+			return playersAdvancements.stream().filter(pl -> pl.owns(player)).findAny().get();
+		} catch ( NoSuchElementException e) {
+			return generateDataAbout(player);
 		}
 	}
 }

@@ -2,7 +2,6 @@ package fr.jamailun.halystia.sql.temporary;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,7 +9,6 @@ import org.bukkit.entity.Player;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.quests.Quest;
-import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.royaumes.Royaume;
 import fr.jamailun.halystia.titles.Title;
 
@@ -24,6 +22,9 @@ public interface DataHandler {
 	
 	public boolean changePlayerClasse(Player player, Classe classe);
 
+	/**
+	 * @deprecated because it's better to use {@link #saveAll(Collection<PlayerData>)} : consume less memory.
+	 */
 	@Deprecated
 	public boolean updateXp(Player player, int exp);
 	
@@ -52,15 +53,15 @@ public interface DataHandler {
 	public boolean looseSoul(Player p);
 	
 	// QUETES
-	public Set<Quest> getAllQuests(Player p);
+	//public Set<Quest> getAllQuests(Player p);
 	
 	public int getStepInQuest(Player p, Quest quest);
 	public int getDataInQuest(Player p, Quest quest);
-	public void updateStepInQuest(Player p, Quest quest, int step);
-	public void updateDataInQuest(Player p, Quest quest, int data);
+	//public void updateStepInQuest(Player p, Quest quest, int step);
+	//public void updateDataInQuest(Player p, Quest quest, int data);
 	
-	public Set<Quest> getOnGoingQuests(Player p);
-	public Set<QuestStep> getOnGoingQuestSteps(Player p);
+	//public Set<Quest> getOnGoingQuests(Player p);
+	//public Set<QuestStep> getOnGoingQuestSteps(Player p);
 	
 	public boolean playerHasTag(Player p, String tag);
 	public void addTagToPlayer(Player p, String tag);

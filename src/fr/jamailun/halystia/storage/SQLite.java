@@ -244,7 +244,7 @@ public class SQLite extends Database implements DataHandler {
 		return false;
 	}
 
-	@Override
+	//@Override
 	public Set<Quest> getAllQuests(Player p) {
 		
 		for(Quest quest : HalystiaRPG.getInstance().getQuestManager().getAllQuests()) {
@@ -271,25 +271,25 @@ public class SQLite extends Database implements DataHandler {
 		return 0;
 	}
 
-	@Override
+	//@Override
 	public void updateStepInQuest(Player p, Quest quest, int step) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	//@Override
 	public void updateDataInQuest(Player p, Quest quest, int data) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+//	@Override
 	public Set<Quest> getOnGoingQuests(Player p) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	//@Override
 	public Set<QuestStep> getOnGoingQuestSteps(Player p) {
 		// TODO Auto-generated method stub
 		return null;
