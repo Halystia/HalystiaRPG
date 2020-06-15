@@ -56,6 +56,8 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 	private List<String> dialog;
 	private NpcMode mode;
 	
+	private ExclamationManagement exclamations;
+	
 	public CitizenNpc2(String path, String id, Location shouldSpawn) {
 		super(path, id);
 		this.id = id;
@@ -70,6 +72,12 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 		} else {
 			npc = CitizensAPI.getNPCRegistry().getById(citizenId);
 		}
+		
+		exclamations = new ExclamationManagement(this);
+	}
+	
+	public ExclamationManagement getExclamation() {
+		return exclamations;
 	}
 	
 	public void updateNpc(NPC npc) {

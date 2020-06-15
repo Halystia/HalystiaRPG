@@ -21,25 +21,37 @@ public class ClasseManager {
 	private Map<UUID, PlayerData> data;
 	
 	private final DataHandler bdd;
+	private final HalystiaRPG main;
 	
 	public ClasseManager(HalystiaRPG main, DataHandler bdd) {
 		this.bdd = bdd;
+		this.main = main;
 		data = new TreeMap<>();
 		
 		startRunnable(main);
 	}
 	
 	private final static int saveFrequence = 120;
-	private int saveCounter = 0;
+	private final static int refreshExclamationFrequence = 30;
+	private int saveCounter = 0, exclCounter = 0;
 	private void startRunnable(HalystiaRPG main) {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				data.values().forEach(PlayerData::refillMana);
 				saveCounter++;
+				exclCounter++;
 				if(saveCounter >= saveFrequence) {
 					saveCounter = 0;
 					data.values().forEach(d -> d.tryImproveKarma());
+					saveData(true);
+				}
+				if(exclCounter >= refreshExclamationFrequence) {
+					exclCounter = 0;
+					for(PlayerData pd : data.values()) {
+						if(pd.isPlayerValid())
+							main.getNpcManager().refreshExclamations(pd.getPlayer());
+					}
 					saveData(true);
 				}
 			}
@@ -64,6 +76,11 @@ public class ClasseManager {
 		}
 		PlayerData playerData = bdd.getPlayerData(player);
 		data.put(uuid, playerData);
+		new BukkitRunnable() {
+			public void run() {
+				main.getNpcManager().refreshExclamations(player);
+			}
+		}.runTaskLater(main, 80L);
 	}
 	
 	/**

@@ -18,12 +18,19 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.mcmonkey.sentinel.SentinelTrait;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.npcs.ExclamationManagement.ExclamationType;
+import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.QuestManager;
+import fr.jamailun.halystia.quests.players.QuestsAdvancement;
+import fr.jamailun.halystia.quests.steps.QuestStep;
+import fr.jamailun.halystia.quests.steps.QuestStepBring;
+import fr.jamailun.halystia.quests.steps.QuestStepSpeak;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.SpawnReason;
 import net.citizensnpcs.api.npc.NPC;
@@ -103,6 +110,61 @@ public final class NpcManager {
 		}
 	}
 
+	public void refreshExclamations(Player player) {
+		int llevel = 0;
+		try {
+			llevel = main.getClasseManager().getPlayerData(player).getLevel();
+		} catch(Exception e) {
+			return;
+		}
+		final int level = llevel;
+		QuestsAdvancement adv = main.getQuestManager().getPlayerData(player);
+		allnpcs: for(RpgNpc npc : npcs) {
+			try {
+				if(player.getLocation().distance(npc.getLocation()) > 60)
+					continue;
+			} catch (Exception e) {
+				continue;
+			}
+			if( ! (npc instanceof CitizenNpc2))
+				continue;
+			ExclamationManagement excl = ((CitizenNpc2)npc).getExclamation();
+			// déjà, étapes où il doit faire un rapport
+			for(QuestStep step : adv.getOnGoingQuestSteps()) {
+				//System.out.println("quest ("+step.getQuest().getID()+" : step n°"+step.getStep()+" type : " + step.getType()+".");
+				if(step instanceof QuestStepBring) {
+					QuestStepBring realStep = (QuestStepBring) step;
+					if(realStep.getTarget().equals(npc)) {
+						excl.changeState(player, ExclamationType.QUEST_REPORT);
+						continue allnpcs;
+					}
+				}
+				if(step instanceof QuestStepSpeak) {
+					QuestStepSpeak realStep = (QuestStepSpeak) step;
+				//	System.out.println("target="+realStep.getTarget()+", ici npc="+npc);
+					if(realStep.getTarget().equals(npc)) {
+						excl.changeState(player, ExclamationType.QUEST_REPORT);
+						continue allnpcs;
+					}
+				}
+			}
+			
+			//Ensuite, si le npc commence une quete
+			Set<Quest> starting = main.getQuestManager().getQuestsStartedByNPC(npc);
+			starting.removeIf(q -> adv.knows(q));
+			if(starting.isEmpty()) {
+				excl.changeState(player, ExclamationType.NONE);
+				continue;
+			}
+			starting.removeIf(q -> q.getLevel() > level);
+			if(starting.isEmpty()) {
+				excl.changeState(player, ExclamationType.NOT_LEVEL);
+				continue;
+			}
+			excl.changeState(player, ExclamationType.QUEST_POSSIBLE);
+		}
+	}
+	
 	public Set<String> getAllConfigIds() {
 		return npcs.stream().map(npc -> npc.getConfigId()).collect(Collectors.toSet());
 	}
@@ -185,5 +247,13 @@ public final class NpcManager {
 				
 			}
 		}.runTaskTimer(main, 10*20L, 10*20L);
+	}
+
+	public void purgeExclamations() {
+		npcs.stream().filter(r -> r instanceof CitizenNpc2).map(r -> (CitizenNpc2)r).forEach(n -> n.getExclamation().purge());
+	}
+
+	public void purgeExclamations(Player player) {
+		npcs.stream().filter(r -> r instanceof CitizenNpc2).map(r -> (CitizenNpc2)r).forEach(n -> n.getExclamation().purge(player));
 	}
 }

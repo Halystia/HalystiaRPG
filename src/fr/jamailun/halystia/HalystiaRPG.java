@@ -53,8 +53,8 @@ import net.citizensnpcs.api.trait.TraitInfo;
  * <br />Get the instance with the static {@link #getInstance()} method.
  * <br />Never construct an other.
  * @author jamailun
- * @see #getSpellManager() #getSpellManager() to modify the spells
- * @see #getClasseManager() #getClasseManager() to get the players data
+ * @see {@link #getSpellManager()} to modify the spells
+ * @see {@link #getClasseManager()} to get the players data
  */
 public final class HalystiaRPG extends JavaPlugin {
 	
@@ -195,7 +195,8 @@ public final class HalystiaRPG extends JavaPlugin {
 				}
 			}
 		} catch (NullPointerException ee) {
-			Bukkit.getLogger().warning("Error during online players initialisation.");
+			Bukkit.getLogger().warning("MAIN > Error during online players initialisation.");
+			ee.printStackTrace();
 		}
 		
 		// CLOCKS FUNCTIONS
@@ -221,6 +222,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		superMobMgr.purge();
 		donjonsMgr.getBossManager().purge();
 		cache.applyCache();
+		npcMgr.purgeExclamations();
 		console.sendMessage(PREFIX + ChatColor.GREEN + "Désactivation terminée en " + (System.currentTimeMillis() - debut) + "ms.");
 	}
 	

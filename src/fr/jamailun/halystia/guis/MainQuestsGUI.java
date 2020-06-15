@@ -39,6 +39,7 @@ public class MainQuestsGUI extends MenuGUI {
 		
 		final QuestsAdvancement playerAdv = HalystiaRPG.getInstance().getQuestManager().getPlayerData(p);
 		final Set<Quest> quests = playerAdv.getAllQuests();
+		final int qtsSize = quests.size();
 		final Set<QuestStep> steps = playerAdv.getOnGoingQuestSteps();
 		
 		ItemStack mur = new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName(" ").toItemStack();
@@ -96,7 +97,6 @@ public class MainQuestsGUI extends MenuGUI {
 			addOption(builder.toItemStack(), slot);
 			slot ++;
 		}
-		
 		for(Quest quest : onGoing)
 			quests.remove(quest);
 		
@@ -109,7 +109,7 @@ public class MainQuestsGUI extends MenuGUI {
 			slot++;
 		}
 		
-		int completed = HalystiaRPG.getInstance().getQuestManager().getPlayerData(p).getAllQuests().size() - steps.size();
+		int completed = qtsSize - steps.size();
 		
 		addOption(new ItemBuilder(Material.BOOKSHELF).setName(BLUE+"Vous avez complété : " + completed + " quête" + (completed >1?"s":"")).toItemStack(), getSize()-2);
 		addOption(new ItemBuilder(Material.ARROW).setName(BLUE+"Retour").toItemStack(), getSize()-1);

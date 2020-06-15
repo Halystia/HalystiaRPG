@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
@@ -66,14 +67,14 @@ public class QuestManager {
 			int step = main.getDataBase().getStepInQuest(player, quest);
 			if(step > -1) {
 				if(step >= quest.getHowManySteps()) {
-					states.add(new QuestState(quest.getID(), step, 0, QuestStatus.FINISHED));
+					states.add(new QuestState(quest, step, 0, QuestStatus.FINISHED));
 					continue;
 				}
 				int data = main.getDataBase().getDataInQuest(player, quest);
-				states.add(new QuestState(quest.getID(), step, data));
+				states.add(new QuestState(quest, step, data, QuestStatus.STARTED));
 				continue;
 			}
-			states.add(new QuestState(quest.getID(), -1, 0, QuestStatus.NOT_STARTED));
+			states.add(new QuestState(quest, -1, 0, QuestStatus.NOT_STARTED));
 		}
 		QuestsAdvancement adv = new QuestsAdvancement(player.getUniqueId(), states);
 		playersAdvancements.add(adv);
@@ -103,10 +104,14 @@ public class QuestManager {
 		quests.add(quest);
 		
 		for(QuestsAdvancement adv : playersAdvancements) {
-			adv.questAdded(new QuestState(quest.getID(), 0, 0, QuestStatus.NOT_STARTED));
+			adv.questAdded(new QuestState(quest, 0, 0, QuestStatus.NOT_STARTED));
 		}
 		
 		return quest;
+	}
+	
+	public Set<Quest> getQuestsStartedByNPC(RpgNpc npc) {
+		return quests.stream().filter(q -> q.getNPCId().equals(npc.getConfigId())).collect(Collectors.toSet());
 	}
 	
 	public void removeQuest(Quest quest) {
@@ -182,6 +187,7 @@ public class QuestManager {
 		try {
 			return playersAdvancements.stream().filter(pl -> pl.owns(player)).findAny().get();
 		} catch ( NoSuchElementException e) {
+			Bukkit.broadcastMessage("§4§lrien trouvé : on regénère.");
 			return generateDataAbout(player);
 		}
 	}

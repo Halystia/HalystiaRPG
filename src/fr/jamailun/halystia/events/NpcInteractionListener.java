@@ -5,6 +5,7 @@ import static org.bukkit.ChatColor.RED;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -25,6 +26,8 @@ import fr.jamailun.halystia.npcs.traits.BanquierTrait;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.quests.Quest;
+import fr.jamailun.halystia.quests.players.QuestState.QuestStatus;
+import fr.jamailun.halystia.quests.players.QuestsAdvancement;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.quests.steps.QuestStepBring;
 import fr.jamailun.halystia.quests.steps.QuestStepSpeak;
@@ -33,8 +36,8 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 
 public class NpcInteractionListener extends HalystiaListener {
 
-	private List<Player> actives;
-	private List<UUID> activesNPCS;
+	private final List<Player> actives;
+	private final List<UUID> activesNPCS;
 	
 	public NpcInteractionListener(HalystiaRPG main) {
 		super(main);
@@ -57,9 +60,6 @@ public class NpcInteractionListener extends HalystiaListener {
 			}
 		}.runTaskLater(main, 25L);
 		
-		
-		
-		
 		RpgNpc npc = main.getNpcManager().getNpc(e.getNPC());
 		if(npc == null) {
 			if(p.isOp())
@@ -72,8 +72,10 @@ public class NpcInteractionListener extends HalystiaListener {
 			return;
 		}
 		
+		QuestsAdvancement playerAdv = main.getQuestManager().getPlayerData(p);
+		
 		//1 : valider le step !
-		for(QuestStep step : main.getQuestManager().getPlayerData(p).getOnGoingQuestSteps()) {
+		for(QuestStep step : playerAdv.getOnGoingQuestSteps()) {
 			if(step instanceof QuestStepSpeak) {
 				QuestStepSpeak realStep = (QuestStepSpeak) step;
 				if(realStep.getTarget().equals(npc)) {
@@ -108,16 +110,19 @@ public class NpcInteractionListener extends HalystiaListener {
 
 	//	System.out.println("no validation");
 		
+		Set<Quest> startingQuests = main.getQuestManager().getQuestsStartedByNPC(npc);
+		startingQuests.removeIf(q -> playerAdv.knows(q));
 		//2 : si aucune quête ne part du NPC, on peut faire le dialogue normal.
-		if( ! npc.hasQuest() ) {
+		if( startingQuests.isEmpty() ) {
 			npc.speak(p);
 			npc.free(p);
+	//		System.out.println("empty");
 			return;
 		}
 		
 	//	System.out.println(" quete");
 		
-		Quest quest = main.getQuestManager().getQuestById(npc.getQuestName());
+		Quest quest = startingQuests.iterator().next();
 		if(quest == null) {
 			main.getConsole().sendMessage(RED + "Erreur ! La quête débutée par ce NPC est nulle ! (npc="+npc.getConfigId()+").");
 			npc.speak(p);
@@ -127,7 +132,7 @@ public class NpcInteractionListener extends HalystiaListener {
 		
 	//	System.out.println("quest="+quest.getID());
 		
-		if( ! quest.isvalid()) {
+		if( ! quest.isValid()) {
 			npc.speak(p);
 			npc.free(p);
 			return;
@@ -138,8 +143,8 @@ public class NpcInteractionListener extends HalystiaListener {
 			npc.free(p);
 			return;
 		}
-		// 3 : Quête non terminée : mais toujours truc
-		if(main.getQuestManager().getPlayerData(p).getOnGoingQuests().contains(quest)) {
+		// 3 : Quête non terminée : mais toujours en cours
+		if(playerAdv.getState(quest) == QuestStatus.STARTED) {
 			npc.speak(p);
 			npc.free(p);
 			return;

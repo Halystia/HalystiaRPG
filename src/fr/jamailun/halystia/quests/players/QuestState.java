@@ -1,32 +1,22 @@
 package fr.jamailun.halystia.quests.players;
 
+import fr.jamailun.halystia.quests.Quest;
+
 public class QuestState {
 	
-	private final String questID;
+	private final Quest quest;
 	private int step, data;
 	private QuestStatus status;
 	
-	public QuestState(String questID) {
-		this(questID, 0);
-	}
-	
-	public QuestState(String questID, int step) {
-		this(questID, step, 0);
-	}
-	
-	public QuestState(String questID, int step, int data) {
-		this(questID, step, data, QuestStatus.STARTED);
-	}
-	
-	public QuestState(String questID, int step, int data, QuestStatus status) {
-		this.questID = questID;
+	public QuestState(Quest quest, int step, int data, QuestStatus status) {
+		this.quest = quest;
 		this.step = step;
 		this.data = data;
 		this.status = status;
 	}
 
-	public String getQuestID() {
-		return questID;
+	public Quest getQuest() {
+		return quest;
 	}
 
 	public int getStep() {
@@ -35,6 +25,10 @@ public class QuestState {
 
 	public int getData() {
 		return data;
+	}
+	
+	public QuestStatus getState() {
+		return status;
 	}
 
 	public boolean isFinished() {
@@ -50,9 +44,15 @@ public class QuestState {
 	}
 	
 	public void finish() {
-		if(status == QuestStatus.NOT_STARTED)
+		if(status != QuestStatus.STARTED)
 			return;
 		status = QuestStatus.FINISHED;
+	}
+	
+	public void start() {
+		if(status != QuestStatus.NOT_STARTED)
+			return;
+		status = QuestStatus.STARTED;
 	}
 	
 	public void updateStep(int step) {

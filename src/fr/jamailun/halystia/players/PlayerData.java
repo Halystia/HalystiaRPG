@@ -40,8 +40,10 @@ public class PlayerData {
 	private Player player; // Assossiated player. (tampon)
 	private SkillSet skills; // même chose que pour exp,level,karma.
 	private boolean playerValid; // If the player is valid. (tampon)
-	private double maxMana; // Calculated at every levelup.
+	//private double maxMana; // Calculated at every levelup.
 	private double mana, manaToRefill; // Mobile values
+	
+	private Statistics stats;
 	
 	/**
 	 * Create a PlayerData object when a {@link org.bukkit.entity.Player Player} connects to the game.
@@ -58,7 +60,12 @@ public class PlayerData {
 		
 		level = -1;
 		playerValid = true;
+		
 		calculateLevel();
+
+		stats = new Statistics(level, player);
+		
+		fullMana();
 	}
 	
 	/**
@@ -76,8 +83,8 @@ public class PlayerData {
 		this.level = (int) level;
 		//Si le joueur est connecté et que le niveau a changé : on calcule !
 		if(different && playerValid) {
-			updateMaxHealth();
-			updateMaxMana();
+			if(stats != null)
+				stats.recalculateLevel(this.level);
 		}
 		return different;
 	}
@@ -89,6 +96,8 @@ public class PlayerData {
 		return (int) xp;
 	}
 	
+	@SuppressWarnings("unused")
+	@Deprecated
 	private void updateMaxHealth() {
 		if(level == 0) {
 			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
@@ -98,16 +107,16 @@ public class PlayerData {
 		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20 + (bonus * 2));
 	}
 	
-	private void updateMaxMana() {
-		maxMana = level * 3;
-		mana = maxMana;
-	}
-	
 	/**
 	 * @return current {@link fr.jamailun.halystia.players.Classe Classe} of the player.
 	 */
 	public Classe getClasse() {
 		return classe;
+	}
+	
+	public void playerEquipItem() {
+		stats.recalculateLevel(level);
+		stats.calculateArmor(player);
 	}
 	
 	public SkillSet getSkillSetInstance() {
@@ -155,7 +164,7 @@ public class PlayerData {
 	 * @return true if it's possible, false if mana is full.
 	 */
 	public boolean addManaRegen(int mana) {
-		if(this.mana >= maxMana)
+		if(this.mana >= stats.getMaxMana())
 			return false;
 		manaToRefill += mana;
 		return true;
@@ -174,6 +183,7 @@ public class PlayerData {
 		if( calculateLevel() ) {
 			player.sendMessage(HalystiaRPG.PREFIX + LIGHT_PURPLE + "Félicitation ! " + GREEN + "Tu passes niveau " + DARK_GREEN + "" + BOLD + level + GREEN + " !");
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2f, 1.1f);
+			HalystiaRPG.getInstance().getNpcManager().refreshExclamations(player);
 		}
 	}
 	
@@ -191,6 +201,7 @@ public class PlayerData {
 		calculateLevel();
 		player.sendMessage(HalystiaRPG.PREFIX + RED + "Attention ! " + GRAY + "Un opérateur a forcé ton exp à : " + exp + ".");
 		player.sendMessage(HalystiaRPG.PREFIX + GRAY + "Tu passes niveau " + LIGHT_PURPLE + level + GRAY + ".");
+		HalystiaRPG.getInstance().getNpcManager().refreshExclamations(player);
 	}
 	
 	/**
@@ -250,8 +261,8 @@ public class PlayerData {
 			manaToRefill -= MANA_REFILL_PER_SECOND;
 		}
 		this.mana += mana;
-		if(this.mana > maxMana) {
-			this.mana = maxMana;
+		if(this.mana > stats.getMaxMana()) {
+			this.mana = stats.getMaxMana();
 			manaToRefill = 0;
 		}
 	}
@@ -290,7 +301,7 @@ public class PlayerData {
 	}
 	
 	public int getManaProgress() {
-		double prog = mana / maxMana;
+		double prog = mana / stats.getMaxMana();
 		if(prog < 0)
 			prog = 0;
 		if(prog > 1)
@@ -299,7 +310,7 @@ public class PlayerData {
 	}
 	
 	public BarColor getManaBarColor() {
-		double prog = mana / maxMana;
+		double prog = mana / stats.getMaxMana();
 		if(prog < 0.1)
 			return BarColor.RED;
 		if(prog <= 0.5)
@@ -308,7 +319,7 @@ public class PlayerData {
 	}
 	
 	public String getManaString() {
-		return ChatColor.DARK_AQUA+""+ChatColor.BOLD+"Mana : " + ChatColor.AQUA + (int)mana + "/" + (int)maxMana
+		return ChatColor.DARK_AQUA+""+ChatColor.BOLD+"Mana : " + ChatColor.AQUA + (int)mana + "/" + (int)stats.getMaxMana()
 				+ ((manaToRefill > 0) ? ChatColor.LIGHT_PURPLE + "   (+"+(int)manaToRefill+")" : "");
 	}
 	
@@ -390,6 +401,7 @@ public class PlayerData {
 	
 	void disconnect() {
 		playerValid = false;
+		HalystiaRPG.getInstance().getNpcManager().purgeExclamations(player);
 	}
 	
 	public boolean isPlayerValid() {
@@ -397,6 +409,6 @@ public class PlayerData {
 	}
 
 	public void fullMana() {
-		mana = maxMana;
+		mana = stats.getMaxMana();
 	}
 }

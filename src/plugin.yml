@@ -1,5 +1,5 @@
 name: HalystiaRPG
-version: 4.5.3
+version: 5.0
 main: fr.jamailun.halystia.HalystiaRPG
 authors: [jamailun]
 depend: [Citizens, Sentinel]

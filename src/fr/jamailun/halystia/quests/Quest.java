@@ -24,6 +24,7 @@ import fr.jamailun.halystia.donjons.DonjonManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
+import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.quests.steps.QuestStepBring;
 import fr.jamailun.halystia.quests.steps.QuestStepDonjon;
@@ -256,7 +257,7 @@ public class Quest extends FileDataRPG {
 		return id;
 	}
 	
-	public boolean isvalid() {
+	public boolean isValid() {
 		return valid;
 	}
 	
@@ -298,6 +299,7 @@ public class Quest extends FileDataRPG {
 	}
 
 	public void stepOver(Player p, int step) {
+		HalystiaRPG.getInstance().getNpcManager().refreshExclamations(p);
 		main.getQuestManager().getPlayerData(p).updateStepInQuest(this, step+1);
 		if(step >= getHowManySteps() - 1)
 			completed(p);
@@ -348,17 +350,18 @@ public class Quest extends FileDataRPG {
 	}
 
 	public boolean playerHasLevel(Player p) {
-		if(main.getClasseManager().getPlayerData(p) == null) {
+		PlayerData pc = main.getClasseManager().getPlayerData(p);
+		if(pc == null) {
 			System.err.println("ERREUR POUR LA CLASSE");
 			return false;
 		}
-		if(main.getQuestManager().getPlayerData(p).getAllQuests().contains(this))
+		if(main.getQuestManager().getPlayerData(p).knows(this))
 			return false;
 		if(level < 0)
 			return false;
 		if(level == 0)
 			return true;
-		return main.getClasseManager().getPlayerData(p).getLevel() >= level;
+		return pc.getLevel() >= level;
 	}
 	
 	public void saveIntro() {
@@ -514,6 +517,8 @@ public class Quest extends FileDataRPG {
 				}
 				QuestStep step = null;
 				int j = passed ? i+1 : i;
+				if(j >= tab.length)
+					break;
 				QuestStep old = steps[j];
 				ConfigurationSection section = config.createSection("steps."+j);
 				switch(old.getType()) {

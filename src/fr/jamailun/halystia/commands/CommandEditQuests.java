@@ -105,13 +105,13 @@ public class CommandEditQuests extends HalystiaCommand {
 				p.sendMessage(ChatColor.RED + "Le NPC (" + args[2] + ") n'existe pas !");
 				return true;
 			}
-			if(npc.hasQuest()) {
-				p.sendMessage(ChatColor.RED + "Le NPC (" + args[2] + ") lance déjà une quête !");
-				return true;
-			}
+			//if(npc.hasQuest()) {
+			//	p.sendMessage(ChatColor.RED + "Le NPC (" + args[2] + ") lance déjà une quête !");
+			//	return true;
+			//}
 			Quest quest = quests.createQuest(args[1], npc);
 			if ( quest != null ) {
-				npc.changeQuest(quest);
+				//npc.changeQuest(quest);
 				p.sendMessage(ChatColor.GREEN + "La quête ["+args[1]+"] a été créé avec succès !");
 			} else {
 				p.sendMessage(ChatColor.RED + "La quête ["+args[1]+"] existe déjà !");
