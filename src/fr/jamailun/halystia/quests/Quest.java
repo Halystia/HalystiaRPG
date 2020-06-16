@@ -299,12 +299,12 @@ public class Quest extends FileDataRPG {
 	}
 
 	public void stepOver(Player p, int step) {
-		HalystiaRPG.getInstance().getNpcManager().refreshExclamations(p);
 		main.getQuestManager().getPlayerData(p).updateStepInQuest(this, step+1);
 		if(step >= getHowManySteps() - 1)
 			completed(p);
 		else
 			p.sendMessage(steps[step+1].getObjectiveDescription());
+		HalystiaRPG.getInstance().getNpcManager().refreshExclamations(p);
 	}
 	
 	public void completed(Player p) {
