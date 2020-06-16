@@ -43,7 +43,7 @@ public class MainQuestsGUI extends MenuGUI {
 		final Set<QuestStep> steps = playerAdv.getOnGoingQuestSteps();
 		
 		ItemStack mur = new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName(" ").toItemStack();
-		for(int i = 1; i <= 9*6 - 1; i++)
+		for(int i = 0; i <= 9*6 - 1; i++)
 			addOption(mur, i);
 		
 		if(steps.size() == 0) {
