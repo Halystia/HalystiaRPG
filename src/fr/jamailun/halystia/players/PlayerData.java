@@ -11,13 +11,20 @@ import static org.bukkit.ChatColor.RED;
 
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.EntityEffect;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.DamageReason;
+import fr.jamailun.halystia.events.EntityDamageOtherListener;
 import fr.jamailun.halystia.utils.PlayerUtils;
 
 /**
@@ -42,7 +49,7 @@ public class PlayerData {
 	private boolean playerValid; // If the player is valid. (tampon)
 	//private double maxMana; // Calculated at every levelup.
 	private double mana, manaToRefill; // Mobile values
-	
+	private double health;
 	private Statistics stats;
 	
 	/**
@@ -66,8 +73,8 @@ public class PlayerData {
 		stats = new Statistics(level, player);
 		
 		fullMana();
+		fullHealth();
 	}
-	
 	/**
 	 * Recalculte level of Player. Carefull : costs RAM.
 	 * <br /> Calculate manaMax and healthMax if the level change.
@@ -85,6 +92,7 @@ public class PlayerData {
 		if(different && playerValid) {
 			if(stats != null)
 				stats.recalculateLevel(this.level);
+			fullMana();
 		}
 		return different;
 	}
@@ -96,17 +104,6 @@ public class PlayerData {
 		return (int) xp;
 	}
 	
-	@SuppressWarnings("unused")
-	@Deprecated
-	private void updateMaxHealth() {
-		if(level == 0) {
-			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
-			return;
-		}
-		int bonus = (int) (((double)level) / 10.0);
-		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20 + (bonus * 2));
-	}
-	
 	/**
 	 * @return current {@link fr.jamailun.halystia.players.Classe Classe} of the player.
 	 */
@@ -114,9 +111,8 @@ public class PlayerData {
 		return classe;
 	}
 	
-	public void playerEquipItem() {
-		stats.recalculateLevel(level);
-		stats.calculateArmor(player);
+	public void playerEquipItem(EquipmentSlot slot, ItemStack item) {
+		stats.changeEquipment(slot, item);
 	}
 	
 	public SkillSet getSkillSetInstance() {
@@ -184,6 +180,7 @@ public class PlayerData {
 			player.sendMessage(HalystiaRPG.PREFIX + LIGHT_PURPLE + "Félicitation ! " + GREEN + "Tu passes niveau " + DARK_GREEN + "" + BOLD + level + GREEN + " !");
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2f, 1.1f);
 			HalystiaRPG.getInstance().getNpcManager().refreshExclamations(player);
+			stats.recalculateLevel(level);
 		}
 	}
 	
@@ -202,6 +199,9 @@ public class PlayerData {
 		player.sendMessage(HalystiaRPG.PREFIX + RED + "Attention ! " + GRAY + "Un opérateur a forcé ton exp à : " + exp + ".");
 		player.sendMessage(HalystiaRPG.PREFIX + GRAY + "Tu passes niveau " + LIGHT_PURPLE + level + GRAY + ".");
 		HalystiaRPG.getInstance().getNpcManager().refreshExclamations(player);
+		stats.recalculateLevel(level);
+		fullHealth();
+		fullMana();
 	}
 	
 	/**
@@ -265,6 +265,80 @@ public class PlayerData {
 			this.mana = stats.getMaxMana();
 			manaToRefill = 0;
 		}
+	}
+	
+	public double getHealthPercent() {
+		return Math.min(20, Math.max(0, health / stats.getMaxHealth()));
+	}
+	
+	public void heal(double heal) {
+		health += heal;
+
+		player.sendMessage("vie = "+health+", heal="+heal+".");
+		
+		if(health > stats.getMaxHealth())
+			health = stats.getMaxHealth();
+		updateHealthBar();
+	}
+	
+	public boolean damage(double damage, UUID damager, DamageReason reason) {
+		return damage(damage, damager, reason, false);
+	}
+	
+	public boolean damage(double damage, UUID damager, DamageReason reason, boolean ignoreArmor) {
+		
+		double realDamages = ignoreArmor ? damage : Math.max(1, damage - stats.getArmor());
+		if(realDamages <= 1 && damage > 1) {
+			//TODO petit effet ? ou déjà le fait de pas animer les dégats suffisent ?
+			return false;
+		}
+		player.sendMessage("§avie = "+health+", armor="+stats.getArmor()+", §edmgs bruts="+damage+", §cdmgs finaux="+realDamages);
+		health -= realDamages;
+		player.playEffect(EntityEffect.HURT);
+		player.setNoDamageTicks(10);
+		if(health <= 0) {
+			health = 0;
+			if(damager != null) {
+				Entity killer = Bukkit.getEntity(damager);
+				if(killer == null) {
+					System.err.println("erreur : killer null (PlayerData#damage)");
+					reason = DamageReason.NONE;
+				}
+				switch(reason) {
+					case NONE:
+					case FIRE:
+					case POISON:
+						EntityDamageOtherListener.alertDeathPlayer(player, null);
+						break;
+					case PLAYER:
+						EntityDamageOtherListener.alertDeathPlayer(player, killer.getName());
+						break;
+					case SUPERMOB:
+					case SENTINEL:
+					case INVOCATION:
+					case MOB:
+						EntityDamageOtherListener.alertDeathPlayer(player, "un " + killer.getCustomName());
+						break;
+					case BOSS:
+						EntityDamageOtherListener.alertDeathPlayer(player, "le " + killer.getCustomName());
+						break;
+				}
+			}
+		}
+		updateHealthBar(); 
+		return health <= 0;
+	}
+	
+	public void updateHealthBar() {
+		if(!isPlayerValid())
+			return;
+		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
+		System.out.println("H="+health+", MX="+stats.getMaxHealth()+", DONC =>  "+getHealthPercent()+"%");
+		player.setHealth(20 * getHealthPercent());
+	}
+	
+	public double getHealth() {
+		return health;
 	}
 	
 	/**
@@ -374,11 +448,11 @@ public class PlayerData {
 			new PlayerUtils(player).sendActionBar(ChatColor.DARK_RED + "Vous venez de perdre " + ChatColor.BOLD + (-delta) + ChatColor.DARK_RED + " point"+(delta<-1?"s":"")+" de karma. Total : " + karma+".");
 		
 		if(old < -300 && karma >= -300) {
-			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Votre karma a dépassé les -300 points. Vous êtes un "+ChatColor.YELLOW+"BIENFAITEUR"+ChatColor.GRAY+".");
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.GRAY + "Votre karma a dépassé les -300 points. Vous êtes un "+ChatColor.YELLOW+"NEUTRE"+ChatColor.GRAY+".");
 			return;
 		}
 		if(old <= 300 && karma > 300) {
-			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "Votre karma a dépassé les 300 points. Vous êtes "+ChatColor.DARK_GREEN+"NEUTRE"+ChatColor.GREEN+".");
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "Votre karma a dépassé les 300 points. Vous êtes "+ChatColor.DARK_GREEN+"BIENFAITEUR"+ChatColor.GREEN+".");
 			return;
 		}
 		if(old >= 300 && karma < 300) {
@@ -411,4 +485,16 @@ public class PlayerData {
 	public void fullMana() {
 		mana = stats.getMaxMana();
 	}
+
+	private void fullHealth() {
+		this.health = stats.getMaxHealth();
+	}
+	public double getDamages() {
+		return stats.getDamages();
+	}
+	public void respawned() {
+		fullHealth();
+		fullMana();
+	}
+
 }
