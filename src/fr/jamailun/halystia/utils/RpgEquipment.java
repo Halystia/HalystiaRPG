@@ -11,12 +11,12 @@ import fr.jamailun.halystia.HalystiaRPG;
 
 public class RpgEquipment {
 
-	public static final String DAMAGES_INT_BEGIN = ChatColor.DARK_RED + "Dégâts : ";
-	public static final String DAMAGES_BUFF_BEGIN = ChatColor.GOLD + "Dégâts bonus : ";
-	public static final String HEALTH_BEGIN = ChatColor.RED + "Vie bonus : ";
-	public static final String ARMOR_BEGIN = ChatColor.GREEN + "Armure : ";
-	public static final String SPEED_BEGIN = ChatColor.WHITE + "Vitesse bonus : ";
-	public static final String MANA_BEGIN = ChatColor.AQUA + "Mana bonus : ";
+	public static final String DAMAGES_INT_BEGIN = ChatColor.BLUE + "Dégâts : ";
+	public static final String DAMAGES_BUFF_BEGIN = ChatColor.BLUE + "Dégâts bonus : ";
+	public static final String HEALTH_BEGIN = ChatColor.BLUE + "Vie bonus : ";
+	public static final String ARMOR_BEGIN = ChatColor.BLUE + "Armure : ";
+	public static final String SPEED_BEGIN = ChatColor.BLUE + "Vitesse bonus : ";
+	public static final String MANA_BEGIN = ChatColor.BLUE + "Mana bonus : ";
 	
 	protected List<String> addionalLore;
 	protected int health, armor, mana, damagesInt;
@@ -35,23 +35,30 @@ public class RpgEquipment {
 	public ItemStack toItemStack() {
 		item.resetLore();
 		if(health != 0)
-			item.addLoreLine(HEALTH_BEGIN + (health > 0 ? "+ " : "- ")+Math.abs(health)+ " HP");
+			item.addLoreLine(HEALTH_BEGIN + getSymbol(health) + Math.abs(health));
 		if(armor != 0)
-			item.addLoreLine(ARMOR_BEGIN + (armor > 0 ? "+ " : "- ")+Math.abs(armor)+ " AP");
+			item.addLoreLine(ARMOR_BEGIN + getSymbol(armor) + Math.abs(armor));
 		if(mana != 0)
-			item.addLoreLine(MANA_BEGIN + (mana > 0 ? "+ " : "- ")+Math.abs(mana)+ " MP");
+			item.addLoreLine(MANA_BEGIN + getSymbol(mana) + Math.abs(mana));
 		if(speed != 0)
-			item.addLoreLine(SPEED_BEGIN + (speed > 0 ? "+ " : "- ")+Math.abs(speed)+ " %");
+			item.addLoreLine(SPEED_BEGIN + getSymbol(speed) + Math.abs(speed)+ " %");
 		if(damagesInt != 0)
-			item.addLoreLine(DAMAGES_INT_BEGIN + (damagesInt > 0 ? "+ " : "- ")+Math.abs(damagesInt)+ " DMG");
+			item.addLoreLine(DAMAGES_INT_BEGIN + getSymbol(damagesInt) + Math.abs(damagesInt));
 		if(damageBuff != 0)
-			item.addLoreLine(DAMAGES_BUFF_BEGIN + (damageBuff > 0 ? "+ " : "- ")+Math.abs(damageBuff)+ " %");
+			item.addLoreLine(DAMAGES_BUFF_BEGIN + getSymbol(damageBuff) + Math.abs(damageBuff)+ " %");
 		if( ! addionalLore.isEmpty()) {
-			item.addLoreLine(" ");
+			item.addLoreLine("");
 			addionalLore.forEach(l -> item.addLoreLine(l));
 		}
 		item.addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 		return item.toItemStack();
+	}
+	
+	private String getSymbol(double value) {
+		return value > 0 ? ChatColor.GREEN+"+ " : ChatColor.RED+"- ";
+	}
+	private String getSymbol(int value) {
+		return getSymbol((double)value);
 	}
 	
 	private void readItem() {
@@ -111,7 +118,8 @@ public class RpgEquipment {
 				}
 				continue;
 			}
-			addionalLore.add(line);
+			if( ! line.isEmpty() && ! line.equals(ChatColor.GRAY+""))
+				addionalLore.add(line);
 		}
 	}
 
