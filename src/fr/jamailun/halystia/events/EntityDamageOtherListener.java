@@ -22,7 +22,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.mcmonkey.sentinel.SentinelTrait;
@@ -40,7 +39,6 @@ import fr.jamailun.halystia.spells.newSpells.epeiste.Damocles;
 import fr.jamailun.halystia.spells.spellEntity.InvocationsManager;
 import fr.jamailun.halystia.utils.PlayerUtils;
 import net.citizensnpcs.api.CitizensAPI;
-import net.minecraft.server.v1_15_R1.EntityHuman;
 
 public class EntityDamageOtherListener extends HalystiaListener {
 
@@ -256,9 +254,27 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			return;
 		if( ! (e.getEntity() instanceof Player))
 			return;
-		if(e.getRegainReason() == RegainReason.WITHER_SPAWN || e.getRegainReason() == RegainReason.ENDER_CRYSTAL || e.getRegainReason() == RegainReason.MAGIC)
+		
+		PlayerData pc = main.getClasseManager().getPlayerData((Player)e.getEntity());
+		if(pc == null) {
+			e.setCancelled(true);
 			return;
-		main.getClasseManager().getPlayerData((Player)e.getEntity()).heal(e.getAmount() * 30);
+		}
+		switch(e.getRegainReason()) {
+			case EATING:
+			case MAGIC:
+			case MAGIC_REGEN:
+			case REGEN:
+			case SATIATED:
+				pc.heal(e.getAmount() * 30);
+				break;
+			case WITHER:
+			case ENDER_CRYSTAL:
+			case WITHER_SPAWN:
+				return;
+			case CUSTOM:
+				return;
+		}
 		e.setCancelled(true);
 	}
 	
@@ -433,9 +449,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			}
 		}
 		
-		//float force = ((EntityHuman)p).o(0);
-		//p.sendMessage("AC="+p.getAttackCooldown());
-		localModifier = p.getAttackCooldown();
+		localModifier = p.getAttackCooldown();	//TODO use EntityHuman (nms) to get current force from 0 to 1...
 		
 
 		int karma = pc.getCurrentKarma();
