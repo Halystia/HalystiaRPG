@@ -40,6 +40,7 @@ import fr.jamailun.halystia.spells.newSpells.epeiste.Damocles;
 import fr.jamailun.halystia.spells.spellEntity.InvocationsManager;
 import fr.jamailun.halystia.utils.PlayerUtils;
 import net.citizensnpcs.api.CitizensAPI;
+import net.minecraft.server.v1_15_R1.EntityHuman;
 
 public class EntityDamageOtherListener extends HalystiaListener {
 
@@ -150,7 +151,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		//DAMAGER == MOB
 		if(main.getMobManager().hasMob(e.getDamager().getEntityId())) {			
 
-			System.out.println("damager = mob");
+			//System.out.println("damager = mob");
 			
 			EnemyMob mob = main.getMobManager().getWithEntityId(e.getDamager().getEntityId());
 			damages = mob.getCustomDamages();
@@ -431,6 +432,11 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				}
 			}
 		}
+		
+		//float force = ((EntityHuman)p).o(0);
+		//p.sendMessage("AC="+p.getAttackCooldown());
+		localModifier = p.getAttackCooldown();
+		
 
 		int karma = pc.getCurrentKarma();
 		if(karma <= -300)
