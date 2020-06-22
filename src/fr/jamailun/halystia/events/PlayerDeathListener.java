@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -114,6 +115,9 @@ public class PlayerDeathListener extends HalystiaListener {
 			e.setRespawnLocation(donjon.respawn(e.getPlayer()));
 			return;
 		}
-		e.setRespawnLocation(main.getDataBase().getSpawnLocation(e.getPlayer()));
+		Location loc = main.getDataBase().getSpawnLocation(e.getPlayer());
+		if(loc != null)
+			e.setRespawnLocation(loc);
+		main.getClasseManager().getPlayerData(e.getPlayer()).respawned();
 	}	
 }

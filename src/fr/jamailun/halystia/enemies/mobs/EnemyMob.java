@@ -100,7 +100,7 @@ public class EnemyMob implements Enemy {
 		entity.getEquipment().clear();
 		entity.setCanPickupItems(false);
 		
-		if(type == EntityType.ZOMBIE || type == EntityType.SKELETON || type == EntityType.GIANT) {
+		if(type == EntityType.ZOMBIE || type == EntityType.SKELETON || type == EntityType.GIANT || type == EntityType.HUSK || type == EntityType.STRAY) {
 			Creature creature = ((Creature) entity);
 			if(creature instanceof Zombie)
 				((Zombie)creature).setBaby(false);
