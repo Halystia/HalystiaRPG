@@ -20,13 +20,19 @@ public class Statistics {
 	private double baseDamages, baseDamagesBuff, armorDamages, armorDamagesBuff;
 	
 	
-	private final PlayerArmor playerArmor;
+	private PlayerArmor playerArmor;
 	
 	public Statistics(int level, Player player) {
 		bonusMaxHealth = 0; // TODO implémenter ça.
 		
 		recalculateLevel(level);
 		
+		playerArmor = new PlayerArmor(player);
+		
+		calculateArmor();
+	}
+	
+	public void resetArmor(Player player) {
 		playerArmor = new PlayerArmor(player);
 		
 		calculateArmor();
@@ -72,7 +78,7 @@ public class Statistics {
 	}
 	
 	public double getDamages() {
-		return (baseDamages + armorDamages) * (baseDamagesBuff * armorDamagesBuff);
+		return (baseDamages + armorDamages) * (baseDamagesBuff + (armorDamagesBuff/100));
 	}
 	
 	public void levelChanged(int level) {

@@ -21,6 +21,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.constants.DamageReason;
@@ -496,9 +497,18 @@ public class PlayerData {
 			return stats.getDamages();
 		return 1;
 	}
+	
 	public void respawned() {
 		fullHealth();
 		fullMana();
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if(stats == null && isPlayerValid())
+					return;
+				stats.resetArmor(player);
+			}
+		}.runTaskLater(HalystiaRPG.getInstance(), 20L);
 	}
 
 }
