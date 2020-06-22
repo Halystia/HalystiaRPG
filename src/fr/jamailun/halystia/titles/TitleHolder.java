@@ -74,7 +74,7 @@ public class TitleHolder extends PlaceholderExpansion {
 			PlayerData pc = players.getPlayerData(p);
 			if(pc == null)
 				return GRAY + "(Loading)";
-			return pc.getHealth() + "";
+			return (int)pc.getHealth() + "";
 		}
 
 		if ( identifier.equals("barColor") ) {
