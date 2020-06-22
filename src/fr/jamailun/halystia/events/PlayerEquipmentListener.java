@@ -22,7 +22,6 @@ public class PlayerEquipmentListener extends HalystiaListener {
 		super(main);
 	}
 	
-
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void playerEquipArmor(ArmorEquipEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getPlayer()))

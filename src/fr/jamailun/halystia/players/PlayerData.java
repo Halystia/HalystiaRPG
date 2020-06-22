@@ -483,14 +483,18 @@ public class PlayerData {
 	}
 
 	public void fullMana() {
-		mana = stats.getMaxMana();
+		if(stats != null)
+			mana = stats.getMaxMana();
 	}
 
 	private void fullHealth() {
-		this.health = stats.getMaxHealth();
+		if(stats != null)
+			this.health = stats.getMaxHealth();
 	}
 	public double getDamages() {
-		return stats.getDamages();
+		if(stats != null)
+			return stats.getDamages();
+		return 1;
 	}
 	public void respawned() {
 		fullHealth();
