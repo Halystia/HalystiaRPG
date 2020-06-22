@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.players.PlayerData;
 
 public class RpgEquipment {
 
@@ -17,8 +18,10 @@ public class RpgEquipment {
 	public static final String ARMOR_BEGIN = ChatColor.BLUE + "Armure : ";
 	public static final String SPEED_BEGIN = ChatColor.BLUE + "Vitesse bonus : ";
 	public static final String MANA_BEGIN = ChatColor.BLUE + "Mana bonus : ";
+	public static final String LEVEL_BEGIN = ChatColor.GRAY + "Équipement de niveau"+ChatColor.GOLD+" ";
 	
 	protected List<String> addionalLore;
+	protected int level = 0;
 	protected int health, armor, mana, damagesInt;
 	protected double speed, damageBuff;
 	protected ItemBuilder item;
@@ -34,6 +37,8 @@ public class RpgEquipment {
 	
 	public ItemStack toItemStack() {
 		item.resetLore();
+		if(level > 0)
+			item.addLoreLine(LEVEL_BEGIN + level);
 		if(health != 0)
 			item.addLoreLine(HEALTH_BEGIN + getSymbol(health) + Math.abs(health));
 		if(armor != 0)
@@ -64,59 +69,44 @@ public class RpgEquipment {
 	private void readItem() {
 		addionalLore = new ArrayList<>();
 		for(String line : item.getLore()) {
-			if(line.contains(HEALTH_BEGIN)) {
-				try {
+			try {
+				if(line.contains(LEVEL_BEGIN)) {
+					String nb = line.split(" ")[4];
+					level = Integer.parseInt(nb);
+					continue;
+				}
+				if(line.contains(HEALTH_BEGIN)) {
 					String nb = line.split(" ")[4];
 					health = Integer.parseInt(nb);
-				} catch(NumberFormatException | IndexOutOfBoundsException e) {
-					HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Erreur. " + e.getClass() + " -> " + e.getMessage());
+					continue;
 				}
-				continue;
-			}
-			if(line.contains(ARMOR_BEGIN)) {
-				try {
+				if(line.contains(ARMOR_BEGIN)) {
 					String nb = line.split(" ")[3];
 					armor = Integer.parseInt(nb);
-				} catch(NumberFormatException | IndexOutOfBoundsException e) {
-					HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Erreur. " + e.getClass() + " -> " + e.getMessage());
+					continue;
 				}
-				continue;
-			}
-			if(line.contains(MANA_BEGIN)) {
-				try {
+				if(line.contains(MANA_BEGIN)) {
 					String nb = line.split(" ")[4];
 					armor = Integer.parseInt(nb);
-				} catch(NumberFormatException | IndexOutOfBoundsException e) {
-					HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Erreur. " + e.getClass() + " -> " + e.getMessage());
+					continue;
 				}
-				continue;
-			}
-			if(line.contains(SPEED_BEGIN)) {
-				try {
+				if(line.contains(SPEED_BEGIN)) {
 					String nb = line.split(" ")[4];
 					speed = Double.parseDouble(nb);
-				} catch(NumberFormatException | IndexOutOfBoundsException e) {
-					HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Erreur. " + e.getClass() + " -> " + e.getMessage());
+					continue;
 				}
-				continue;
-			}
-			if(line.contains(DAMAGES_INT_BEGIN)) {
-				try {
+				if(line.contains(DAMAGES_INT_BEGIN)) {
 					String nb = line.split(" ")[3];
 					damagesInt = Integer.parseInt(nb);
-				} catch(NumberFormatException | IndexOutOfBoundsException e) {
-					HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Erreur. " + e.getClass() + " -> " + e.getMessage());
+					continue;
 				}
-				continue;
-			}
-			if(line.contains(DAMAGES_BUFF_BEGIN)) {
-				try {
+				if(line.contains(DAMAGES_BUFF_BEGIN)) {
 					String nb = line.split(" ")[4];
 					damageBuff = Double.parseDouble(nb);
-				} catch(NumberFormatException | IndexOutOfBoundsException e) {
-					HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Erreur. " + e.getClass() + " -> " + e.getMessage());
+					continue;
 				}
-				continue;
+			} catch(NumberFormatException | IndexOutOfBoundsException e) {
+				HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Erreur. " + e.getClass() + " -> " + e.getMessage());
 			}
 			if( ! line.isEmpty() && ! line.equals(ChatColor.GRAY+""))
 				addionalLore.add(line);
@@ -137,6 +127,18 @@ public class RpgEquipment {
 
 	public double getSpeed() {
 		return speed;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		if(level < 0)
+			level = 0;
+		if(level > PlayerData.LEVEL_MAX)
+			level = PlayerData.LEVEL_MAX;
+		this.level = level;
 	}
 
 	public int getDamagesInt() {
