@@ -22,6 +22,7 @@ public class EventsManager {
 		new PlayerBreakListener(main, jobs);
 		new EntityDamageOtherListener(main);
 		new ConsumeItemListener(main);
+		new SomeWorldListeners(main);
 		
 		new MobAggroListener(main);
 		new BossListeners(main);

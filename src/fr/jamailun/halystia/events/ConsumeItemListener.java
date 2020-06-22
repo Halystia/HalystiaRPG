@@ -3,12 +3,9 @@ package fr.jamailun.halystia.events;
 import java.util.List;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.block.BlockFadeEvent;
-import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.ItemStack;
@@ -51,13 +48,6 @@ public class ConsumeItemListener extends HalystiaListener {
 	}
 	
 	@EventHandler
-	public void leaveDecayEvent(LeavesDecayEvent e) {
-		if( ! HalystiaRPG.isRpgWorld(e.getBlock().getWorld()))
-			return;
-		e.setCancelled(true);
-	}
-	
-	@EventHandler
 	public void foodLevelChange(FoodLevelChangeEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getEntity()))
 			return;
@@ -73,15 +63,7 @@ public class ConsumeItemListener extends HalystiaListener {
 			e.setCancelled(true);
 	}
 	
-	@EventHandler
-	public void farmDepopEvent(BlockFadeEvent e) {
-		if( ! HalystiaRPG.isRpgWorld(e.getBlock().getWorld()))
-			return;
-		
-		if(e.getBlock().getType() == Material.FARMLAND)
-			e.setCancelled(true);
-			
-	}
+	
 	
 	private int getHealthOfItem(ItemStack item) {
 		if(item == null)
