@@ -11,6 +11,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.enemies.mobs.EnemyMob;
+import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.spells.spellEntity.InvocationsManager;
 
 public class MobAggroListener extends HalystiaListener {
@@ -51,6 +52,11 @@ public class MobAggroListener extends HalystiaListener {
 	public void mobShoot(EntityShootBowEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getEntity()))
 			return;
+		if( e.getEntity() instanceof Player) {
+			PlayerData pc = main.getClasseManager().getPlayerData((Player) e.getEntity());
+			e.getProjectile().setMetadata("damages", new FixedMetadataValue(main, e.getForce() * pc.getDamages()));
+			return;
+		}
 		if( ! (e.getEntity() instanceof Monster) )
 			return;
 		EnemyMob mob = main.getMobManager().getWithEntityId(e.getEntity().getEntityId());

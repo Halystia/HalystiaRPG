@@ -72,14 +72,13 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		final PlayerData pcible = (e.getEntity() instanceof Player) ? main.getClasseManager().getPlayerData((Player)e.getEntity()) : null;
 
 		if(e.getDamager() instanceof Arrow) {
-			
 
-			System.out.println("damager = arrow");
 			
 			Arrow arrow = (Arrow) e.getDamager();
 			if(arrow.hasMetadata("damages")) {
 				damages = arrow.getMetadata("damages").get(0).asDouble();
 			}
+			System.out.println("damager = arrow, §cdamages="+damages);
 			if(main.getDonjonManager().getBossManager().isBoss(e.getEntity())) {
 				if(arrow.getShooter() != null && arrow.getShooter() instanceof Player)
 					main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), ((Player)arrow.getShooter()).getUniqueId(), damages);
