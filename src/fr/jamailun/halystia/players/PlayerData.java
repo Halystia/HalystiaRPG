@@ -114,6 +114,7 @@ public class PlayerData {
 	
 	public void playerEquipItem(EquipmentSlot slot, ItemStack item) {
 		stats.changeEquipment(slot, item);
+		updateHealthBar();
 	}
 	
 	public SkillSet getSkillSetInstance() {
@@ -273,12 +274,15 @@ public class PlayerData {
 	}
 	
 	public void heal(double heal) {
+		if(heal < 0)
+			heal = 0;
 		health += heal;
 
-		player.sendMessage("vie = "+health+", heal="+heal+".");
+		//player.sendMessage("vie = "+health+", heal="+heal+".");
 		
-		if(health > stats.getMaxHealth())
-			health = stats.getMaxHealth();
+		// Déjà fait dans le updateHealthBar !
+		//if(health > stats.getMaxHealth())
+		//	health = stats.getMaxHealth();
 		updateHealthBar();
 	}
 	
@@ -287,7 +291,8 @@ public class PlayerData {
 	}
 	
 	public boolean damage(double damage, UUID damager, DamageReason reason, boolean ignoreArmor) {
-		
+		if(damage < 0)
+			return false;
 		double realDamages = ignoreArmor ? damage : Math.max(1, damage - stats.getArmor());
 		if(realDamages <= 1 && damage > 1) {
 			//TODO petit effet ? ou déjà le fait de pas animer les dégats suffisent ?
@@ -333,8 +338,10 @@ public class PlayerData {
 	public void updateHealthBar() {
 		if(!isPlayerValid())
 			return;
+		if(health > stats.getMaxHealth())
+			health = stats.getMaxHealth();
 		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20);
-		System.out.println("H="+health+", MX="+stats.getMaxHealth()+", DONC =>  "+getHealthPercent()+"%");
+		//System.out.println("H="+health+", MX="+stats.getMaxHealth()+", DONC =>  "+getHealthPercent()+"%");
 		player.setHealth(20 * getHealthPercent());
 	}
 	

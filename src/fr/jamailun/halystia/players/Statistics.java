@@ -58,7 +58,7 @@ public class Statistics {
 		armorDamagesBuff = playerArmor.getDamageBuff();
 		
 		Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "ARMURE UNQUEMENT : §aarmor="+playerArmor.getArmor()+", §dhealth="+playerArmor.getHealth()+", §fspeed="+playerArmor.getSpeed()+", §cdmgs="+playerArmor.getDamagesInteger()
-			+", dmgsBuff=" + playerArmor.getDamageBuff() +", §bmana="+playerArmor.getMana()+".");
+			+", dmgsBuff=" + playerArmor.getDamageBuff() +"%, §bmana="+playerArmor.getMana()+".");
 	}
 
 	public double getMaxHealth() {
@@ -78,7 +78,7 @@ public class Statistics {
 	}
 	
 	public double getDamages() {
-		return (baseDamages + armorDamages) * (baseDamagesBuff + (armorDamagesBuff/100));
+		return (baseDamages + armorDamages) * (baseDamagesBuff + (armorDamagesBuff/100.0));
 	}
 	
 	public void levelChanged(int level) {

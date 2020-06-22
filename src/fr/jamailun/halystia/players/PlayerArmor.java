@@ -32,7 +32,7 @@ public class PlayerArmor {
 	private void recalculate() {
 		health = armor = mana = 0;
 		speed = 0;
-		damageBuff = 1;
+		damageBuff = 0;
 		damages = 0;
 		for(RpgEquipment equip : items.values()) {
 			health += equip.getHealth();
