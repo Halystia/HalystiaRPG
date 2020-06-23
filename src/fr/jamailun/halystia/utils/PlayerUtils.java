@@ -20,6 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.HitType;
 import net.minecraft.server.v1_15_R1.ChatMessage;
 import net.minecraft.server.v1_15_R1.ChatMessageType;
 import net.minecraft.server.v1_15_R1.EntityArmorStand;
@@ -218,7 +219,7 @@ public class PlayerUtils {
 		return null;
 	}
 
-	public void sendDamageMarker(double damages, Location loc)  {
+	public void sendDamageMarker(double damages, Location loc, HitType type)  {
 		WorldServer s = ((CraftWorld)players.get(0).getWorld()).getHandle();
 		EntityArmorStand stand = new EntityArmorStand(s, loc.getX(), loc.getY(), loc.getZ());
 		stand.setNoGravity(true);
@@ -228,9 +229,9 @@ public class PlayerUtils {
 			((CraftPlayer)p).getHandle().playerConnection.sendPacket(packetCreate);
 		}
 
-		new BukkitRunnable() {
-			@Override
-			public void run() {
+		//new BukkitRunnable() {
+		//	@Override
+		//	public void run() {
 				stand.setArms(true);
 				stand.setBasePlate(false);
 				stand.setInvisible(true);
@@ -242,11 +243,16 @@ public class PlayerUtils {
 					formatter = new DecimalFormat("###.#");
 				else 
 					formatter = new DecimalFormat("####.#");
-				stand.setCustomName(new ChatMessage(ChatColor.RED+""+ChatColor.BOLD+formatter.format(damages)));
+				String color = ChatColor.GOLD + "";
+				if(type == HitType.CRITICAL)
+					color = ChatColor.RED+""+ChatColor.BOLD;
+				else if(type == HitType.DODGED)
+					color = ChatColor.WHITE + "" + ChatColor.BOLD;
+				stand.setCustomName(new ChatMessage(color+formatter.format(damages)));
 				PacketPlayOutEntityMetadata packetData = new PacketPlayOutEntityMetadata(stand.getId(), stand.getDataWatcher(), true);
 				players.forEach(p -> ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packetData));
-			}
-		}.runTask(HalystiaRPG.getInstance());
+		//	}
+		//}.runTask(HalystiaRPG.getInstance());
 
 		new BukkitRunnable() {
 			@Override
@@ -254,6 +260,6 @@ public class PlayerUtils {
 				PacketPlayOutEntityDestroy packetDestroy = new PacketPlayOutEntityDestroy(stand.getId());
 				players.forEach(p -> ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packetDestroy));
 			}
-		}.runTaskLater(HalystiaRPG.getInstance(), 30L);
+		}.runTaskLater(HalystiaRPG.getInstance(), 15L);
 	}
 }

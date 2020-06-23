@@ -28,6 +28,7 @@ import org.mcmonkey.sentinel.SentinelTrait;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.constants.DamageReason;
+import fr.jamailun.halystia.constants.HitType;
 import fr.jamailun.halystia.custom.PlayerEffectsManager;
 import fr.jamailun.halystia.enemies.mobs.EnemyMob;
 import fr.jamailun.halystia.players.Classe;
@@ -449,8 +450,18 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			}
 		}
 		
-		localModifier = p.getAttackCooldown();	//TODO use EntityHuman (nms) to get current force from 0 to 1...
+		if(cibleData != null) {
+			
+		}
+		if ( Math.random() < 0.01 * cibleData.getSkillSetInstance().getLevel(SkillSet.SKILL_AGILITE) ) {
+			new PlayerUtils(p).sendDamageMarker(0, target.getLocation().add(0, 0.9, 0), HitType.DODGED);
+			new PlayerUtils(cibleData.getPlayer()).sendActionBar(ChatColor.GOLD + ""+ChatColor.BOLD+"Esquive !");
+			cibleData.getPlayer().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, cibleData.getPlayer().getLocation(), 50); 
+			return -1;
+		}
 		
+		localModifier = p.getAttackCooldown();	//TODO use EntityHuman (nms) to get current force from 0 to 1...
+		boolean critical = false;
 
 		int karma = pc.getCurrentKarma();
 		if(karma <= -300)
@@ -462,9 +473,10 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		// Add the % of critical hit
 		if ( Math.random() < 0.01 * pc.getSkillSetInstance().getLevel(SkillSet.SKILL_FORCE) ) {
 			localModifier *= 1.5;
-			if(pc != null)
-				pc.getPlayer().sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Votre agresseur vous a assené un coup critique. +50% de dégâts.");
+		//	if(cibleData != null)
+		//		cibleData.getPlayer().sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Votre agresseur vous a assené un coup critique. +50% de dégâts.");
 			new PlayerUtils(pc.getPlayer()).sendActionBar(ChatColor.GOLD + "Coup critique !"+ChatColor.BOLD+" +50% de dégâts.");
+			critical = true;
 		}
 
 		if(effects.hasEffect(Damocles.EFFECT_NAME, p)) {
@@ -503,7 +515,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		
 		double finalDamages = pc.getDamages() * localModifier;
 
-		new PlayerUtils(p).sendDamageMarker(finalDamages, target.getLocation().add(0, 0.6, 0));
+		new PlayerUtils(p).sendDamageMarker(finalDamages, target.getLocation().add(0, 0.9, 0), critical ? HitType.CRITICAL : HitType.STANDARD);
 		
 		return finalDamages;
 	}
