@@ -500,7 +500,11 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			}
 			pc.deltaKarma(karma2);
 		}
+		
+		double finalDamages = pc.getDamages() * localModifier;
 
-		return pc.getDamages() * localModifier;
+		new PlayerUtils(p).sendDamageMarker(finalDamages, target.getLocation().add(0, 0.6, 0));
+		
+		return finalDamages;
 	}
 }
