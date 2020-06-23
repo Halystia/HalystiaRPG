@@ -81,5 +81,10 @@ public class SkillSet {
 			t += skill;
 		return t;
 	}
+
+	public void reset() {
+		for(int i = 0; i < skills.length; i++)
+			skills[i] = 0;
+	}
 	
 }

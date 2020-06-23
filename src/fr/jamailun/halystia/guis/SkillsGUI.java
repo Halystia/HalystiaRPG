@@ -1,6 +1,8 @@
 package fr.jamailun.halystia.guis;
 
 import static org.bukkit.ChatColor.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -60,6 +62,13 @@ public class SkillsGUI {
 				case 16:
 					skills.updateSkill(SkillSet.SKILL_AGILITE);
 					break;
+				case 18:
+					p.sendMessage(HalystiaRPG.PREFIX + ChatColor.GOLD + "" + ChatColor.BOLD + "Les skills ont été reset !");
+					skills.reset();
+					break;
+				case 26:
+					new MainClasseGUI(p);
+					return;
 				default:
 					return;
 				}
@@ -91,6 +100,8 @@ public class SkillsGUI {
 		gui.addOption(new ItemBuilder(Material.FEATHER).setName(BLUE + "Agilité").addLoreLine("Augmente de 1% les chances d'esquiver un coup.")
 				.addLoreLine(WHITE + "Actuellement niveau " + GOLD + levelAgi + ITALIC + " (+"+(levelAgi*1)+"%)").toItemStack(), 16);
 		
+		gui.addOption(new ItemBuilder(Material.TNT).setName(ChatColor.RED+""+ChatColor.BOLD+"Reset des points").toItemStack(), 18);
+		gui.addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE+"Retour").toItemStack(), 26);
 	}
 	
 	
