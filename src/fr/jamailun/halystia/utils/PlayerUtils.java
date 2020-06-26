@@ -247,8 +247,8 @@ public class PlayerUtils {
 				if(type == HitType.CRITICAL)
 					color = ChatColor.RED+""+ChatColor.BOLD;
 				else if(type == HitType.DODGED)
-					color = ChatColor.WHITE + "" + ChatColor.BOLD;
-				stand.setCustomName(new ChatMessage(color+formatter.format(damages)));
+					color = ChatColor.GRAY + "" + ChatColor.BOLD +"" +  ChatColor.ITALIC;
+				stand.setCustomName(new ChatMessage(damages == 0 ? color+"* MISS *" : color+formatter.format(damages)));
 				PacketPlayOutEntityMetadata packetData = new PacketPlayOutEntityMetadata(stand.getId(), stand.getDataWatcher(), true);
 				players.forEach(p -> ((CraftPlayer)p).getHandle().playerConnection.sendPacket(packetData));
 		//	}
