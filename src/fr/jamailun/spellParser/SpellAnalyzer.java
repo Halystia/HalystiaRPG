@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -141,7 +140,7 @@ public class SpellAnalyzer extends Spell {
 
 	@Override
 	public List<String> getLore() {
-		return new ArrayList<>(); //TODO le lore des spells serializés !
+		return data.getLore();
 	}
 
 	@Override

@@ -1,9 +1,12 @@
 package fr.jamailun.spellParser;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SpellData {
 
 	private int level, mana, cooldown;
-	private String name, color, id = "#none", classe = "none";
+	private String name, color, id = "#none", classe = "none", lore;
 
 	public SpellData() {
 		name = "undefined";
@@ -15,7 +18,7 @@ public class SpellData {
 	}
 
 	public static boolean isStringKey(String key) {
-		return key.equalsIgnoreCase("color") || key.equalsIgnoreCase("name") || key.equalsIgnoreCase("id") || key.equalsIgnoreCase("classe");
+		return key.equalsIgnoreCase("color") || key.equalsIgnoreCase("name") || key.equalsIgnoreCase("id") || key.equalsIgnoreCase("classe") || key.equalsIgnoreCase("lore");
 	}
 
 	public int getLevel() {
@@ -45,6 +48,10 @@ public class SpellData {
 	public String getColor() {
 		return color;
 	}
+	
+	public List<String> getLore() {
+		return Arrays.asList(lore.split(";"));
+	}
 
 	public void associateInteger(String a, int value) {
 		if(a.equalsIgnoreCase("level"))
@@ -64,6 +71,8 @@ public class SpellData {
 			color = value;
 		else if(a.equalsIgnoreCase("id"))
 			id = value;
+		else if(a.equalsIgnoreCase("lore"))
+			lore = value;
 		else if(a.equalsIgnoreCase("classe"))
 			classe = value;
 		else

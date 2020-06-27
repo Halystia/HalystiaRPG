@@ -35,7 +35,7 @@ public class ApplyEffectStructure extends CommandStructure {
 			invalidate();
 			return;
 		}
-		this.force = force;
+		this.force = force - 1;
 	}
 
 	public void setDurationInt(int duration, String unit) {

@@ -1,15 +1,21 @@
 package fr.jamailun.spellParser;
 
-import fr.jamailun.spellParser.contexts.ApplicativeContext;
-import fr.jamailun.spellParser.contexts.TokenContext;
-import fr.jamailun.spellParser.structures.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import fr.jamailun.spellParser.contexts.ApplicativeContext;
+import fr.jamailun.spellParser.contexts.TokenContext;
+import fr.jamailun.spellParser.structures.ApplyEffectStructure;
+import fr.jamailun.spellParser.structures.DamageStructure;
+import fr.jamailun.spellParser.structures.DefineStructure;
+import fr.jamailun.spellParser.structures.ForLoopStructure;
+import fr.jamailun.spellParser.structures.GlobalStructure;
+import fr.jamailun.spellParser.structures.HealStructure;
+import fr.jamailun.spellParser.structures.SendMessageStructure;
+import fr.jamailun.spellParser.structures.SpawnStructure;
 
 public class SpellTokenizer {
 
@@ -51,7 +57,7 @@ public class SpellTokenizer {
 		String[] words = line.split(" ");
 
 		if(words[0].equalsIgnoreCase("define")) {
-			define(words);
+			define(line);
 			return false;
 		}
 
@@ -112,17 +118,28 @@ public class SpellTokenizer {
 		global.openBlock(structure);
 	}
 
-	private void define(String[] words) {
-		if(words.length < 4) {
-			System.err.println("Not enough words : " + Arrays.toString(words) + " on line " + lineNumber+".");
-			System.err.println("Use 'define <var> as <var>'");
+	private void define(String line) {
+		if( ! line.matches(DefineStructure.REGEX) ) {
+			System.err.println("Bad format : " + line);
+			System.err.println("Use '"+DefineStructure.REGEX+"'" + " on line " + lineNumber+".");
 			return;
 		}
-		if( ! words[0].equalsIgnoreCase("define") || ! (words[2].equalsIgnoreCase("=") || words[2].equalsIgnoreCase("as"))) {
-			System.err.println("Bad definition : " + Arrays.toString(words));
+		
+		DefineStructure structure = new DefineStructure(context);
+		String[] words = line.split(" ");
+		//define %defined as [closest] <thing> from %target within (dist)
+		structure.setDefinitionString(words[1]);
+		structure.setModeString(words[3]);
+		structure.setSelectorString(words[4]);
+		structure.defineTarget(words[6]);
+		try {
+			structure.setRangeDouble(Double.parseDouble(words[8]));
+		} catch(NumberFormatException e) {
+			System.err.println("Error line " + lineNumber + " : bad range double format.");
 			return;
 		}
-		context.define(words[1], words[3]);
+		
+		global.add(structure);
 	}
 
 	private void enterSubContext() {
@@ -139,9 +156,8 @@ public class SpellTokenizer {
 		context = context.getParent();
 	}
 
-	private static final String ALPHANUMERICS = "[\\pL\\pN_]+";
 	private void forLoop(String line) {
-		if( ! line.matches("for ("+groups.get(GROUP_ENTITIES).getRegexValue()+") as %"+ALPHANUMERICS+" around %"+ALPHANUMERICS+" in [\\pN]+ do \\{")) {
+		if( ! line.matches(ForLoopStructure.REGEX)) {
 			System.err.println("Bad format : " + line);
 			System.err.println("Use 'for <target> as <var> around <entity> in <r> do {'" + " on line " + lineNumber+".");
 			return;
