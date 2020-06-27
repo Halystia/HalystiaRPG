@@ -19,6 +19,7 @@ import fr.jamailun.halystia.commands.CommandPing;
 import fr.jamailun.halystia.commands.CommandPurge;
 import fr.jamailun.halystia.commands.CommandQuests;
 import fr.jamailun.halystia.commands.CommandReloadShops;
+import fr.jamailun.halystia.commands.CommandReloadSpells;
 import fr.jamailun.halystia.commands.CommandSetChunk;
 import fr.jamailun.halystia.commands.CommandSetJob;
 import fr.jamailun.halystia.commands.CommandSetKarma;
@@ -66,6 +67,7 @@ public class CommandsManager {
 		new CommandEditTitles(main, titleMgr);
 		new CommandEditDonjons(main, donjonsMgr);
 		new CommandEditEquipment(main);
+		new CommandReloadSpells(main);
 		
 		new CommandSetRoi(main);
 		new CommandSetXp(main);
