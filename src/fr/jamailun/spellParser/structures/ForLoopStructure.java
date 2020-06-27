@@ -1,25 +1,29 @@
 package fr.jamailun.spellParser.structures;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
 
 import fr.jamailun.spellParser.contexts.ApplicativeContext;
 import fr.jamailun.spellParser.contexts.TokenContext;
+import fr.jamailun.spellParser.data.Selector;
 import fr.jamailun.spellParser.structures.abstraction.BlockStructure;
 
 public class ForLoopStructure extends BlockStructure {
 	private double range = 5;
 	private boolean shouldApplyCaster = false;
-	private final String targetSymbol, targetCategory;
+	private final String targetSymbol;
+	private final Selector selector;
 	private String sourceEntity = "%caster";
 
+	public static final String REGEX = "for [A-Za-z0-9_]+ as %[A-Za-z0-9_]+ around %[A-Za-z0-9_]+ in [0-9.]+ do \\{";
+	
 	public ForLoopStructure(TokenContext context, String targetCategory, String targetSymbol) {
 		super(context);
-		this.targetSymbol =targetSymbol;
-		this.targetCategory = targetCategory;
+		this.targetSymbol = targetSymbol;
+		this.selector = Selector.fromString(targetCategory);
+		if(selector == Selector.NONE) {
+			System.out.println("Error : for loop selector '"+targetCategory+"' could not be resolved.");
+			invalidate();
+		}
 	}
 
 	public void setRangeDouble(double range) {
@@ -35,19 +39,18 @@ public class ForLoopStructure extends BlockStructure {
 	public void apply(ApplicativeContext applicativeContext) {
 		String casterVariable = context.getDefinition(sourceEntity); // = %caster
 		Entity caster = applicativeContext.getEntity(casterVariable); // Player
-		Bukkit.broadcastMessage(">AROUND="+caster);
 		caster.getWorld().getEntities().forEach(en -> {
 			//Bukkit.broadcastMessage(">> TEST : "+en.getName());
-			if( corresponds(en) ) {
+			if( selector.isAllowed(en) ) {
 			//	Bukkit.broadcastMessage(">> identifier : valid");
 				if(en.getLocation().distance(caster.getLocation()) < range) {
 			//		Bukkit.broadcastMessage(">> range : ok");
 					if( ! en.getUniqueId().equals(caster.getUniqueId()) || shouldApplyCaster) {
-						Bukkit.broadcastMessage(">> concerned : ok");
+			//			Bukkit.broadcastMessage(">> concerned : ok");
 						ApplicativeContext child = applicativeContext.createChild();
 						child.define(targetSymbol, en);
 						super.children.forEach(structure -> {
-							Bukkit.broadcastMessage(">>> calling structures");
+			//				Bukkit.broadcastMessage(">>> calling structures");
 							if(structure.isValid())
 								structure.apply(child);
 						});
@@ -56,19 +59,6 @@ public class ForLoopStructure extends BlockStructure {
 			}
 		});
 
-	}
-
-	private boolean corresponds(Entity entity) {
-		if(targetCategory.equalsIgnoreCase("all"))
-			return true;
-		if(targetCategory.equalsIgnoreCase("mob") || targetCategory.equalsIgnoreCase("mobs"))
-			return entity instanceof Monster;
-		if(targetCategory.equalsIgnoreCase("entity") || targetCategory.equalsIgnoreCase("entities"))
-			return entity instanceof LivingEntity;
-		if(targetCategory.equalsIgnoreCase("player") || targetCategory.equalsIgnoreCase("players"))
-			return entity instanceof Player;
-		System.err.println("Undefined target value in for loop : '"+targetCategory+"'.");
-		return false;
 	}
 
 	public void setAroundValue(String sourceEntity) {
