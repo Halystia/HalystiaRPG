@@ -15,6 +15,10 @@ public abstract class DataBlockStructure extends Structure implements CloseableS
 		super(context);
 		data = new DataList();
 	}
+	
+	protected boolean isDataSet(String key) {
+		return data.hasDefined(key);
+	}
 
 	public void defineTarget(String target) {
 		if(target == null || target.isEmpty()) {
@@ -64,8 +68,10 @@ public abstract class DataBlockStructure extends Structure implements CloseableS
 	}
 
 	public boolean getBooleanData(String key) {
-		return data.getBooleanValue(key).orElse(false);
+		return data.getBooleanValue(key).orElse(getDoubleData(key) > 0);
 	}
+	
+	
 
 	public abstract List<String> getAllKeys();
 

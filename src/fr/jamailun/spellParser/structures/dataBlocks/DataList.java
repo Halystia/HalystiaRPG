@@ -53,5 +53,21 @@ public class DataList {
 		dataBooleans.removeIf(d -> d.getName().equals(key));
 		dataBooleans.add(new DataLine<>(key, value));
 	}
+	
+	public boolean hasDefined(String key) {
+		for(DataLine<String> dl : dataStrings)
+			if(dl.getName().equals(key))
+				return true;
+		for(DataLine<Integer> dl : dataInts)
+			if(dl.getName().equals(key))
+				return true;
+		for(DataLine<Double> dl : dataDoubles)
+			if(dl.getName().equals(key))
+				return true;
+		for(DataLine<Boolean> dl : dataBooleans)
+			if(dl.getName().equals(key))
+				return true;
+		return false;
+	}
 
 }
