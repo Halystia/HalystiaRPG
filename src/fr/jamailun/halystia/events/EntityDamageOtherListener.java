@@ -451,13 +451,12 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		}
 		
 		if(cibleData != null) {
-			
-		}
-		if ( Math.random() < 0.01 * cibleData.getSkillSetInstance().getLevel(SkillSet.SKILL_AGILITE) ) {
-			new PlayerUtils(p).sendDamageMarker(0, target.getLocation().add(0, 0.9, 0), HitType.DODGED);
-			new PlayerUtils(cibleData.getPlayer()).sendActionBar(ChatColor.GOLD + ""+ChatColor.BOLD+"Esquive !");
-			cibleData.getPlayer().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, cibleData.getPlayer().getLocation(), 50); 
-			return -1;
+			if ( Math.random() < 0.01 * cibleData.getSkillSetInstance().getLevel(SkillSet.SKILL_AGILITE) ) {
+				new PlayerUtils(p).sendDamageMarker(0, target.getLocation().add(0, 0.9, 0), HitType.DODGED);
+				new PlayerUtils(cibleData.getPlayer()).sendActionBar(ChatColor.GOLD + ""+ChatColor.BOLD+"Esquive !");
+				cibleData.getPlayer().getWorld().spawnParticle(Particle.FIREWORKS_SPARK, cibleData.getPlayer().getLocation(), 50); 
+				return -1;
+			}
 		}
 		
 		localModifier = p.getAttackCooldown();	//TODO use EntityHuman (nms) to get current force from 0 to 1...
