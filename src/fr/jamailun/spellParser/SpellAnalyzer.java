@@ -1,8 +1,19 @@
 package fr.jamailun.spellParser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class SpellAnalyzer {
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import fr.jamailun.halystia.players.Classe;
+import fr.jamailun.halystia.spells.Spell;
+
+public class SpellAnalyzer extends Spell {
 
 	private final SpellData data;
 	private SpellTokenizer tokenizer;
@@ -12,7 +23,11 @@ public class SpellAnalyzer {
 		tokenizer = new SpellTokenizer();
 		deserialize(file);
 	}
-
+	
+	public SpellData getSpellData() {
+		return data;
+	}
+	
 	private boolean deserialize(File file) {
 		if(file == null || ! file.exists())
 			return false;
@@ -83,6 +98,69 @@ public class SpellAnalyzer {
 			return;
 		}
 		System.err.println("Unknown key : '" + a + "'.");
+	}
+
+	@Override
+	public boolean cast(Player p) {
+		if( ! data.hasId()) {
+			p.sendMessage(ChatColor.RED + "Une erreur est survenue... le spell n'a pas d'ID !");
+			return false;
+		}
+		tokenizer.run(p);
+		return true;
+	}
+
+	@Override
+	public String getName() {
+		return data.getName();
+	}
+
+	@Override
+	public ChatColor getColor() {
+		try {
+		return ChatColor.valueOf(data.getColor());
+		} catch (IllegalArgumentException e) {
+			return ChatColor.GRAY;
+		}
+	}
+	
+	@Override
+	public final boolean isLegacy() {
+		return false;
+	}
+
+	@Override
+	public Classe getClasseRequired() {
+		return Classe.fromString(data.getClasse());
+	}
+
+	@Override
+	public int getLevelRequired() {
+		return data.getLevel();
+	}
+
+	@Override
+	public List<String> getLore() {
+		return new ArrayList<>(); //TODO le lore des spells serializés !
+	}
+
+	@Override
+	public String getStringIdentification() {
+		return data.getId();
+	}
+
+	@Override
+	public int getManaCost() {
+		return data.getMana();
+	}
+
+	@Override
+	public int getCooldown() {
+		return data.getCooldown();
+	}
+
+	public boolean isValid() {
+		return data.hasId() && tokenizer.isFinished();
 	}
 
 }

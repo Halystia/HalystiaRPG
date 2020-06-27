@@ -38,6 +38,7 @@ import fr.jamailun.halystia.players.SoulManager;
 import fr.jamailun.halystia.quests.QuestManager;
 import fr.jamailun.halystia.shops.ShopManager;
 import fr.jamailun.halystia.shops.TradeManager;
+import fr.jamailun.halystia.spells.SpellLoader;
 import fr.jamailun.halystia.spells.SpellManager;
 import fr.jamailun.halystia.sql.HalystiaDataBase;
 import fr.jamailun.halystia.sql.temporary.FileSaver;
@@ -99,6 +100,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	private QuestManager questsMgr;
 	private NpcManager npcMgr;
 	private PlayerEffectsManager effMgr;
+	private SpellLoader spellLoader;
 	
 	//Usefull things
 	private ChooseClasseGui classeGui;
@@ -165,6 +167,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		jobs = new JobsManager();
 		new JamailunJobExtension(PATH+"/jobs", jobs);
 		banque = new Banque(PATH+"/banque", jobs);
+		spellLoader = new SpellLoader(PATH + "/spells", spellMgr);
 		
 		npcMgr.verifyQuests(questsMgr);
 		
@@ -451,5 +454,9 @@ public final class HalystiaRPG extends JavaPlugin {
 	 */
 	public CacheMemory getCache() {
 		return cache;
+	}
+	
+	public SpellLoader getSpellLoader() {
+		return spellLoader;
 	}
 }

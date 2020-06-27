@@ -5,5 +5,7 @@ public interface CloseableStructure {
 	void close();
 
 	boolean isOpen();
+	
+	Structure getInstance();
 
 }

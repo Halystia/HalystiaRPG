@@ -2,6 +2,8 @@ package fr.jamailun.halystia.players;
 
 import static org.bukkit.ChatColor.*;
 
+import java.util.Locale;
+
 import org.bukkit.ChatColor;
 
 /**
@@ -20,6 +22,25 @@ public enum Classe {
 	
 	private final String displayName, rank2, rank3, rank4;
 	private final int id;
+	
+	public static Classe fromString(String classe) {
+		classe = classe.toLowerCase(Locale.FRANCE);
+		switch(classe) {
+		case "alchimiste":
+		case "alchi":
+			return ALCHIMISTE;
+		case "épéiste":
+		case "epeiste":
+			return EPEISTE;
+		case "archer":
+			return ARCHER;
+		case "invocateur":
+		case "invoc":
+			return INVOCATEUR;
+		}
+		return NONE;
+	}
+	
 	
 	private Classe(int id, String displayName, String rank2, String rank3, String rank4) {
 		this.id = id;

@@ -28,4 +28,9 @@ public abstract class BlockStructure extends Structure implements CloseableStruc
 	public boolean isOpen() {
 		return open;
 	}
+
+	@Override
+	public Structure getInstance() {
+		return this;
+	}
 }

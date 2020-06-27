@@ -50,16 +50,21 @@ public class GlobalStructure extends Structure {
 		if(openBlocks.isEmpty())
 			return true;
 		int index = openBlocks.size() - 1;
-		openBlocks.get(index).close();
+		CloseableStructure structure = openBlocks.get(index);
+		structure.close();
 		openBlocks.remove(index);
+		structures.add(structure.getInstance());
 		return openBlocks.isEmpty();
 	}
 
 	@Override
 	public void apply(ApplicativeContext context) {
 		structures.forEach(s -> {
-			if(s.isValid())
+			if(s.isValid()) {
+				System.out.println("apply structure : " + s);
 				s.apply(context);
+			} else
+				System.err.println("structure NOT valid ! ("+s+")");
 		});
 	}
 

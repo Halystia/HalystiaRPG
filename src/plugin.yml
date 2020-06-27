@@ -142,6 +142,11 @@ commands:
     permission: halystia.rpg.master
     permission-message: §cIl faut que tu sois un maître du jeu du RPG.
     description: Tue tous les mobs customs.
+  reload-spells:
+    usage: /reload-spells
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Reload les spells customs.
   summon-mob:
     usage: /summonMob <id>
     permission: halystia.rpg.master

@@ -105,6 +105,10 @@ public abstract class Spell {
 		return casters.contains(p);
 	}
 	
+	public boolean isLegacy() {
+		return true;
+	}
+	
 	/**
 	 * Spawn particles around location.
 	 */

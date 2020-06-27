@@ -1,10 +1,13 @@
 package fr.jamailun.spellParser.structures;
 
+import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.DamageReason;
 import fr.jamailun.spellParser.contexts.ApplicativeContext;
 import fr.jamailun.spellParser.contexts.TokenContext;
 import fr.jamailun.spellParser.structures.abstraction.CommandStructure;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 public class DamageStructure extends CommandStructure {
 
@@ -32,5 +35,10 @@ public class DamageStructure extends CommandStructure {
 			return;
 		if( entity instanceof LivingEntity)
 			((LivingEntity)entity).damage(amount);
+		if(entity instanceof Player) {
+			try {
+				HalystiaRPG.getInstance().getClasseManager().getPlayerData((Player)entity).damage(amount, null, DamageReason.NONE);
+			} catch (NullPointerException ignored) {}
+		}
 	}
 }

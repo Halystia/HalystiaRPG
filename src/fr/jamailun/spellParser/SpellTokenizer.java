@@ -3,6 +3,8 @@ package fr.jamailun.spellParser;
 import fr.jamailun.spellParser.contexts.ApplicativeContext;
 import fr.jamailun.spellParser.contexts.TokenContext;
 import fr.jamailun.spellParser.structures.*;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -35,8 +37,9 @@ public class SpellTokenizer {
 	 */
 	public boolean readLine(String line, int lineNumber) {
 		this.lineNumber = lineNumber;
-		while(line.startsWith(" "))
-			line = line.replaceFirst(" ", "");
+		while(line.startsWith(" ") || line.startsWith("\t")) {
+			line = line.replaceFirst(" |\\t", "");
+		}
 		if(line.isEmpty() || line.startsWith("#"))
 			return false;
 
@@ -94,7 +97,7 @@ public class SpellTokenizer {
 			return false;
 		}
 
-		System.err.println("Error : unknown symbol : '"+words[0]+"' on line n°"+lineNumber+".");
+		Bukkit.getConsoleSender().sendMessage("§cError : unknown symbol : '"+words[0]+"' on line n°"+lineNumber+".");
 		return false;
 	}
 

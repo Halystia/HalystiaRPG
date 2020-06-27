@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -25,6 +26,7 @@ import fr.jamailun.halystia.spells.newSpells.invocateur.*;
 import fr.jamailun.halystia.spells.newSpells.epeiste.*;
 import fr.jamailun.halystia.spells.spellEntity.*;
 import fr.jamailun.halystia.utils.ItemBuilder;
+import fr.jamailun.spellParser.SpellAnalyzer;
 
 /**
  * Handle all spells in the game.<br />
@@ -50,7 +52,7 @@ public class SpellManager {
 		cooldowns = new HashMap<>();
 		
 		spells = new ArrayList<>();
-		// Spells pout alchimiste
+		// Spells pour alchimiste
 		addSpell(SoinsPrimaires.class);
 		addSpell(Toxine.class);
 		addSpell(Flameche.class);
@@ -61,7 +63,7 @@ public class SpellManager {
 		addSpell(SoinsUltimes.class);
 		addSpell(JetVolcanique.class);
 
-		// Spells pout invocateur
+		// Spells pour invocateur
 		addSpell(InvocationBasique.class);
 		addSpell(ResistanceElementaire.class);
 		addSpell(DiversionDeGrele.class);
@@ -74,7 +76,7 @@ public class SpellManager {
 
 		addSpell(ProtectionElementaire.class);
 
-		// Spells pout archer
+		// Spells pour archer
 		addSpell(PluieAceree.class);
 		addSpell(Echappatoire.class);
 		addSpell(Propulsion.class);
@@ -85,7 +87,7 @@ public class SpellManager {
 		addSpell(PluieDacier.class);
 		addSpell(Partageforce.class);
 
-		// Spells pout épéiste
+		// Spells pour épéiste
 		addSpell(ExuvationSimple.class);
 		addSpell(RepliqueFeu.class);
 		addSpell(FracassTete.class);
@@ -116,6 +118,22 @@ public class SpellManager {
 			Bukkit.getLogger().log(Level.SEVERE, "Spell's class ("+spell+") could not be loaded.");
 			return false;
 		}
+	}
+	
+	boolean registerSpell(SpellAnalyzer spell) {
+		for(Spell sp : spells) {
+			if(sp.getStringIdentification().equals(spell.getStringIdentification())) {
+				main.getConsole().sendMessage(ChatColor.RED + "Error : unlegacy spell with ID '"+spell.getStringIdentification()+"' could not be added. ID already exists.");
+				return false;
+			}
+		}
+		spells.add(spell);
+		return true;
+	}
+	
+	void clearNotLegacy() {
+		spells.removeIf(s -> ! s.isLegacy());
+		main.getConsole().sendMessage(ChatColor.YELLOW+"Unlegacy spells where removed.");
 	}
 	
 	/**

@@ -1,5 +1,8 @@
 package fr.jamailun.spellParser.structures;
 
+import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.spells.Invocator;
+import fr.jamailun.halystia.utils.RandomString;
 import fr.jamailun.spellParser.contexts.ApplicativeContext;
 import fr.jamailun.spellParser.contexts.TokenContext;
 import fr.jamailun.spellParser.structures.abstraction.DataBlockStructure;
@@ -13,11 +16,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
-public class SpawnStructure extends DataBlockStructure {
+public class SpawnStructure extends DataBlockStructure implements Invocator {
 
 	public static final String REGEX = "spawn(| [0-9]+) [A-Za-z_]+ (at|around) %[A-Za-z0-9_]+ with \\{";
 
@@ -52,7 +57,7 @@ public class SpawnStructure extends DataBlockStructure {
 
 	@Override
 	public List<String> getAllKeys() {
-		return Arrays.asList("health", "speed", "name", "damages", "duration");
+		return Arrays.asList("health", "speed", "name", "damages", "duration", "max-alive");
 	}
 
 	@Override
@@ -64,10 +69,12 @@ public class SpawnStructure extends DataBlockStructure {
 		for(int i = 1; i <= howMany; i++) {
 			Location spawn = caster.getLocation();
 			if(spawnType == SpawnType.AROUND) {
-				spawn = new Location(spawn.getWorld(), spawn.getX() + (Math.random() * 2) - 1, spawn.getY() + (Math.random()), spawn.getZ() + (Math.random() * 2) - 1);
-			} //TODO avec un vrai randInt x)
+				spawn = new Location(spawn.getWorld(), spawn.getX() + RandomString.randDouble(-2, 2), spawn.getY() + RandomString.randDouble(0, .5), spawn.getZ() + RandomString.randDouble(-2, 2));
+			}
+			
 			final Entity invoc = Objects.requireNonNull(spawn.getWorld()).spawnEntity(spawn, type);
 			applyDataToEntity(invoc);
+			addInvocation(invoc, (LivingEntity)caster, false, (int) Math.min(10, getDoubleData("damage")));
 			double duration = Math.min(10, getDoubleData("duration"));
 			new BukkitRunnable() {
 				public void run() {
@@ -76,7 +83,7 @@ public class SpawnStructure extends DataBlockStructure {
 					else
 						invoc.remove();
 				}
-			}.runTaskLater(null, (int)duration * 20L); //TODO API fix : JavaPlugin
+			}.runTaskLater(HalystiaRPG.getInstance(), (int)duration * 20L);
 		}
 	}
 
@@ -99,12 +106,41 @@ public class SpawnStructure extends DataBlockStructure {
 		if(speedAttribute != null && speed > 0) {
 			speedAttribute.setBaseValue(speed);
 		}
-
-		//TODO damages avec l'API
-
 	}
-
+	
 	private enum SpawnType {
 		AT, AROUND
+	}
+
+	private HashMap<UUID, Integer> map = new HashMap<>();
+	
+	@Override
+	public synchronized boolean canInvoke(UUID uuid, int howMany) {
+		if( ! map.containsKey(uuid))
+			return true;
+		return map.get(uuid) + howMany <= Math.min(1, super.getDoubleData("max-alive"));
+	}
+	
+	@Override
+	public synchronized void oneIsDead(UUID uuid) {
+		if( ! map.containsKey(uuid))
+			return;
+		int current = map.get(uuid);
+		map.replace(uuid, current - 1);
+	}
+	
+	/**
+	 * Alert the system about the creation of a summoned unit.
+	 * @param entity the summoned unit
+	 * @param p the caster
+	 * @param masterCanBeAttacked if true the master will also be targeted by is own units.
+	 * @param damages Custom amount of damages the entity with deal. -1 for natural damages.
+	 */
+	protected synchronized void addInvocation(Entity entity, LivingEntity p, boolean masterCanBeAttacked, int damages) {
+		if( ! map.containsKey(p.getUniqueId()))
+			map.put(p.getUniqueId(), 1);
+		else
+			map.replace(p.getUniqueId(), 1 + map.get(p.getUniqueId()));
+		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(entity, p, masterCanBeAttacked, this, damages);
 	}
 }

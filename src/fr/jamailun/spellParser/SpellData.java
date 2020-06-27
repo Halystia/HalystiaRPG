@@ -3,7 +3,7 @@ package fr.jamailun.spellParser;
 public class SpellData {
 
 	private int level, mana, cooldown;
-	private String name, color;
+	private String name, color, id = "#none", classe = "none";
 
 	public SpellData() {
 		name = "undefined";
@@ -15,7 +15,7 @@ public class SpellData {
 	}
 
 	public static boolean isStringKey(String key) {
-		return key.equalsIgnoreCase("color") || key.equalsIgnoreCase("name");
+		return key.equalsIgnoreCase("color") || key.equalsIgnoreCase("name") || key.equalsIgnoreCase("id") || key.equalsIgnoreCase("classe");
 	}
 
 	public int getLevel() {
@@ -25,11 +25,19 @@ public class SpellData {
 	public int getMana() {
 		return mana;
 	}
+	
+	public String getId() {
+		return id;
+	}
 
 	public int getCooldown() {
 		return cooldown;
 	}
 
+	public boolean hasId() {
+		return id != null && ! id.equals("#none");
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -54,6 +62,10 @@ public class SpellData {
 			name = value;
 		else if(a.equalsIgnoreCase("color"))
 			color = value;
+		else if(a.equalsIgnoreCase("id"))
+			id = value;
+		else if(a.equalsIgnoreCase("classe"))
+			classe = value;
 		else
 			System.err.println("Unknown string key : (" + a + ")");
 	}
@@ -67,5 +79,9 @@ public class SpellData {
 				", name='" + name + '\'' +
 				", color='" + color + '\'' +
 				'}';
+	}
+
+	public String getClasse() {
+		return classe;
 	}
 }

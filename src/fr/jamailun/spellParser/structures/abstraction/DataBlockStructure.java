@@ -78,4 +78,9 @@ public abstract class DataBlockStructure extends Structure implements CloseableS
 	public boolean isOpen() {
 		return open;
 	}
+
+	@Override
+	public Structure getInstance() {
+		return this;
+	}
 }
