@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import fr.jamailun.spellParser.contexts.ApplicativeContext;
 import fr.jamailun.spellParser.contexts.TokenContext;
+import fr.jamailun.spellParser.data.TimeUnit;
 import fr.jamailun.spellParser.structures.abstraction.CommandStructure;
 
 public class ApplyEffectStructure extends CommandStructure {
@@ -49,16 +50,13 @@ public class ApplyEffectStructure extends CommandStructure {
 			this.duration = 1;
 			return;
 		}
-		if(unit.equalsIgnoreCase("second") || unit.equalsIgnoreCase("seconds")) {
-			this.duration = duration * 20;
+		TimeUnit timeUnit = TimeUnit.fromString(unit);
+		if(timeUnit == null) {
+			invalidate();
+			System.err.println("Error : unknown time unit : '"+unit+"'");
 			return;
 		}
-		if(unit.equalsIgnoreCase("tick") || unit.equalsIgnoreCase("ticks")) {
-			this.duration = duration;
-			return;
-		}
-		invalidate();
-		System.err.println("Error : unknown time unit : '"+unit+"'");
+		this.duration = duration * timeUnit.getTicksDuration();
 	}
 
 	@Override
