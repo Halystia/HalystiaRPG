@@ -1,8 +1,5 @@
 package fr.jamailun.spellParser;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -14,6 +11,7 @@ import fr.jamailun.spellParser.structures.DefineStructure;
 import fr.jamailun.spellParser.structures.ForLoopStructure;
 import fr.jamailun.spellParser.structures.GlobalStructure;
 import fr.jamailun.spellParser.structures.HealStructure;
+import fr.jamailun.spellParser.structures.ParticlesStructure;
 import fr.jamailun.spellParser.structures.SendMessageStructure;
 import fr.jamailun.spellParser.structures.SpawnStructure;
 import fr.jamailun.spellParser.structures.ThrowStructure;
@@ -21,15 +19,12 @@ import fr.jamailun.spellParser.structures.ThrowStructure;
 public class SpellTokenizer {
 
 	private TokenContext context;
-	private Map<String, TokenGroup> groups;
 
 	private GlobalStructure global;
 
 	public static final String GROUP_ENTITIES = "#entities";
 
 	public SpellTokenizer() {
-		groups = new HashMap<>();
-		groups.put(GROUP_ENTITIES, new TokenGroup("all", "mob", "mobs", "entity", "entities", "player", "players"));
 		context = new TokenContext().createChild();
 		global = new GlobalStructure(context);
 	}
@@ -96,6 +91,11 @@ public class SpellTokenizer {
 			throwBlock(line);
 			return false;
 		}
+		
+		if(words[0].equalsIgnoreCase("emit")) {
+			emitBlock(line);
+			return false;
+		}
 
 		if(global.isInData()) {
 			if( ! line.matches("[A-Za-z_\\-]+(| *):(| *)[\\pN\\pL.&\\s%?!:]+") ) {
@@ -111,6 +111,17 @@ public class SpellTokenizer {
 
 		Bukkit.getConsoleSender().sendMessage("§cError : unknown symbol : '"+words[0]+"' on line n°"+lineNumber+".");
 		return false;
+	}
+
+	private void emitBlock(String line) {
+		if ( ! line.matches(ParticlesStructure.REGEX) ) {
+			System.err.println("Error : bad format on line " + lineNumber+". Used here : '"+line+"'.");
+			System.err.println("Use '"+ParticlesStructure.REGEX+"'.");
+			return;
+		}
+		ParticlesStructure structure = new ParticlesStructure(context);
+		structure.read(line);
+		global.openBlock(structure);
 	}
 
 	private void throwBlock(String line) {
