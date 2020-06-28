@@ -1,7 +1,7 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 
 import java.util.ArrayList;
 import java.util.Arrays;

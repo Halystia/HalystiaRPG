@@ -1,6 +1,9 @@
 package fr.jamailun.halystia.custom.boats;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.YELLOW;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

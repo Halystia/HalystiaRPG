@@ -1,6 +1,16 @@
 package fr.jamailun.halystia.shops;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.DARK_BLUE;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.DARK_GREEN;
+import static org.bukkit.ChatColor.DARK_PURPLE;
+import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.LIGHT_PURPLE;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.WHITE;
+import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,13 +1,14 @@
 package fr.jamailun.spellParser.structures;
 
-import fr.jamailun.spellParser.contexts.ApplicativeContext;
-import fr.jamailun.spellParser.contexts.TokenContext;
-import fr.jamailun.spellParser.structures.abstraction.CommandStructure;
+import java.util.Objects;
+
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
-import java.util.Objects;
+import fr.jamailun.spellParser.contexts.ApplicativeContext;
+import fr.jamailun.spellParser.contexts.TokenContext;
+import fr.jamailun.spellParser.structures.abstraction.CommandStructure;
 
 public class HealStructure extends CommandStructure {
 

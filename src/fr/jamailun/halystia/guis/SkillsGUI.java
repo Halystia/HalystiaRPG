@@ -1,6 +1,14 @@
 package fr.jamailun.halystia.guis;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.BLACK;
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.DARK_GREEN;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.ITALIC;
+import static org.bukkit.ChatColor.LIGHT_PURPLE;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.WHITE;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

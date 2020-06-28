@@ -1,6 +1,12 @@
 package fr.jamailun.halystia.jobs;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.DARK_GREEN;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.YELLOW;
 
 import java.util.HashMap;
 import java.util.List;

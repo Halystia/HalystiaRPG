@@ -1,9 +1,9 @@
 package fr.jamailun.spellParser.structures.abstraction;
 
-import fr.jamailun.spellParser.contexts.TokenContext;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import fr.jamailun.spellParser.contexts.TokenContext;
 
 public abstract class BlockStructure extends Structure implements CloseableStructure{
 

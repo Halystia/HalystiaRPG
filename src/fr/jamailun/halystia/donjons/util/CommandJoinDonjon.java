@@ -1,6 +1,10 @@
 package fr.jamailun.halystia.donjons.util;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.DARK_GREEN;
+import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.RED;
+
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.command.BlockCommandSender;

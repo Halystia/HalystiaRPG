@@ -1,8 +1,11 @@
 package fr.jamailun.halystia;
 
 import static org.bukkit.ChatColor.BOLD;
+import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.WHITE;
 
 import java.util.ArrayList;
 import java.util.Arrays;

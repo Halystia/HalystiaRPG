@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.InvocationSpell;
 

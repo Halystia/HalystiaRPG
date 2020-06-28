@@ -1,6 +1,7 @@
 package fr.jamailun.halystia.spells.old;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.RED;
 
 import java.util.ArrayList;
 import java.util.List;

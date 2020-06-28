@@ -1,10 +1,11 @@
 package fr.jamailun.spellParser.structures;
 
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Entity;
+
 import fr.jamailun.spellParser.contexts.ApplicativeContext;
 import fr.jamailun.spellParser.contexts.TokenContext;
 import fr.jamailun.spellParser.structures.abstraction.CommandStructure;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Entity;
 
 public class SendMessageStructure extends CommandStructure {
 

@@ -1,9 +1,9 @@
 package fr.jamailun.spellParser.structures.abstraction;
 
+import java.util.List;
+
 import fr.jamailun.spellParser.contexts.TokenContext;
 import fr.jamailun.spellParser.structures.dataBlocks.DataList;
-
-import java.util.List;
 
 public abstract class DataBlockStructure extends Structure implements CloseableStructure {
 

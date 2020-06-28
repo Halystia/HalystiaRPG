@@ -1,8 +1,9 @@
 package fr.jamailun.spellParser.contexts;
 
-import org.bukkit.entity.Entity;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.bukkit.entity.Entity;
 
 public class ApplicativeContext {
 

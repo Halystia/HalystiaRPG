@@ -9,9 +9,9 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import fr.jamailun.halystia.players.*;
-import fr.jamailun.halystia.spells.*;
-import fr.jamailun.halystia.spells.spellEntity.*;
+import fr.jamailun.halystia.players.Classe;
+import fr.jamailun.halystia.spells.Spell;
+import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
 
 public class Flameche extends Spell {
 

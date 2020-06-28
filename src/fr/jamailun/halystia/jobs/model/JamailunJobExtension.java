@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
 import fr.jamailun.halystia.constants.Rarity;
 import fr.jamailun.halystia.jobs.JobBlock;
 import fr.jamailun.halystia.jobs.JobBlockManager;

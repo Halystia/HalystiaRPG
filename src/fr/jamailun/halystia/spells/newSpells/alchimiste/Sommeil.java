@@ -11,8 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import fr.jamailun.halystia.players.*;
-import fr.jamailun.halystia.spells.*;
+import fr.jamailun.halystia.players.Classe;
+import fr.jamailun.halystia.spells.Spell;
 import fr.jamailun.halystia.spells.spellEntity.EffectSpellEntity;
 
 public class Sommeil extends Spell {

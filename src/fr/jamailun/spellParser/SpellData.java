@@ -1,7 +1,9 @@
 package fr.jamailun.spellParser;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.bukkit.ChatColor;
 
 public class SpellData {
 
@@ -50,7 +52,10 @@ public class SpellData {
 	}
 	
 	public List<String> getLore() {
-		return Arrays.asList(lore.split(";"));
+		List<String> lore = new ArrayList<>();
+		for(String line : this.lore.split(";"))
+			lore.add(ChatColor.GRAY + line);
+		return lore;
 	}
 
 	public void associateInteger(String a, int value) {

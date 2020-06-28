@@ -1,6 +1,6 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GREEN;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

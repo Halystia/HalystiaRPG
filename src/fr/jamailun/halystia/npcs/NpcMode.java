@@ -1,6 +1,7 @@
 package fr.jamailun.halystia.npcs;
 
 import org.mcmonkey.sentinel.SentinelTrait;
+
 import net.citizensnpcs.api.trait.Trait;
 
 public enum NpcMode {

@@ -10,8 +10,9 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
 import fr.jamailun.halystia.players.Classe;
-import fr.jamailun.halystia.spells.*;
+import fr.jamailun.halystia.spells.Spell;
 
 public class ResistanceElementaire extends Spell {
 	

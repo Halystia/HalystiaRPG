@@ -1,6 +1,7 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;

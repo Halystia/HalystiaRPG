@@ -1,10 +1,18 @@
 package fr.jamailun.halystia.commands;
 
+import static org.bukkit.ChatColor.BLACK;
+import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.BOLD;
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
+import static org.bukkit.ChatColor.YELLOW;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.bukkit.ChatColor.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

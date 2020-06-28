@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.Classe;
-import fr.jamailun.halystia.spells.*;
+import fr.jamailun.halystia.spells.Spell;
 
 public class ProtectionElementaire extends Spell {
 

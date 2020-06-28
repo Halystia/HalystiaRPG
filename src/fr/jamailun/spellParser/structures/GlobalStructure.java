@@ -1,11 +1,15 @@
 package fr.jamailun.spellParser.structures;
 
-import fr.jamailun.spellParser.contexts.ApplicativeContext;
-import fr.jamailun.spellParser.contexts.TokenContext;
-import fr.jamailun.spellParser.structures.abstraction.*;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import fr.jamailun.spellParser.contexts.ApplicativeContext;
+import fr.jamailun.spellParser.contexts.TokenContext;
+import fr.jamailun.spellParser.structures.abstraction.BlockStructure;
+import fr.jamailun.spellParser.structures.abstraction.CloseableStructure;
+import fr.jamailun.spellParser.structures.abstraction.CommandStructure;
+import fr.jamailun.spellParser.structures.abstraction.DataBlockStructure;
+import fr.jamailun.spellParser.structures.abstraction.Structure;
 
 public class GlobalStructure extends Structure {
 

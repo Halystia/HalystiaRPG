@@ -1,11 +1,15 @@
 package fr.jamailun.halystia.constants;
 
-import static org.bukkit.ChatColor.*;
-import fr.jamailun.halystia.utils.*;
+import static org.bukkit.ChatColor.DARK_RED;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
+
+import fr.jamailun.halystia.utils.ItemBuilder;
 
 public enum GUIEntityType {
 	

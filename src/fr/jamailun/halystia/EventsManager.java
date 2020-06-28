@@ -4,7 +4,25 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
 import fr.jamailun.halystia.chunks.ChunkManager;
-import fr.jamailun.halystia.events.*;
+import fr.jamailun.halystia.events.BossListeners;
+import fr.jamailun.halystia.events.ConsumeItemListener;
+import fr.jamailun.halystia.events.EntityDamageOtherListener;
+import fr.jamailun.halystia.events.EntityPickupItemListener;
+import fr.jamailun.halystia.events.GUIListener;
+import fr.jamailun.halystia.events.MobAggroListener;
+import fr.jamailun.halystia.events.MobDeathListener;
+import fr.jamailun.halystia.events.MobSpawnListener;
+import fr.jamailun.halystia.events.NpcInteractionListener;
+import fr.jamailun.halystia.events.PlayerBreakListener;
+import fr.jamailun.halystia.events.PlayerDeathListener;
+import fr.jamailun.halystia.events.PlayerDropItemListener;
+import fr.jamailun.halystia.events.PlayerEquipmentListener;
+import fr.jamailun.halystia.events.PlayerFishListener;
+import fr.jamailun.halystia.events.PlayerInteractListener;
+import fr.jamailun.halystia.events.PlayerJoinLeaveListener;
+import fr.jamailun.halystia.events.PlayerMovementsListener;
+import fr.jamailun.halystia.events.SomeWorldListeners;
+import fr.jamailun.halystia.events.TchatListener;
 import fr.jamailun.halystia.jobs.JobsManager;
 
 public class EventsManager {

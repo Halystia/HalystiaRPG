@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.utils.FileDataRPG;

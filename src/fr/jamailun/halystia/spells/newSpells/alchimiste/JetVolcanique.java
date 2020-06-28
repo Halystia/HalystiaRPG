@@ -10,8 +10,8 @@ import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import fr.jamailun.halystia.players.*;
-import fr.jamailun.halystia.spells.*;
+import fr.jamailun.halystia.players.Classe;
+import fr.jamailun.halystia.spells.Spell;
 
 public class JetVolcanique extends Spell {
 	

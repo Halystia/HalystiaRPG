@@ -1,6 +1,8 @@
 package fr.jamailun.halystia.players;
 
-import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+import static org.bukkit.ChatColor.RED;
 
 import java.util.Locale;
 

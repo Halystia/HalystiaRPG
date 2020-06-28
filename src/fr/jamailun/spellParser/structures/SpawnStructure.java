@@ -1,11 +1,12 @@
 package fr.jamailun.spellParser.structures;
 
-import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.spells.Invocator;
-import fr.jamailun.halystia.utils.RandomString;
-import fr.jamailun.spellParser.contexts.ApplicativeContext;
-import fr.jamailun.spellParser.contexts.TokenContext;
-import fr.jamailun.spellParser.structures.abstraction.DataBlockStructure;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.UUID;
+
 import org.bukkit.Location;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -15,12 +16,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.UUID;
+import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.spells.Invocator;
+import fr.jamailun.halystia.utils.RandomString;
+import fr.jamailun.spellParser.contexts.ApplicativeContext;
+import fr.jamailun.spellParser.contexts.TokenContext;
+import fr.jamailun.spellParser.structures.abstraction.DataBlockStructure;
 
 public class SpawnStructure extends DataBlockStructure implements Invocator {
 
