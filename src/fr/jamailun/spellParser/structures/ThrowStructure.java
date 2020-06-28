@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Egg;
 import org.bukkit.entity.EnderPearl;
@@ -51,13 +52,24 @@ public class ThrowStructure extends DataBlockStructure implements Invocator {
 		Projectile projectile = shooter.launchProjectile(type);
 		
 		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(projectile, (LivingEntity) shooterRaw, false, this, (int)Math.min(0, super.getDoubleData("damage")));
+		if(super.isDataSet("gravity"))
+			projectile.setGravity(getBooleanData("gravity"));
 		if(super.isDataSet("bounce"))
 			projectile.setBounce(getBooleanData("bounce"));
+		if(super.isDataSet("fire-chances"))
+			projectile.setFireTicks(Math.random() <= getDoubleData("fire-chances") ? 50 : 0);
+		
+		if(projectile instanceof AbstractArrow) {
+			if(super.isDataSet("critical-chances"))
+				((AbstractArrow) projectile).setCritical(Math.random() <= getDoubleData("critical-chances"));
+			if(super.isDataSet("pierce-level"))
+				((AbstractArrow) projectile).setPierceLevel((int)Math.min(0, getDoubleData("pierce-level")));
+		}
 	}
 
 	@Override
 	public List<String> getAllKeys() {
-		return Arrays.asList("bounce", "damage", "fire");
+		return Arrays.asList("bounce", "damage", "fire-chances", "critical-chances", "gravity", "pierce-level");
 	}
 	
 	private Class<? extends Projectile> getType(String type) {
