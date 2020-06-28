@@ -26,7 +26,6 @@ public class ParticlesStructure extends DataBlockStructure {
 	@Override
 	public void apply(ApplicativeContext context) {
 		String targetId = this.context.getDefinition(target);
-		System.out.println("owo : " + targetId);
 		Entity target = context.getEntity(targetId);
 		if(target == null)
 			return;
@@ -37,7 +36,6 @@ public class ParticlesStructure extends DataBlockStructure {
 		for ( Player pl : loc.getWorld().getPlayers() ) {
 			if(pl.getLocation().distance(loc) > 80)
 				continue;
-			pl.sendMessage("ui");
 			if(isDataSet("speed"))
 				pl.spawnParticle(particle, loc.add(0,.5,0), howMany, ox, oy, oz);
 			else

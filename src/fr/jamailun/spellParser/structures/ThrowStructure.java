@@ -52,7 +52,7 @@ public class ThrowStructure extends DataBlockStructure implements Invocator {
 		ProjectileSource shooter = (ProjectileSource) shooterRaw;
 		final Projectile projectile = shooter.launchProjectile(type);
 		
-		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(projectile, (LivingEntity) shooterRaw, false, this, (int)Math.min(0, super.getDoubleData("damage")));
+		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(projectile, (LivingEntity) shooterRaw, false, this, (int)Math.min(0, super.getDoubleData("damages")));
 		if(super.isDataSet("gravity"))
 			projectile.setGravity(getBooleanData("gravity"));
 		if(super.isDataSet("bounce"))
@@ -83,7 +83,7 @@ public class ThrowStructure extends DataBlockStructure implements Invocator {
 
 	@Override
 	public List<String> getAllKeys() {
-		return Arrays.asList("bounce", "damage", "fire-chances", "critical-chances", "gravity", "pierce-level", "velocity", "speed");
+		return Arrays.asList("bounce", "damages", "fire-chances", "critical-chances", "gravity", "pierce-level", "velocity", "speed");
 	}
 	
 	private Class<? extends Projectile> getType(String type) {

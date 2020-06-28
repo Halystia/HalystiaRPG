@@ -1,14 +1,15 @@
 package fr.jamailun.spellParser.structures;
 
-import fr.jamailun.spellParser.contexts.ApplicativeContext;
-import fr.jamailun.spellParser.contexts.TokenContext;
-import fr.jamailun.spellParser.structures.abstraction.CommandStructure;
+import java.util.Locale;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Locale;
+import fr.jamailun.spellParser.contexts.ApplicativeContext;
+import fr.jamailun.spellParser.contexts.TokenContext;
+import fr.jamailun.spellParser.structures.abstraction.CommandStructure;
 
 public class ApplyEffectStructure extends CommandStructure {
 
