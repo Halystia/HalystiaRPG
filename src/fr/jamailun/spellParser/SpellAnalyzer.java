@@ -37,7 +37,7 @@ public class SpellAnalyzer extends Spell {
 			boolean data = true;
 			while ((line = reader.readLine()) != null) {
 				n++;
-				if (line.startsWith("#"))
+				if (line.startsWith("#") || line.isEmpty())
 					continue;
 				if (line.startsWith("{")) {
 					data = false;
@@ -75,6 +75,8 @@ public class SpellAnalyzer extends Spell {
 	}
 
 	private void readData(String line) {
+		if(line.replace("\\t", "").replace(" ", "").startsWith("#"))
+			return;
 		String[] words = line.split(": ", 2);
 		if(words.length < 2) {
 			System.err.println("Erreur ligne data ["+line+"].");
