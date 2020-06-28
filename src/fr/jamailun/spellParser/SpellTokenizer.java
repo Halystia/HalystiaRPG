@@ -16,6 +16,7 @@ import fr.jamailun.spellParser.structures.GlobalStructure;
 import fr.jamailun.spellParser.structures.HealStructure;
 import fr.jamailun.spellParser.structures.SendMessageStructure;
 import fr.jamailun.spellParser.structures.SpawnStructure;
+import fr.jamailun.spellParser.structures.ThrowStructure;
 
 public class SpellTokenizer {
 
@@ -90,6 +91,11 @@ public class SpellTokenizer {
 			spawn(line);
 			return false;
 		}
+		
+		if(words[0].equalsIgnoreCase("throw")) {
+			throwBlock(line);
+			return false;
+		}
 
 		if(global.isInData()) {
 			if( ! line.matches("[A-Za-z_\\-]+(| *):(| *)[\\pN\\pL.&\\s%?!:]+") ) {
@@ -105,6 +111,18 @@ public class SpellTokenizer {
 
 		Bukkit.getConsoleSender().sendMessage("§cError : unknown symbol : '"+words[0]+"' on line n°"+lineNumber+".");
 		return false;
+	}
+
+	private void throwBlock(String line) {
+		if ( ! line.matches(ThrowStructure.REGEX) ) {
+			System.err.println("Error : bad format on line " + lineNumber+". Used here : '"+line+"'.");
+			System.err.println("Use '"+ThrowStructure.REGEX+"'.");
+			return;
+		}
+		String[] words = line.split(" ");
+		ThrowStructure structure = new ThrowStructure(context, words[1]);
+		structure.defineTarget(words[3]);
+		global.openBlock(structure);
 	}
 
 	private void spawn(String line) {

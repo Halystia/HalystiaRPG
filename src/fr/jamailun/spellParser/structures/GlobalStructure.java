@@ -61,10 +61,8 @@ public class GlobalStructure extends Structure {
 	public void apply(ApplicativeContext context) {
 		structures.forEach(s -> {
 			if(s.isValid()) {
-				System.out.println("apply structure : " + s);
 				s.apply(context);
-			} else
-				System.err.println("structure NOT valid ! ("+s+")");
+			}
 		});
 	}
 

@@ -19,6 +19,7 @@ import org.bukkit.entity.Snowball;
 import org.bukkit.entity.Trident;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.spells.Invocator;
@@ -29,7 +30,7 @@ import fr.jamailun.spellParser.structures.abstraction.DataBlockStructure;
 public class ThrowStructure extends DataBlockStructure implements Invocator {
 
 	private Class<? extends Projectile> type;
-	public static final String REGEX = "throw [a-zA-Z0-9_]+ from %[-zA-Z0-9_]+ with \\{";
+	public static final String REGEX = "throw [a-zA-Z_]+ from %[a-zA-Z0-9_]+ with \\{";
 	
 	public ThrowStructure(TokenContext context, String type) {
 		super(context);
@@ -49,7 +50,7 @@ public class ThrowStructure extends DataBlockStructure implements Invocator {
 		if( ! ( shooterRaw instanceof ProjectileSource))
 			return;
 		ProjectileSource shooter = (ProjectileSource) shooterRaw;
-		Projectile projectile = shooter.launchProjectile(type);
+		final Projectile projectile = shooter.launchProjectile(type);
 		
 		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(projectile, (LivingEntity) shooterRaw, false, this, (int)Math.min(0, super.getDoubleData("damage")));
 		if(super.isDataSet("gravity"))
@@ -65,11 +66,24 @@ public class ThrowStructure extends DataBlockStructure implements Invocator {
 			if(super.isDataSet("pierce-level"))
 				((AbstractArrow) projectile).setPierceLevel((int)Math.min(0, getDoubleData("pierce-level")));
 		}
+
+		if(super.isDataSet("velocity"))
+			projectile.setVelocity(projectile.getVelocity().multiply(Math.min(0.0001, getDoubleData("velocity"))));
+		if(super.isDataSet("speed"))
+			projectile.setVelocity(projectile.getVelocity().multiply(Math.min(0.0001, getDoubleData("speed"))));
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				if(projectile.isValid())
+					projectile.remove();
+			}
+		}.runTaskLater(HalystiaRPG.getInstance(), 200L);
 	}
 
 	@Override
 	public List<String> getAllKeys() {
-		return Arrays.asList("bounce", "damage", "fire-chances", "critical-chances", "gravity", "pierce-level");
+		return Arrays.asList("bounce", "damage", "fire-chances", "critical-chances", "gravity", "pierce-level", "velocity", "speed");
 	}
 	
 	private Class<? extends Projectile> getType(String type) {
