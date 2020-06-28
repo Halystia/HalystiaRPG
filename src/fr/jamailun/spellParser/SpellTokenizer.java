@@ -8,6 +8,7 @@ import fr.jamailun.spellParser.contexts.TokenContext;
 import fr.jamailun.spellParser.structures.ApplyEffectStructure;
 import fr.jamailun.spellParser.structures.DamageStructure;
 import fr.jamailun.spellParser.structures.DefineStructure;
+import fr.jamailun.spellParser.structures.DelayStructure;
 import fr.jamailun.spellParser.structures.ForLoopStructure;
 import fr.jamailun.spellParser.structures.GlobalStructure;
 import fr.jamailun.spellParser.structures.HealStructure;
@@ -87,6 +88,11 @@ public class SpellTokenizer {
 			return false;
 		}
 		
+		if(words[0].equalsIgnoreCase("delay")) {
+			delayBlock(line);
+			return false;
+		}
+		
 		if(words[0].equalsIgnoreCase("throw")) {
 			throwBlock(line);
 			return false;
@@ -144,6 +150,19 @@ public class SpellTokenizer {
 		}
 		SpawnStructure structure = new SpawnStructure(context);
 		structure.read(line);
+		global.openBlock(structure);
+	}
+	
+	private void delayBlock(String line) {
+		if ( ! line.matches(DelayStructure.REGEX) ) {
+			System.err.println("Error : bad format on line " + lineNumber+". Used here : '"+line+"'.");
+			System.err.println("Use '"+DelayStructure.REGEX+"'.");
+			return;
+		}
+		String[] words = line.split(" ");
+		DelayStructure structure = new DelayStructure(context);
+		structure.setDurationInteger(Integer.parseInt(words[2]));
+		structure.setUnitString(words[3]);
 		global.openBlock(structure);
 	}
 
