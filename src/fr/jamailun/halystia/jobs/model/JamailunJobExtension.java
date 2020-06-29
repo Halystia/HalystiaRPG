@@ -247,11 +247,11 @@ public class JamailunJobExtension {
 		crafts.registerContent(new JobCraft(forgeron, 1, item("noviB"), 30, 	item("iron1", 10), item("coal1", 2)));
 		crafts.registerContent(new JobCraft(forgeron, 1, item("noviE"), 45, 	item("iron1", 8), item("coal1", 2), item("stick", 20), item("silex1")));
 		
-		crafts.registerContent(new JobCraft(forgeron, 2, item("neopH"), 50, 	item("iron2", 18), item("coal2", 2), item("string")));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("neopC"), 80, 	item("iron2", 22), item("coal2", 4), item("string")));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("neopL"), 70, 	item("iron2", 20), item("coal2", 2), item("string")));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("neopB"), 40, 	item("iron2", 16), item("coal2", 2), item("string")));
-		crafts.registerContent(new JobCraft(forgeron, 2, item("neopE"), 60, 	item("iron2", 3), item("coal2", 2), item("string", 4), item("stick", 40)));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("néopH"), 50, 	item("iron2", 18), item("coal2", 2), item("string")));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("néopC"), 80, 	item("iron2", 22), item("coal2", 4), item("string")));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("néopL"), 70, 	item("iron2", 20), item("coal2", 2), item("string")));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("néopB"), 40, 	item("iron2", 16), item("coal2", 2), item("string")));
+		crafts.registerContent(new JobCraft(forgeron, 2, item("néopE"), 60, 	item("iron2", 3), item("coal2", 2), item("string", 4), item("stick", 40)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("hache1"), 60, 	item("iron2", 15), item("coal2", 2), item("string"), item("stick", 20)));
 		crafts.registerContent(new JobCraft(forgeron, 2, item("pioche1"), 60, 	item("iron2", 15), item("coal2", 2), item("string"), item("stick", 20)));
 		

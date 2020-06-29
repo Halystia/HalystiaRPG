@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,6 +27,10 @@ public class RpgEquipment {
 	protected int health, armor, mana, damagesInt;
 	protected double speed, damageBuff;
 	protected ItemBuilder item;
+	
+	public RpgEquipment(Material material) {
+		this(new ItemBuilder(material));
+	}
 	
 	public RpgEquipment(ItemStack item) {
 		this(new ItemBuilder(item));
@@ -133,44 +139,77 @@ public class RpgEquipment {
 		return level;
 	}
 
-	public void setLevel(int level) {
+	public double getDamageBuff() {
+		return damageBuff;
+	}
+	
+	public RpgEquipment addEnchant(Enchantment enchant, int level) {
+		item.addEnchant(enchant, level);
+		return this;
+	}
+	
+	public RpgEquipment setName(String name) {
+		item.setName(name);
+		return this;
+	}
+
+	public RpgEquipment setLevel(int level) {
 		if(level < 0)
 			level = 0;
 		if(level > PlayerData.LEVEL_MAX)
 			level = PlayerData.LEVEL_MAX;
 		this.level = level;
+		return this;
+	}
+	
+	public RpgEquipment setUnbreakable() {
+		item.setUnbreakable();
+		return this;
+	}
+	
+	public RpgEquipment shine() {
+		item.shine();
+		return this;
+	}
+	
+	public RpgEquipment shineAndUnbreak() {
+		item.setUnbreakable();
+		item.shine();
+		return this;
 	}
 
 	public int getDamagesInt() {
 		return damagesInt;
 	}
 
-	public void setDamagesInt(int damagesInt) {
+	public RpgEquipment setDamagesInt(int damagesInt) {
 		this.damagesInt = damagesInt;
+		return this;
 	}
 
-	public double getDamageBuff() {
-		return damageBuff;
-	}
-
-	public void setDamageBuff(double damageBuff) {
+	public RpgEquipment setDamageBuff(double damageBuff) {
 		this.damageBuff = damageBuff;
+		return this;
 	}
 
-	public void setHealth(int health) {
+	public RpgEquipment setHealth(int health) {
 		this.health = health;
+		return this;
 	}
 
-	public void setArmor(int armor) {
+	public RpgEquipment setArmor(int armor) {
 		this.armor = armor;
+		return this;
 	}
 
-	public void setMana(int mana) {
+	public RpgEquipment setMana(int mana) {
 		this.mana = mana;
+		return this;
 	}
 
-	public void setSpeed(double speed) {
+	public RpgEquipment setSpeed(double speed) {
 		this.speed = speed;
+		return this;
 	}
 	
 }
