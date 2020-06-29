@@ -84,7 +84,7 @@ public class ExclamationManagement {
 
 	private final static class Exclamation {
 
-		private final static double Y_DELTA = 0.5*2;
+		private final static double Y_DELTA = 1.7;
 		private ExclamationType type;
 		private final EntityArmorStand stand;
 
@@ -108,6 +108,7 @@ public class ExclamationManagement {
 					stand.setInvisible(true);
 					stand.setInvulnerable(true);
 					stand.setMarker(true);
+					stand.setSmall(true);
 					PacketPlayOutEntityMetadata packetData2 = new PacketPlayOutEntityMetadata(stand.getId(), stand.getDataWatcher(), true);
 					((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packetData2);
 				}
