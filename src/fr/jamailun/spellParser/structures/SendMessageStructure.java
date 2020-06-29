@@ -1,5 +1,7 @@
 package fr.jamailun.spellParser.structures;
 
+import java.text.DecimalFormat;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 
@@ -51,6 +53,12 @@ public class SendMessageStructure extends CommandStructure {
 				if(var.getCustomName() != null)
 					name = var.getCustomName();
 				words[i] = name;
+				continue;
+			}
+			if(context.isDefinedHasNumber(key)) {
+				double var = context.getNumber(key);
+				boolean noDecimal =  Math.abs(var - ((int)var)) < 0.01;
+				words[i] = new DecimalFormat(noDecimal ? (var > 10 ? "##" : "#") : "##.#").format(var);
 				continue;
 			}
 		}
