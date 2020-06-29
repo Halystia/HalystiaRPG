@@ -32,6 +32,34 @@ public class SendMessageStructure extends CommandStructure {
 		Entity entity = context.getEntity(target);
 		if(entity == null)
 			return;
-		entity.sendMessage(ChatColor.translateAlternateColorCodes('&', message));
+		String message = ChatColor.translateAlternateColorCodes('&', this.message);
+		if ( ! message.contains("%") ) {
+			entity.sendMessage(message);
+			return;
+		}
+		
+		String[] words = message.split(" ");
+		for(int i = 0; i < words.length; i++) {
+			if ( ! words[i].startsWith("%") )
+				continue;
+			String key = this.context.getDefinition(words[i]);
+			if(context.isDefinedHasEntity(key)) {
+				Entity var = context.getEntity(key);
+				if(var == null)
+					continue;
+				String name = var.getName();
+				if(var.getCustomName() != null)
+					name = var.getCustomName();
+				words[i] = name;
+				continue;
+			}
+		}
+		StringBuilder builder = new StringBuilder();
+		for(int i = 0; i < words.length; i++) {
+			builder.append(words[i]);
+			if(i < words.length - 1)
+				builder.append(" ");
+		}
+		entity.sendMessage(builder.toString());
 	}
 }
