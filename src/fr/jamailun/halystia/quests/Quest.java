@@ -393,6 +393,7 @@ public class Quest extends FileDataRPG {
 		p.sendMessage(DARK_PURPLE + "" + BOLD + "QUÊTE OBTENUE : " + getDisplayName() + DARK_PURPLE + " !");
 		main.getQuestManager().getPlayerData(p).updateStepInQuest(this, 0);
 		p.sendMessage(steps[0].getObjectiveDescription());
+		HalystiaRPG.getInstance().getNpcManager().refreshExclamations(p);
 	}
 
 	public void addStepSpeak(RpgNpc cible) {

@@ -49,10 +49,10 @@ public class QuestManager {
 		this.mobs = mobs;
 		this.donjons = donjons;
 		quests = new HashSet<>();
+		
 		reload();
 		
 		playersAdvancements = new HashSet<>();
-		
 	}
 	
 	public boolean hasDataAbout(Player player) {
@@ -177,7 +177,7 @@ public class QuestManager {
 						continue;
 					}
 				} else if( step instanceof QuestStepInteract ) {
-					
+					// ?
 				}
 			}
 		}
@@ -187,7 +187,7 @@ public class QuestManager {
 		try {
 			return playersAdvancements.stream().filter(pl -> pl.owns(player)).findAny().get();
 		} catch ( NoSuchElementException e) {
-			Bukkit.broadcastMessage("§4§lrien trouvé : on regénère.");
+//			Bukkit.broadcastMessage("§4§lrien trouvé : on regénère.");
 			return generateDataAbout(player);
 		}
 	}

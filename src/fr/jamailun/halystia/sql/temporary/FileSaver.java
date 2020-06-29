@@ -219,7 +219,7 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 			}
 			return quests;
 		}
-	}
+	}*/
 
 	@Override
 	public void updateStepInQuest(Player p, Quest quest, int step) {
@@ -241,7 +241,7 @@ public class FileSaver extends FileDataRPG implements DataHandler {
 			save();
 		}
 	}
-
+/*
 	@Override
 	public Set<QuestStep> getOnGoingQuestSteps(Player p) {
 		synchronized (file) {

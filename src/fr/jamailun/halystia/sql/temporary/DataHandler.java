@@ -57,8 +57,8 @@ public interface DataHandler {
 	
 	public int getStepInQuest(Player p, Quest quest);
 	public int getDataInQuest(Player p, Quest quest);
-	//public void updateStepInQuest(Player p, Quest quest, int step);
-	//public void updateDataInQuest(Player p, Quest quest, int data);
+	public void updateStepInQuest(Player p, Quest quest, int step);
+	public void updateDataInQuest(Player p, Quest quest, int data);
 	
 	//public Set<Quest> getOnGoingQuests(Player p);
 	//public Set<QuestStep> getOnGoingQuestSteps(Player p);

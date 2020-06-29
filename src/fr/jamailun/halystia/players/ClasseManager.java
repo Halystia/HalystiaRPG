@@ -32,7 +32,7 @@ public class ClasseManager {
 	}
 	
 	private final static int saveFrequence = 120;
-	private final static int refreshExclamationFrequence = 30;
+	private final static int refreshExclamationFrequence = 10;
 	private int saveCounter = 0, exclCounter = 0;
 	private void startRunnable(HalystiaRPG main) {
 		new BukkitRunnable() {

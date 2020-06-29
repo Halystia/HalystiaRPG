@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.quests.players.QuestState.QuestStatus;
 import fr.jamailun.halystia.quests.steps.QuestStep;
@@ -79,6 +80,7 @@ public class QuestsAdvancement {
 		} catch(NoSuchElementException ignored) {
 			quests.add(new QuestState(quest, step, 0, QuestStatus.STARTED));
 		}
+		HalystiaRPG.getInstance().getDataBase().updateStepInQuest(Bukkit.getPlayer(uuid), quest, step);
 	}
 	
 	public void updateDataInQuest(Quest quest, int data) {
@@ -87,6 +89,7 @@ public class QuestsAdvancement {
 				.filter(state -> state.getQuest().equals(quest))
 				.findFirst().get()
 				.updateData(data);
+			HalystiaRPG.getInstance().getDataBase().updateDataInQuest(Bukkit.getPlayer(uuid), quest, data);
 		} catch(NoSuchElementException ignored) {
 			Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Erreur : player don't have quest " + quest.getID() + ". Step back to 0.");
 			quests.add(new QuestState(quest, 0, data, QuestStatus.STARTED));
@@ -126,6 +129,7 @@ public class QuestsAdvancement {
 	public void resetQuest(Quest quest) {
 		quests.removeIf(data -> data.getQuest().equals(quest));
 		quests.add(new QuestState(quest, -1, 0, QuestStatus.NOT_STARTED));
+		HalystiaRPG.getInstance().getDataBase().updateStepInQuest(Bukkit.getPlayer(uuid), quest, -1);
 	}
 
 	public boolean knows(Quest quest) {

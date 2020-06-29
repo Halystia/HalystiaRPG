@@ -1,7 +1,5 @@
 package fr.jamailun.halystia.players;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -46,7 +44,7 @@ public class Statistics {
 		baseDamages = level / 5 + 1;
 		baseDamagesBuff = 1;
 		
-		Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "JOUEUR TOTAL : §aarmor="+getArmor()+", §dhealth="+getMaxHealth()+", §fspeed="+getSpeed()+", §cdmgs="+getDamages()+", §bmana="+getMaxMana()+".");
+	//	Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "JOUEUR TOTAL : §aarmor="+getArmor()+", §dhealth="+getMaxHealth()+", §fspeed="+getSpeed()+", §cdmgs="+getDamages()+", §bmana="+getMaxMana()+".");
 	}
 	
 	private void calculateArmor() {
@@ -57,8 +55,8 @@ public class Statistics {
 		armorDamages = playerArmor.getDamagesInteger();
 		armorDamagesBuff = playerArmor.getDamageBuff();
 		
-		Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "ARMURE UNQUEMENT : §aarmor="+playerArmor.getArmor()+", §dhealth="+playerArmor.getHealth()+", §fspeed="+playerArmor.getSpeed()+", §cdmgs="+playerArmor.getDamagesInteger()
-			+", dmgsBuff=" + playerArmor.getDamageBuff() +"%, §bmana="+playerArmor.getMana()+".");
+	//	Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "ARMURE UNQUEMENT : §aarmor="+playerArmor.getArmor()+", §dhealth="+playerArmor.getHealth()+", §fspeed="+playerArmor.getSpeed()+", §cdmgs="+playerArmor.getDamagesInteger()
+	//		+", dmgsBuff=" + playerArmor.getDamageBuff() +"%, §bmana="+playerArmor.getMana()+".");
 	}
 
 	public double getMaxHealth() {
