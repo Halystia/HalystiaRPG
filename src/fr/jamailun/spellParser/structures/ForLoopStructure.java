@@ -12,7 +12,7 @@ public class ForLoopStructure extends BlockStructure {
 	private boolean shouldApplyCaster = false;
 	private final String targetSymbol;
 	private final Selector selector;
-	private String sourceEntity = "%caster";
+	private String sourceEntity = TokenContext.KEY_CASTER;
 
 	public static final String REGEX = "for [A-Za-z0-9_]+ as %[A-Za-z0-9_]+ around %[A-Za-z0-9_]+ in [0-9.]+ do \\{";
 	
