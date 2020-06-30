@@ -48,6 +48,12 @@ commands:
     permission: halystia.rpg.shop
     permission-message: §cIl te faut le droit de manipuler les shops RPG !
     description: Recharger les shops si il y a eu un problème.
+  #> COMMANDES AVEC PERMS SPECIALES <#
+  tpnpc:
+    usage: /tpnpc <npc>
+    permission: halystia.rpg.tpnpc
+    permission-message: §cIl te faut le droit de te téléporter aux NPCS.
+    description: Vous téléporte à un NPC.
   #> GUI D'EDITION <#
   edit-mobs:
     usage: /edit-mobs
@@ -207,11 +213,18 @@ permissions:
       halystia.rpg.shop: true
       halystia.rpg.master: true
       halystia.rpg.player: true
+      halystia.rpg.tpnpc: true
+  halystia.rpg.tpnpc:
+    description: Permet de se téléporter à un NPC distant.
+    default: false
+    children:
+      halystia.rpg.player: true
   halystia.rpg.world:
     description: Donne les droits sur les editions des chunks + mobs et affectation.
     default: false
     children:
       halystia.rpg.player: true
+      halystia.rpg.tpnpc: true
   halystia.rpg.shops:
     description: Donne les droits sur les editions de shops.
     default: false
@@ -222,6 +235,7 @@ permissions:
     default: false
     children:
       halystia.rpg.player: true
+      halystia.rpg.tpnpc: true
   halystia.rpg.player:
     description: Permissions de base des joueurs.
     default: true

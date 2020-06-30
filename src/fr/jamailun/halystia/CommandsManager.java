@@ -15,6 +15,7 @@ import fr.jamailun.halystia.commands.CommandGiveItems;
 import fr.jamailun.halystia.commands.CommandGivePotion;
 import fr.jamailun.halystia.commands.CommandGiveSpell;
 import fr.jamailun.halystia.commands.CommandGiveWater;
+import fr.jamailun.halystia.commands.CommandNpcTeleport;
 import fr.jamailun.halystia.commands.CommandPing;
 import fr.jamailun.halystia.commands.CommandPurge;
 import fr.jamailun.halystia.commands.CommandQuests;
@@ -52,6 +53,7 @@ public class CommandsManager {
 		new CommandTitle(main);
 		new CommandPing(main);
 		new CommandSkills(main);
+		new CommandNpcTeleport(main, npcMgr);
 		
 		main.getCommand("create-shop-classe").setExecutor(new CommandCreateShop(main));
 		main.getCommand("reload-shop-classe").setExecutor(new CommandReloadShops(main));
