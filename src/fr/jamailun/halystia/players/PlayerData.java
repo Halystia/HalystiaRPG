@@ -290,7 +290,12 @@ public class PlayerData {
 		return damage(damage, damager, reason, false);
 	}
 	
+	private long lastDamage = System.currentTimeMillis();
+	
 	public boolean damage(double damage, UUID damager, DamageReason reason, boolean ignoreArmor) {
+		if(System.currentTimeMillis() - lastDamage < 500)
+			return false;
+		lastDamage = System.currentTimeMillis();
 		if(damage < 0)
 			return false;
 		double realDamages = ignoreArmor ? damage : Math.max(1, damage - stats.getArmor());
