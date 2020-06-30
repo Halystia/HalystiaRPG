@@ -16,7 +16,7 @@ import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
 public class RepliqueFeu extends Spell {
 
 	public final static double RANGE = 1.2;
-	public final static double POWER = 5;
+	public final static double POWER = 7;
 	
 	@Override
 	public boolean cast(Player p) {

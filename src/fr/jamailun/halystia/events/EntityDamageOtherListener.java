@@ -300,16 +300,16 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			boolean dead = false;
 			switch(e.getCause()) {
 			case CONTACT:
-				dead = pc.damage(30, null, DamageReason.NONE, true);
+				dead = pc.damage(e.getDamage(), null, DamageReason.NONE, true);
 				break;
 			case CRAMMING:
 				dead = pc.damage(2, null, DamageReason.NONE, true);
 				break;
 			case DRAGON_BREATH:
-				dead = pc.damage(300, null, DamageReason.NONE, true);
+				dead = pc.damage(200, null, DamageReason.NONE, true);
 				break;
 			case DROWNING:
-				dead = pc.damage(100, null, DamageReason.NONE, true);
+				dead = pc.damage(50, null, DamageReason.NONE, true);
 				break;
 			case DRYOUT:
 			case MELTING:
@@ -329,10 +329,10 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				dead = pc.damage(20, null, DamageReason.FIRE, true);
 				break;
 			case FIRE_TICK:
-				dead = pc.damage(10, null, DamageReason.FIRE, true);
+				dead = pc.damage(5, null, DamageReason.FIRE, true);
 				break;
 			case LAVA:
-				dead = pc.damage(40, null, DamageReason.FIRE, true);
+				dead = pc.damage(30, null, DamageReason.FIRE, true);
 				break;
 			case ENTITY_EXPLOSION:
 			case LIGHTNING:
@@ -362,7 +362,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			case THORNS:
 			case FALL:
 			case FALLING_BLOCK:
-				dead = pc.damage(e.getDamage() * 20, null, DamageReason.NONE, true);
+				dead = pc.damage(e.getDamage() * 5, null, DamageReason.NONE, true);
 				break;
 			case VOID:
 				dead = pc.damage(500, null, DamageReason.NONE, true);

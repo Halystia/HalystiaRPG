@@ -34,17 +34,17 @@ public class InvocationArmee extends InvocationSpell {
 			IronGolem golem = p.getWorld().spawn(block.getLocation().add(Math.random(), 1 + Math.random(), Math.random()), IronGolem.class);
 			golem.setCustomName(ChatColor.YELLOW + "Golem d'acier de " + ChatColor.GOLD +  p.getName());
 			
-			golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(150.0);
+			golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(1500);
 			golem.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(.3);
-			golem.setHealth(150.0);
+			golem.setHealth(1500);
 			
-			addInvocation(golem, p, false, 13);
+			addInvocation(golem, p, false, 80);
 			
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					if(golem.isValid())
-						golem.damage(300);
+						golem.damage(3000);
 				}
 			}.runTaskLater(main, 20*120);
 		}
@@ -76,7 +76,7 @@ public class InvocationArmee extends InvocationSpell {
 	public List<String> getLore() {
 		return Arrays.asList(
 			ChatColor.GRAY + "Invoque trois golems d'acier",
-			ChatColor.GRAY + "Golem d'acier : " + ChatColor.RED + "150 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "13 dmgs" + ChatColor.GRAY + ".",
+			ChatColor.GRAY + "Golem d'acier : " + ChatColor.RED + "1500 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "80 dmgs" + ChatColor.GRAY + ".",
 			ChatColor.GRAY + "Durée des invocations : " + ChatColor.GREEN + 120 + "s" + ChatColor.GRAY + "."
 		);
 	}

@@ -19,8 +19,8 @@ import fr.jamailun.halystia.spells.InvocationSpell;
 public class Corruption extends InvocationSpell {
 	
 	public final static double RAYON = 3.0;
-	public final static int CREATURE_DAMAGES = 10;
-	public final static double CREATURE_HEALTH = 10;
+	public final static int CREATURE_DAMAGES = 50;
+	public final static double CREATURE_HEALTH = 300;
 	
 	private EntityType[] types;
 	
@@ -55,7 +55,7 @@ public class Corruption extends InvocationSpell {
 					@Override
 					public void run() {
 						if(en.isValid())
-							en.damage(1000);
+							en.damage(CREATURE_HEALTH * 10);
 					}
 				}.runTaskLater(main, 20*20);
 			}

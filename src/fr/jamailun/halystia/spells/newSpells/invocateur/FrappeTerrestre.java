@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.DamageReason;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.Spell;
 
@@ -57,7 +58,9 @@ public class FrappeTerrestre extends Spell {
 					}
 					
 					if(entity.getLocation().distance(p.getLocation()) <= RANGE) {
-						if(entity instanceof Damageable)
+						if(entity instanceof Player)
+							HalystiaRPG.getInstance().getClasseManager().getPlayerData((Player)entity).damage(2, p.getUniqueId(), DamageReason.SPELL);
+						else if(entity instanceof Damageable)
 							((Damageable)entity).damage(2);
 						
 						Location loc = ((LivingEntity)entity).getEyeLocation();

@@ -30,16 +30,16 @@ public class InvocationBasique extends InvocationSpell {
 		IronGolem golem = p.getWorld().spawn(block.getLocation().add(0, 1, 0), IronGolem.class);
 		golem.setCustomName(ChatColor.YELLOW + "Golem de " + ChatColor.GOLD +  p.getName());
 		
-		golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-		golem.setHealth(20.0);
+		golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(300);
+		golem.setHealth(300);
 		
-		addInvocation(golem, p, false, 5);
+		addInvocation(golem, p, false, 15);
 		
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				if(golem.isValid())
-					golem.damage(100);
+					golem.damage(1000);
 			}
 		}.runTaskLater(main, 20*50);
 		
@@ -70,7 +70,7 @@ public class InvocationBasique extends InvocationSpell {
 	public List<String> getLore() {
 		return Arrays.asList(
 			ChatColor.GRAY + "Invoque un golem de fer",
-			ChatColor.GRAY + "Golem : " + ChatColor.RED + "20 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "5 dmgs" + ChatColor.GRAY + ".",
+			ChatColor.GRAY + "Golem : " + ChatColor.RED + "300 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "15 dmgs" + ChatColor.GRAY + ".",
 			ChatColor.GRAY + "Durée des invocations : " + ChatColor.GREEN + 50 + "s" + ChatColor.GRAY + "."
 		);
 	}

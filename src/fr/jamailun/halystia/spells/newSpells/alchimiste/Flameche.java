@@ -18,7 +18,7 @@ public class Flameche extends Spell {
 	@Override
 	public synchronized boolean cast(Player p) {
 		EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(p.getLocation().add(0, 1.5, 0).clone(), p, 4*3, 5*20, false, false);
-		spell.setDamages(2);
+		spell.setDamages(20);
 		spell.setFireTick(8);
 		Vector dir = p.getLocation().getDirection();
 		Vector dirr = dir.multiply(.5);

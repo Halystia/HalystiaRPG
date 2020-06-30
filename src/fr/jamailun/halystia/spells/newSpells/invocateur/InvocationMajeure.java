@@ -35,16 +35,16 @@ public class InvocationMajeure extends InvocationSpell {
 			IronGolem golem = p.getWorld().spawn(block.getLocation().add(Math.random(), 1 + Math.random(), Math.random()), IronGolem.class);
 			golem.setCustomName(ChatColor.YELLOW + "Grand golem de " + ChatColor.GOLD +  p.getName());
 			
-			golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.0);
-			golem.setHealth(50.0);
+			golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(600);
+			golem.setHealth(600);
 			
-			addInvocation(golem, p, false, 10);
+			addInvocation(golem, p, false, 50);
 			
 			new BukkitRunnable() {
 				@Override
 				public void run() {
 					if(golem.isValid())
-						golem.damage(200);
+						golem.damage(2000);
 				}
 			}.runTaskLater(HalystiaRPG.getInstance(), 20*60);
 		}
@@ -76,7 +76,7 @@ public class InvocationMajeure extends InvocationSpell {
 	public List<String> getLore() {
 		return Arrays.asList(
 			ChatColor.GRAY + "Invoque deux grands golems de fer",
-			ChatColor.GRAY + "Grand golem : " + ChatColor.RED + "50 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "10 dmgs" + ChatColor.GRAY + ".",
+			ChatColor.GRAY + "Grand golem : " + ChatColor.RED + "600 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "50 dmgs" + ChatColor.GRAY + ".",
 			ChatColor.GRAY + "Durée des invocations : " + ChatColor.GREEN + 60 + "s" + ChatColor.GRAY + "."
 		);
 	}

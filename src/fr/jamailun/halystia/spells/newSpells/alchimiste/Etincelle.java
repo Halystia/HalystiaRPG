@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.DamageReason;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.Spell;
 import fr.jamailun.halystia.utils.Laser;
@@ -21,6 +22,8 @@ public class Etincelle extends Spell {
 	public final static int RANGE = 25;
 	public final static int TICK_DURATION = 20;
 	public final static int PERIOD = 2;
+	
+	public final static int DAMAGES = 40;
 	
 	@Override
 	public synchronized boolean cast(final Player p) {
@@ -68,7 +71,10 @@ public class Etincelle extends Spell {
 						e.printStackTrace();
 					}
 					
-					target.damage(3);
+					if(target instanceof Player)
+						HalystiaRPG.getInstance().getClasseManager().getPlayerData((Player)target).damage(DAMAGES, p.getUniqueId(), DamageReason.SPELL, true);
+					else
+						target.damage(DAMAGES);
 					
 					if( ! (target.isValid() && p.isValid()))
 						tick = TICK_DURATION;

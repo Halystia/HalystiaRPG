@@ -15,7 +15,7 @@ import fr.jamailun.halystia.spells.spellEntity.EffectAndDamageSpellEntity;
 
 public class Vague extends Spell {
 
-	public final static double RANGE = 2.3;
+	public final static double RANGE = 1.4;
 	public final static double POWER = 1.5;
 	
 	@Override
@@ -26,7 +26,7 @@ public class Vague extends Spell {
 		Vector dir = p.getLocation().getDirection();
 		Vector dirr = dir.multiply(1.5);
 		spell.setDirection(dirr);
-		spell.addParticleEffect(Particle.WATER_SPLASH, 450, RANGE/2, RANGE/4, .1);
+		spell.addParticleEffect(Particle.WATER_SPLASH, 450, RANGE/1.8, RANGE/5, .1);
 		spell.addSoundEffect(Sound.AMBIENT_UNDERWATER_ENTER, .5f, 1.5f);
 		return true;
 	}

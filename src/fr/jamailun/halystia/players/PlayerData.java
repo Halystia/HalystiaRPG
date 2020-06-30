@@ -322,6 +322,7 @@ public class PlayerData {
 						EntityDamageOtherListener.alertDeathPlayer(player, null);
 						break;
 					case PLAYER:
+					case SPELL:
 						EntityDamageOtherListener.alertDeathPlayer(player, killer.getName());
 						break;
 					case SUPERMOB:

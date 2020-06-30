@@ -4,8 +4,12 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
+
+import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.DamageReason;
 
 public class EffectAndDamageSpellEntity extends SpellEntity {
 	
@@ -70,8 +74,13 @@ public class EffectAndDamageSpellEntity extends SpellEntity {
 			});
 			if(data.getFireTick() > 0)
 				en.setFireTicks(data.getFireTick());
-			if(data.getDamages() > 0)
-				en.damage(data.getDamages(), launcherEntity);
+			if(data.getDamages() > 0) {
+				if(en instanceof Player) {
+					HalystiaRPG.getInstance().getClasseManager().getPlayerData((Player)en).damage(data.getDamages(), launcher, DamageReason.SPELL, data.doesIgnoreArmor());
+				} else {
+					en.damage(data.getDamages(), launcherEntity);
+				}
+			}
 			if(data.getyForce() > 0)
 				en.setVelocity(en.getVelocity().add(new Vector(0 , data.getyForce(), 0)));
 			if(oneTarget) {

@@ -108,7 +108,7 @@ public class BossRuines extends Boss {
 				EffectAndDamageSpellEntity spell = new EffectAndDamageSpellEntity(mob.getEyeLocation(), mob, 12, 3, false, false);
 				spell.setPotionEffects(effects);
 				spell.setFireTick(20*5);
-				spell.setDamages(6);
+				spell.setDamages(3);
 				spell.setYForce(.1);
 				spell.setDirection(target.getEyeLocation().toVector().subtract(mob.getEyeLocation().toVector()).normalize().multiply(1.7));
 				spell.addSoundEffect(Sound.BLOCK_CAMPFIRE_CRACKLE, 2f, .1f);

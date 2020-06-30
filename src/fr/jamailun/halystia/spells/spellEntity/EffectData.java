@@ -11,6 +11,7 @@ public class EffectData {
 	private int fireTick;
 	private double damages;
 	private double yForce;
+	private boolean ignoreArmor = false;
 	
 	public EffectData() {
 		effects = new ArrayList<>();
@@ -33,6 +34,14 @@ public class EffectData {
 
 	public int getFireTick() {
 		return fireTick;
+	}
+	
+	public boolean doesIgnoreArmor() {
+		return ignoreArmor;
+	}
+	
+	public void setIgnoreArmor(boolean ignoreArmor) {
+		this.ignoreArmor = ignoreArmor;
 	}
 
 	public void setFireTick(int fireTick) {

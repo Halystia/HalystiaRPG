@@ -20,8 +20,8 @@ public class VitesseExtreme extends Spell {
 	public final static int DURATION_SECONDS = 20;
 	
 	private final List<PotionEffect> effects = Arrays.asList(
-				new PotionEffect(PotionEffectType.SPEED, 20*20, 2, true, true, true),
-				new PotionEffect(PotionEffectType.FAST_DIGGING, 20*20, 2, true, true, false)
+				new PotionEffect(PotionEffectType.SPEED, 20*20, 4, true, true, true),
+				new PotionEffect(PotionEffectType.FAST_DIGGING, 20*20, 3, true, true, false)
 			);
 	
 	@Override

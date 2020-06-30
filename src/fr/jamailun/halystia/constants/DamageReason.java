@@ -4,6 +4,7 @@ public enum DamageReason {
 	PLAYER,
 	SENTINEL,
 	MOB,
+	SPELL,
 	SUPERMOB,
 	INVOCATION,
 	BOSS,

@@ -20,7 +20,7 @@ import fr.jamailun.halystia.utils.RandomString;
 public class AcierEffrene extends InvocationSpell {
 
 	public final static int ARROWS = 40;
-	public final static int DAMAGES = 4;
+	public final static int DAMAGES = 5;
 	public final static int POWER = 5;
 	
 	@Override

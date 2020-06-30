@@ -14,7 +14,7 @@ import fr.jamailun.halystia.spells.InvocationSpell;
 
 public class DiversionDeGrele extends InvocationSpell {
 	
-	public final static double HEALTH = 12;
+	public final static double HEALTH = 80;
 	
 	@Override
 	public void init() {
@@ -36,7 +36,7 @@ public class DiversionDeGrele extends InvocationSpell {
 		golem.setCustomName(ChatColor.DARK_AQUA + "Golem de " + ChatColor.BLUE +  p.getName());
 		golem.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(HEALTH);
 		golem.setHealth(HEALTH);
-		addInvocation(golem, p, false, 0);
+		addInvocation(golem, p, false, 5);
 		
 		return true;
 	}
@@ -65,7 +65,7 @@ public class DiversionDeGrele extends InvocationSpell {
 	public List<String> getLore() {
 		return Arrays.asList(
 			ChatColor.GRAY + "Invoque un bonhomme de neige.",
-			ChatColor.GRAY + "SnowMan : " + ChatColor.RED + HEALTH + " PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "0 dmgs" + ChatColor.GRAY + "."
+			ChatColor.GRAY + "SnowMan : " + ChatColor.RED + HEALTH + " PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "5 dmgs" + ChatColor.GRAY + "."
 		);
 	}
 

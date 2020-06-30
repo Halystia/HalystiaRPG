@@ -29,6 +29,8 @@ public class Revenants extends InvocationSpell {
 	public final static int NB_PER_VAGUES = 5;
 	public final static double RAYON = 3.0;
 	
+	public final static int HEALTH = 40, DAMAGES = 25;
+	
 	public void init() {
 		LIMIT = 25;
 	}
@@ -79,16 +81,16 @@ public class Revenants extends InvocationSpell {
 						WitherSkeleton sk = p.getWorld().spawn(picks.nextPick().clone().add(0,1.1,0), WitherSkeleton.class);
 						sk.setCustomName(ChatColor.RED + "Revenant de " + ChatColor.GOLD +  p.getName());
 						
-						sk.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(5.0);
-						sk.setHealth(5.0);
+						sk.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(HEALTH);
+						sk.setHealth(HEALTH);
 						
-						addInvocation(sk, p, false, 5);
+						addInvocation(sk, p, false, DAMAGES);
 						
 						new BukkitRunnable() {
 							@Override
 							public void run() {
 								if(sk.isValid())
-									sk.damage(100);
+									sk.damage(HEALTH*10);
 							}
 						}.runTaskLater(main, 20*VAGUES*DELAY*2);
 					}
@@ -129,7 +131,7 @@ public class Revenants extends InvocationSpell {
 		return Arrays.asList(
 			ChatColor.GRAY + "Conjure les forces obscure pour faire",
 			ChatColor.GRAY + "revenir à la vie une horde de morts vivants.",
-			ChatColor.GRAY + "Revenant : " + ChatColor.RED + "5 PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + "5 dmgs" + ChatColor.GRAY + ".",
+			ChatColor.GRAY + "Revenant : " + ChatColor.RED + HEALTH + " PV" + ChatColor.GRAY + " et " + ChatColor.BLUE + DAMAGES + " dmgs" + ChatColor.GRAY + ".",
 			ChatColor.GRAY + "Durée des invocations : " + ChatColor.GREEN + (VAGUES*DELAY*2) + "s" + ChatColor.GRAY + "."
 		);
 	}

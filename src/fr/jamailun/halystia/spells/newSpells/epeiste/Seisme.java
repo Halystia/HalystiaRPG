@@ -15,6 +15,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.constants.DamageReason;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.spells.Spell;
 
@@ -23,7 +25,7 @@ public class Seisme extends Spell {
 	private PotionEffect slow;
 	
 	public final static double RANGE = 10;
-	public final static double DAMAGES = 5;
+	public final static double DAMAGES = 80;
 	public final static int WAVES = 3;
 	public final static int DELAY = 3;
 	
@@ -68,7 +70,9 @@ public class Seisme extends Spell {
 					@Override
 					public void run() {
 						for(Entity en : getEntitiesAroundPlayer(p, RANGE, false)) {
-							if(en instanceof LivingEntity) {
+							if(en instanceof Player) {
+								HalystiaRPG.getInstance().getClasseManager().getPlayerData((Player)en).damage(DAMAGES, p.getUniqueId(), DamageReason.SPELL);
+							} else if(en instanceof LivingEntity) {
 								((LivingEntity)en).damage(DAMAGES, p);
 							}
 						}
