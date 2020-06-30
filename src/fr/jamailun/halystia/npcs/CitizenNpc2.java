@@ -76,6 +76,7 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 		exclamations = new ExclamationManagement(this);
 	}
 	
+	@Override
 	public ExclamationManagement getExclamation() {
 		return exclamations;
 	}

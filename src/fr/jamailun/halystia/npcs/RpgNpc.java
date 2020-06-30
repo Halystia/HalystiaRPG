@@ -16,6 +16,8 @@ public interface RpgNpc extends Dialogable {
 	public void spawn();
 	public void despawn();
 	
+	public ExclamationManagement getExclamation();
+	
 	public void speak(Player p);
 	public void sendMessage(Player p, String message);
 	public void free(Player p);

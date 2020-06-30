@@ -25,6 +25,7 @@ import org.mcmonkey.sentinel.SentinelTrait;
 import org.mcmonkey.sentinel.targeting.SentinelTargetLabel;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.npcs.ExclamationManagement;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.NpcMode;
 import fr.jamailun.halystia.npcs.RpgNpc;
@@ -540,6 +541,12 @@ public class CitizenNpc extends FileDataRPG implements RpgNpc {
 	public boolean isSpeaking(Player p) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public ExclamationManagement getExclamation() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

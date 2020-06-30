@@ -121,14 +121,16 @@ public final class NpcManager {
 		QuestsAdvancement adv = main.getQuestManager().getPlayerData(player);
 		allnpcs: for(RpgNpc npc : npcs) {
 			try {
-				if(player.getLocation().distance(npc.getLocation()) > 60)
+				if(player.getLocation().distance(npc.getLocation()) > 60) {
+					npc.getExclamation().purge(player);
 					continue;
+				}
 			} catch (Exception e) {
 				continue;
 			}
 			if( ! (npc instanceof CitizenNpc2))
 				continue;
-			ExclamationManagement excl = ((CitizenNpc2)npc).getExclamation();
+			ExclamationManagement excl = npc.getExclamation();
 			// déjà, étapes où il doit faire un rapport
 			for(QuestStep step : adv.getOnGoingQuestSteps()) {
 				//System.out.println("quest ("+step.getQuest().getID()+" : step n°"+step.getStep()+" type : " + step.getType()+".");
