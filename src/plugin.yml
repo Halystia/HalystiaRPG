@@ -148,6 +148,11 @@ commands:
     permission: halystia.rpg.master
     permission-message: §cIl faut que tu sois un maître du jeu du RPG.
     description: Tue tous les mobs customs.
+  full-ames:
+    usage: /full-ames [joueur]
+    permission: halystia.rpg.master
+    permission-message: §cIl faut que tu sois un maître du jeu du RPG.
+    description: Reset les ames d'un joueur.
   reload-spells:
     usage: /reload-spells
     permission: halystia.rpg.master

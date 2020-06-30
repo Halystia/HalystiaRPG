@@ -1,5 +1,6 @@
 package fr.jamailun.halystia;
 
+import fr.jamailun.halystia.commands.CommandAmes;
 import fr.jamailun.halystia.commands.CommandClasse;
 import fr.jamailun.halystia.commands.CommandCreateShop;
 import fr.jamailun.halystia.commands.CommandCustomEnchant;
@@ -58,6 +59,7 @@ public class CommandsManager {
 		main.getCommand("create-shop-classe").setExecutor(new CommandCreateShop(main));
 		main.getCommand("reload-shop-classe").setExecutor(new CommandReloadShops(main));
 		new CommandPurge(main);
+		new CommandAmes(main);
 		
 		new CommandCustomEnchant(main);
 		new CommandGiveWater(main); // pour les cmdss blocks : ya pas de lézard.
