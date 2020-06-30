@@ -48,6 +48,12 @@ public class RavagerBoss extends Boss {
 		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SOLID, BarFlag.CREATE_FOG);
 		bar.setVisible(true);
 	}
+
+	@Override
+	public double getDamages() {
+		return 300;
+	}
+	
 	private int noPlayers = 0;
 	private int counter = 0;
 	private final static int ACTION_EVERY_SECONDS = 5;

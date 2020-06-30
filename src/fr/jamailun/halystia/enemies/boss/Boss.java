@@ -377,4 +377,6 @@ public abstract class Boss implements Enemy, Invocator {
 		if(bar != null && player != null && player.isOnline())
 			bar.removePlayer(player);
 	}
+
+	public abstract double getDamages();
 }

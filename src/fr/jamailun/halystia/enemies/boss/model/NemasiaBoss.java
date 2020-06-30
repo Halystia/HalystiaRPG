@@ -36,9 +36,9 @@ import fr.jamailun.halystia.spells.spellEntity.EffectSpellEntity;
 
 public class NemasiaBoss extends Boss {
 
-	public static final int HEALTH = 7000;
-	public static final int HEALTH_PER_CUBE = 200;
-	public static final int CUBES_HEALTH = 100;
+	public static final int HEALTH = 10000;
+	public static final int HEALTH_PER_CUBE = 600;
+	public static final int CUBES_HEALTH = 500;
 	public static final int CUBES_DAMAGES = 12;
 	
 	private Location loc;
@@ -53,6 +53,11 @@ public class NemasiaBoss extends Boss {
 		maxHealth = health = HEALTH;
 		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SOLID, BarFlag.DARKEN_SKY);
 		bar.setVisible(true);
+	}
+
+	@Override
+	public double getDamages() {
+		return 400;
 	}
 	
 	private int noPlayers = 0;

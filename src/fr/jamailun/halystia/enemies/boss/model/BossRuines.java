@@ -49,6 +49,12 @@ public class BossRuines extends Boss {
 		bar = Bukkit.createBossBar(getCustomName(), BarColor.RED, BarStyle.SOLID, BarFlag.CREATE_FOG);
 		bar.setVisible(true);
 	}
+
+	@Override
+	public double getDamages() {
+		return 50;
+	}
+	
 	private int noPlayers = 0;
 	private int counter = 0;
 	private final static int ACTION_EVERY_SECONDS = 7;
@@ -117,7 +123,7 @@ public class BossRuines extends Boss {
 		Phantom inv = mob.getWorld().spawn(mob.getLocation().clone().add(0, 3, 0), Phantom.class);
 		new EffectSpellEntity(mob.getEyeLocation().clone().add(0,1,0), mob, 1, new ArrayList<>(), 1, false).addParticleEffect(Particle.ENCHANTMENT_TABLE, 300, .2, .1, .4);
 		inv.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(10);
-		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(inv, mob, false, this, 5);
+		HalystiaRPG.getInstance().getSpellManager().getInvocationsManager().add(inv, mob, false, this, 12);
 		invocations.add(inv);
 		inv.setCustomName(ChatColor.DARK_AQUA+"Illusion");
 		inv.setCustomNameVisible(true);

@@ -78,7 +78,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			if(arrow.hasMetadata("damages")) {
 				damages = arrow.getMetadata("damages").get(0).asDouble();
 			}
-			System.out.println("damager = arrow, §cdamages="+damages);
+//			System.out.println("damager = arrow, §cdamages="+damages);
 			if(main.getDonjonManager().getBossManager().isBoss(e.getEntity())) {
 				if(arrow.getShooter() != null && arrow.getShooter() instanceof Player)
 					main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), ((Player)arrow.getShooter()).getUniqueId(), damages);
@@ -91,7 +91,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		if(invocs.contains(e.getDamager().getUniqueId())) {
 			Entity damager = e.getDamager();
 
-			System.out.println("damager = invoc");
+//			System.out.println("damager = invoc");
 			
 			//MàJ des dommages
 			damages = invocs.getDamages(damager);
@@ -139,7 +139,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 
 			damages = playerAttacked(p, target, pcible);
 			
-			p.sendMessage("Attaque de §c"+damages);
+//			p.sendMessage("Attaque de §c"+damages);
 			
 			if(damages == -1) {
 				e.setCancelled(true);
@@ -165,10 +165,10 @@ public class EntityDamageOtherListener extends HalystiaListener {
 
 		// DAMAGER == BOSS
 		if(main.getDonjonManager().getBossManager().isBoss(e.getDamager())) {
-			// TODO si on rajoute les degats des boss : damages = main.getDonjonManager().getBossManager().getBoss(e.getDamager()).getDamages()
+			damages = main.getDonjonManager().getBossManager().getBoss(e.getDamager()).getDamages();
 			if(pcible != null) {
 				e.setCancelled(true);
-		//		pcible.damage(damages, e.getDamager().getUniqueId(), DamageReason.BOSS);
+				pcible.damage(damages, e.getDamager().getUniqueId(), DamageReason.BOSS);
 			}
 		}
 		
