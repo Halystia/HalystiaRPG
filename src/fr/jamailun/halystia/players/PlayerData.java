@@ -298,7 +298,7 @@ public class PlayerData {
 			//TODO petit effet ? ou déjà le fait de pas animer les dégats suffisent ?
 			return false;
 		}
-		player.sendMessage("§avie = "+health+", armor="+stats.getArmor()+", §edmgs bruts="+damage+", §cdmgs finaux="+realDamages);
+//		player.sendMessage("§avie = "+health+", armor="+stats.getArmor()+", §edmgs bruts="+damage+", §cdmgs finaux="+realDamages);
 		health -= realDamages;
 		player.playEffect(EntityEffect.HURT);
 		player.setNoDamageTicks(10);

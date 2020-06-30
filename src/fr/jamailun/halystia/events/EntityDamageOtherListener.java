@@ -222,6 +222,12 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			return;
 		}
 		
+		// TARGET == BOSS
+		if ( main.getDonjonManager().getBossManager().damageBoss(e.getEntity(), e.getDamager().getUniqueId(), damages) ) {
+			e.setCancelled(true);
+			return;
+		}
+		
 	}
 
 	private final static String SKULL = new String(Character.toChars(10060));
@@ -267,7 +273,7 @@ public class EntityDamageOtherListener extends HalystiaListener {
 			case MAGIC_REGEN:
 			case REGEN:
 			case SATIATED:
-				pc.heal(e.getAmount() * 30);
+				pc.heal(e.getAmount() * 5);
 				break;
 			case WITHER:
 			case ENDER_CRYSTAL:

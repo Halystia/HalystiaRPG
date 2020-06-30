@@ -76,7 +76,7 @@ public class Statistics {
 	}
 	
 	public double getDamages() {
-		return (baseDamages + armorDamages) * (baseDamagesBuff + (armorDamagesBuff/100.0));
+		return Math.max(0, (baseDamages + Math.max(0, armorDamages) ) * (baseDamagesBuff + (armorDamagesBuff/100.0)) );
 	}
 	
 	public void levelChanged(int level) {

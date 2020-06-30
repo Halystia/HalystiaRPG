@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
 
 import com.codingforcookies.armorequip.ArmorEquipEvent;
+import com.codingforcookies.armorequip.ArmorEquipEvent.EquipMethod;
 import com.codingforcookies.armorequip.ArmorType;
 
 import fr.jamailun.halystia.HalystiaRPG;
@@ -25,6 +26,8 @@ public class PlayerEquipmentListener extends HalystiaListener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void playerEquipArmor(ArmorEquipEvent e) {
 		if( ! HalystiaRPG.isInRpgWorld(e.getPlayer()))
+			return;
+		if(e.getMethod() == EquipMethod.DEATH || e.getMethod() == EquipMethod.BROKE)
 			return;
 		final Player p = e.getPlayer();
 		try {

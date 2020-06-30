@@ -98,7 +98,7 @@ public class ExclamationManagement {
 			PacketPlayOutSpawnEntityLiving packet = new PacketPlayOutSpawnEntityLiving((EntityLiving) stand);
 			((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packet);
 			
-			//PacketPlayOut
+			//PacketPlayOutAttachEntity
 			
 			changeStatus(type, recipe);
 			
