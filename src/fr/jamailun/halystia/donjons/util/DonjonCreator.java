@@ -45,13 +45,14 @@ public class DonjonCreator {
 		lines.add(ChatColor.GRAY + "Difficultée : " + donjon.getDonjonDifficulty().getDisplayName());
 		lines.add(ChatColor.GRAY + "Niveau minimum : " + ChatColor.YELLOW + donjon.getLevelNeed());
 		
-		Location locBase = new Location(loc.getWorld(), loc.getX(), loc.getY() + (lines.size() * 0.6), loc.getZ());
+		Location locBase = new Location(loc.getWorld(), loc.getX(), loc.getY() + (lines.size() * 0.6) + 1, loc.getZ());
 		for(int i = 0; i < lines.size(); i++) {
 			Location aLoc = new Location(locBase.getWorld(), locBase.getX(), locBase.getY() - (i * 0.5), locBase.getZ());
 			ArmorStand as = (ArmorStand) aLoc.getWorld().spawnEntity(aLoc, EntityType.ARMOR_STAND);
 			as.setInvulnerable(true);
 			as.setVisible(false);
 			as.setGravity(false);
+			as.setMarker(true);
 			as.setCustomNameVisible(true);
 			as.setCustomName(lines.get(i));
 		}
