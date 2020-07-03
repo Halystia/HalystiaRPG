@@ -12,6 +12,7 @@ import fr.jamailun.halystia.HalystiaRPG;
  */
 public class SpellEntityManager {
 	
+	public static final int REFRESH_PERIOD_TICKS = 5;
 	private List<SpellEntity> list;
 	
 	/**
@@ -31,7 +32,7 @@ public class SpellEntityManager {
 						list.remove(se);
 				}
 			}
-		}.runTaskTimer(HalystiaRPG.getInstance(), 20L, 5L);
+		}.runTaskTimer(HalystiaRPG.getInstance(), 20L, REFRESH_PERIOD_TICKS * 1L);
 	}
 	
 	/**

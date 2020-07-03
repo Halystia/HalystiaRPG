@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.bukkit.potion.PotionEffect;
 
-public class EffectData {
+class EffectData {
 	
 	private List<PotionEffect> effects;
 	private int fireTick;
