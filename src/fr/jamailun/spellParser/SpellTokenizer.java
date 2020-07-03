@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import fr.jamailun.spellParser.contexts.ApplicativeContext;
 import fr.jamailun.spellParser.contexts.TokenContext;
 import fr.jamailun.spellParser.structures.ApplyEffectStructure;
+import fr.jamailun.spellParser.structures.CreateStructure;
 import fr.jamailun.spellParser.structures.DamageStructure;
 import fr.jamailun.spellParser.structures.DefineStructure;
 import fr.jamailun.spellParser.structures.DelayStructure;
@@ -108,6 +109,11 @@ public class SpellTokenizer {
 			maths(line);
 			return false;
 		}
+		
+		if(words[0].equalsIgnoreCase("create")) {
+			createBlock(line);
+			return false;
+		}
 
 		if(global.isInData()) {
 			if( ! line.matches("[A-Za-z_\\-]+(| *):(| *)[\\pN\\pL.&\\s%?!:]+") ) {
@@ -123,6 +129,16 @@ public class SpellTokenizer {
 
 		Bukkit.getConsoleSender().sendMessage("§cError : unknown symbol : '"+words[0]+"' on line n°"+lineNumber+".");
 		return false;
+	}
+
+	private void createBlock(String line) {
+		if ( ! line.matches(CreateStructure.REGEX) ) {
+			System.err.println("Error : bad format on line " + lineNumber+". Used here : '"+line+"'.");
+			System.err.println("Use '"+CreateStructure.REGEX+"'.");
+			return;
+		}
+		CreateStructure structure = new CreateStructure(context);
+		global.openBlock(structure);
 	}
 
 	private void maths(String line) {
