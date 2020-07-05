@@ -25,6 +25,7 @@ import fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.enemies.mobs.NaturalSpawnWorld;
 import fr.jamailun.halystia.enemies.supermobs.SuperMobManager;
+import fr.jamailun.halystia.guilds.GuildManager;
 import fr.jamailun.halystia.guis.ChooseClasseGui;
 import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.jobs.model.JamailunJobExtension;
@@ -101,6 +102,7 @@ public final class HalystiaRPG extends JavaPlugin {
 	private NpcManager npcMgr;
 	private PlayerEffectsManager effMgr;
 	private SpellLoader spellLoader;
+	private GuildManager guildsMgr;
 	
 	//Usefull things
 	private ChooseClasseGui classeGui;
@@ -147,6 +149,7 @@ public final class HalystiaRPG extends JavaPlugin {
 			return;
 		}
 		//MANAGERS
+		guildsMgr = new GuildManager(PATH + "/guilds");
 		effMgr = new PlayerEffectsManager(this);
 		classesMgr = new ClasseManager(this, bdd);
 		shopMgr = new ShopManager(PATH, "shopsData");
@@ -180,7 +183,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		classeGui = new ChooseClasseGui(this);
 		
 		//COMMANDS
-		new CommandsManager(this, bdd, jobs, titleMgr, donjonsMgr, npcMgr, questsMgr, mobMgr, spawnerMgr);
+		new CommandsManager(this, bdd, jobs, titleMgr, donjonsMgr, npcMgr, questsMgr, mobMgr, spawnerMgr, guildsMgr);
 		
 		//PLACEHOLDERAPI
 		if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {

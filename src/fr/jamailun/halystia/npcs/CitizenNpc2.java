@@ -147,6 +147,7 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 		return speackers.contains(p);
 	}
 	
+	// WARNING : absolutly NOT optimized !
 	public void speak(Player p) {
 		if(speackers.contains(p.getPlayer()))
 			return;
@@ -156,28 +157,24 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 		for(String line : dialog) {
 			String[] words = line.split(" ");
 			
-			String tag = null;// = words[0].replaceFirst("#", "");
-			boolean hasTag = true;//HalystiaRPG.getInstance().getDataBase().playerHasTag(p, tag);
+			String tag = null;
+			boolean hasTag = true;
 			
 			StringBuilder builder = new StringBuilder();
 			boolean first = true; // Si oui ou non on est avant le else !
 			int save = -1;
 			for(int i = 0; i < words.length; i++) {
 				String word = words[i];
-	//			p.sendMessage("§7Lecture du mot ["+word+"]");
 				if ( tag == null ) {
 					if(word.startsWith("#")) {
-	//					p.sendMessage("§oBalise : '"+word+"'");
 						if(word.equalsIgnoreCase("#else") || word.startsWith("#tp;")) {
 							action(p, word, delay);
 							continue;
 						}
 						tag = word.replaceFirst("#", "");
 						hasTag = HalystiaRPG.getInstance().getDataBase().playerHasTag(p, tag);
-	//					p.sendMessage("nouveau tag : '" + tag + "' : " + hasTag);
 						continue;
 					}
-	//				p.sendMessage("add : '"+word+"'");
 					builder.append(i == 0 ? BASE_SPEAK_COLOR : " ").append(word);
 					continue;
 				}
@@ -196,8 +193,6 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 						action(p, word, delay);
 						continue;
 					}
-					//tp ? give ? tag ?
-	//				p.sendMessage("§aadd : '"+word+"'");
 					builder.append(i == 0 ? BASE_SPEAK_COLOR : " ").append(word);
 				} else {
 					if(hasTag)
@@ -206,7 +201,6 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 						action(p, word, delay);
 						continue;
 					}
-	//				p.sendMessage("§cadd : '"+word+"'");
 					builder.append(i == save ? BASE_SPEAK_COLOR : " ").append(word);
 				}
 				
