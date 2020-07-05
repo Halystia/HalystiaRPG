@@ -136,7 +136,7 @@ public class TchatListener extends HalystiaListener {
 					.findFirst().get();
 		} catch (NoSuchElementException ee) {
 			//Bukkit.getLogger().log(Level.WARNING, "Impossible de retrouver les propriété de tchat de " + p.getName()+".");
-			prefixNormal = "";
+			prefixNormal = Classe.getColor(pc.getLevel()) + "";
 		}
 		
 		prefixNormal = ChatColor.translateAlternateColorCodes('&', prefixNormal);
