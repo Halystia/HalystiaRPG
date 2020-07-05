@@ -1,28 +1,34 @@
 package fr.jamailun.halystia.guilds;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import fr.jamailun.halystia.sql.temporary.FileSaver;
+import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.utils.FileDataRPG;
 
-public class Guild extends FileSaver {
+public class Guild extends FileDataRPG {
 	
 	private String name, tag;
 	private Map<UUID, GuildRank> members;
 	private int maxMembers = 5;
+	private Set<GuildInvite> pendingInvite;
 	
-	public Guild(String path, String fileName) {
+	Guild(String path, String fileName) {
 		super(path, fileName);
 		members = new HashMap<>();
 		loadFile();
+		pendingInvite = new HashSet<>();
 	}
 	
 	public Guild(String path, String fileName, Player creator, String name) {
@@ -37,6 +43,9 @@ public class Guild extends FileSaver {
 		config.set("created", System.currentTimeMillis());
 	}
 	
+	public String getGuildName() {
+		return name;
+	}
 	
 	public boolean isInTheGuild(Player player) {
 		return members.containsKey(player.getUniqueId());
@@ -102,6 +111,20 @@ public class Guild extends FileSaver {
 		return GuildResult.SUCCESS;
 	}
 	
+	public GuildInvite generateInvite(Player source) {
+		if( ! isInTheGuild(source))
+			return null;
+		if( ! hasPermissions(source, GuildRank.RIGHT_ARM))
+			return null;
+		GuildInvite invite = new GuildInvite(source, this);
+		pendingInvite.add(invite);
+		return invite;
+	}
+	
+	public boolean isInviteValid(String token) {
+		return pendingInvite.stream().anyMatch(gi -> gi.getToken().equals(token));
+	}
+	
 	public GuildResult broadcast(Player source, String message) {
 		if( ! isInTheGuild(source))
 			return GuildResult.PLAYER_NOT_HERE;
@@ -164,6 +187,15 @@ public class Guild extends FileSaver {
 			}
 		}
 		return members;
+	}
+
+	void disband() {
+		String message = HalystiaRPG.PREFIX + tag + ChatColor.RED + " > " + ChatColor.DARK_RED + "" + ChatColor.BOLD + "La guilde a été supprimée par le maître de guilde.";
+		Bukkit.getOnlinePlayers().stream().filter(p -> members.containsKey(p.getUniqueId())).forEach(p -> {
+			p.playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_DEATH, 10f, .7f);
+			p.sendMessage(message);
+		});
+		super.delete();
 	}
 	
 }

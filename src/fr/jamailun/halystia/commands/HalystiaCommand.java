@@ -26,9 +26,9 @@ abstract class HalystiaCommand implements CommandExecutor, TabCompleter {
 	}
 	
 	@Override
-	public abstract boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args);
+	public abstract boolean onCommand(CommandSender sender, Command command, String label, String[] args);
 	
 	@Override
-	public abstract List<String> onTabComplete(CommandSender sender, Command arg1, String arg2, String[] args);
+	public abstract List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args);
 	
 }

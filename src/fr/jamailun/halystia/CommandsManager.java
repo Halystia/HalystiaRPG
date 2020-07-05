@@ -32,6 +32,7 @@ import fr.jamailun.halystia.commands.CommandSetXp;
 import fr.jamailun.halystia.commands.CommandSkills;
 import fr.jamailun.halystia.commands.CommandSummonMob;
 import fr.jamailun.halystia.commands.CommandTitle;
+import fr.jamailun.halystia.commands.GuildCommand;
 import fr.jamailun.halystia.commands.ModifyOeilAntiqueCommand;
 import fr.jamailun.halystia.commands.SystemCommand;
 import fr.jamailun.halystia.donjons.DonjonManager;
@@ -40,6 +41,7 @@ import fr.jamailun.halystia.donjons.util.CommandDonjonPorte;
 import fr.jamailun.halystia.donjons.util.CommandJoinDonjon;
 import fr.jamailun.halystia.enemies.mobSpawner.MobSpawnerManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
+import fr.jamailun.halystia.guilds.GuildManager;
 import fr.jamailun.halystia.jobs.JobsManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.quests.QuestManager;
@@ -48,12 +50,13 @@ import fr.jamailun.halystia.titles.TitlesManager;
 
 public class CommandsManager {
 
-	public CommandsManager(HalystiaRPG main, DataHandler bdd, JobsManager jobs, TitlesManager titleMgr, DonjonManager donjonsMgr, NpcManager npcMgr, QuestManager questsMgr, MobManager mobMgr, MobSpawnerManager spawnerMgr) {
+	public CommandsManager(HalystiaRPG main, DataHandler bdd, JobsManager jobs, TitlesManager titleMgr, DonjonManager donjonsMgr, NpcManager npcMgr, QuestManager questsMgr, MobManager mobMgr, MobSpawnerManager spawnerMgr, GuildManager guilds) {
 		new CommandClasse(main);
 		new CommandQuests(main);
 		new CommandTitle(main);
 		new CommandPing(main);
 		new CommandSkills(main);
+		new GuildCommand(main, guilds);
 		new CommandNpcTeleport(main, npcMgr);
 		
 		main.getCommand("create-shop-classe").setExecutor(new CommandCreateShop(main));
