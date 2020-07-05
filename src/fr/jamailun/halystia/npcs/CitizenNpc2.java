@@ -154,48 +154,68 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 		int delay = 0;
 		
 		for(String line : dialog) {
-			if(line.startsWith("#")) {
-				String[] words = line.split(" ");
-				String tag = words[0].replaceFirst("#", "");
-				boolean hasTag = HalystiaRPG.getInstance().getDataBase().playerHasTag(p, tag);
-				
-				StringBuilder builder = new StringBuilder();
-				boolean first = true; // Si oui ou non on est avant le else !
-				int save = -1;
-				for(int i = 1; i < words.length; i++) {
-					String word = words[i];
-					if(word.equals("#else") && first) {
-						first = false;
-						if(hasTag)
-							break;
-						save = i + 1;
-						builder = new StringBuilder();
+			String[] words = line.split(" ");
+			
+			String tag = null;// = words[0].replaceFirst("#", "");
+			boolean hasTag = true;//HalystiaRPG.getInstance().getDataBase().playerHasTag(p, tag);
+			
+			StringBuilder builder = new StringBuilder();
+			boolean first = true; // Si oui ou non on est avant le else !
+			int save = -1;
+			for(int i = 0; i < words.length; i++) {
+				String word = words[i];
+	//			p.sendMessage("§7Lecture du mot ["+word+"]");
+				if ( tag == null ) {
+					if(word.startsWith("#")) {
+	//					p.sendMessage("§oBalise : '"+word+"'");
+						if(word.equalsIgnoreCase("#else") || word.startsWith("#tp;")) {
+							action(p, word, delay);
+							continue;
+						}
+						tag = word.replaceFirst("#", "");
+						hasTag = HalystiaRPG.getInstance().getDataBase().playerHasTag(p, tag);
+	//					p.sendMessage("nouveau tag : '" + tag + "' : " + hasTag);
 						continue;
 					}
-					if(first) {
-						if(!hasTag)
-							continue;
-						if(word.startsWith("#")) {
-							action(p, word, delay);
-							continue;
-						}
-						//tp ? give ? tag ?
-						builder.append(i == 1 ? "" : " ").append(word);
-					} else {
-						if(word.startsWith("#")) {
-							action(p, word, delay);
-							continue;
-						}
-						builder.append(i == save ? BASE_SPEAK_COLOR : " ").append(word);
+	//				p.sendMessage("add : '"+word+"'");
+					builder.append(i == 0 ? BASE_SPEAK_COLOR : " ").append(word);
+					continue;
+				}
+				if(word.equals("#else") && first) {
+					first = false;
+					if(hasTag)
+						break;
+					save = i + 1;
+					builder = new StringBuilder();
+					continue;
+				}
+				if(first) {
+					if(!hasTag)
+						continue;
+					if(word.startsWith("#")) {
+						action(p, word, delay);
+						continue;
 					}
-					
+					//tp ? give ? tag ?
+	//				p.sendMessage("§aadd : '"+word+"'");
+					builder.append(i == 0 ? BASE_SPEAK_COLOR : " ").append(word);
+				} else {
+					if(hasTag)
+						continue;
+					if(word.startsWith("#")) {
+						action(p, word, delay);
+						continue;
+					}
+	//				p.sendMessage("§cadd : '"+word+"'");
+					builder.append(i == save ? BASE_SPEAK_COLOR : " ").append(word);
 				}
-				line = builder.toString();
 				
-				if(save == -1 & !hasTag) {
-					line = null;
-				}
 			}
+			line = builder.toString();
+			
+			//if(save == -1 & !hasTag) {
+			//	line = null;
+			//}
 			
 			if(line != null) {
 				final String fline = line;
