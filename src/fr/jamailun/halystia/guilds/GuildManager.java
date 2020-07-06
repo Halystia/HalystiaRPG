@@ -41,6 +41,24 @@ public class GuildManager {
 		return guild.getPlayerRank(player);
 	}
 	
+	public boolean joinGuild(Player player, String token) {
+		if ( getGuild(player) != null) {
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Tu possèdes déjà une guilde : impossible d'en rejoindre une autre !");
+			return false;
+		}
+		for(Guild guild : guilds) {
+			if(guild.isInviteValid(token)) {
+				return guild.playerJoin(player, token);
+			}
+		}
+		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Ce token d'invitation n'existe pas !");
+		return false;
+	}
+	
+	boolean tagExists(String tag) {
+		return guilds.stream().anyMatch(g -> g.getPureTag().equalsIgnoreCase(tag));
+	}
+	
 	public Guild createGuild(Player player, String guildName) {
 		if ( guildName.length() < GUILD_NAME_LENGTH_MIN) {
 			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le nom de la guilde doit faire au moins "+GUILD_NAME_LENGTH_MIN+" caractères !");

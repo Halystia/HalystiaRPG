@@ -27,5 +27,9 @@ public enum GuildResult {
 	/**
 	 * Permissions en générales
 	 */
-	NEED_TO_BE_MASTER, NEED_TO_BE_RA, NEED_TO_BE_CAPTAIN
+	NEED_TO_BE_MASTER, NEED_TO_BE_RA, NEED_TO_BE_CAPTAIN,
+	/**
+	 * 
+	 */
+	MASTER_CANNOT_LEAVE,
 }

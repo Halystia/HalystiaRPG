@@ -306,6 +306,10 @@ public final class HalystiaRPG extends JavaPlugin {
 		this.bdd = saver;
 		console.sendMessage(PREFIX + ChatColor.YELLOW + "BDD has been updated."); 
 	}
+	
+	public GuildManager getGuildManager() {
+		return guildsMgr;
+	}
 
 	/**
 	 * Get the chunk managerr of the server.

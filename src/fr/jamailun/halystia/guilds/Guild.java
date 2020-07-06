@@ -65,13 +65,18 @@ public class Guild extends FileDataRPG {
 		tag = tag.toUpperCase(Locale.FRANCE);
 		if(tag.length() != 3)
 			return GuildResult.WRONG_TAG_SIZE;
-		//TODO test if this tag exists somewhere
+		if(HalystiaRPG.getInstance().getGuildManager().tagExists(tag))
+			return GuildResult.TAG_ALREADY_EXISTS;
 		this.tag = tag;
 		synchronized (config) {
 			config.set("tag", tag);
 			save();
 		}
 		return GuildResult.SUCCESS;
+	}
+	
+	String getPureTag() {
+		return tag;
 	}
 	
 	public GuildRank getPlayerRank(Player player) {
@@ -87,7 +92,7 @@ public class Guild extends FileDataRPG {
 		GuildRank current = members.get(player.getUniqueId());
 		if(current == GuildRank.MASTER)
 			return GuildResult.IS_ALREADY_MASTER;
-		if(current == GuildRank.CAPITAIN)
+		if(current == GuildRank.RIGHT_ARM)
 			return GuildResult.CAN_ONLY_HAVE_ONE_MASTER;
 		if(current == GuildRank.CAPITAIN && guildHasRightArm())
 			return GuildResult.CAN_ONLY_HAVE_RIGHT_ARM;
@@ -130,13 +135,25 @@ public class Guild extends FileDataRPG {
 			return GuildResult.PLAYER_NOT_HERE;
 		if( ! hasPermissions(source, GuildRank.CAPITAIN))
 			return GuildResult.NEED_TO_BE_CAPTAIN;
-		message = getTag() + ChatColor.WHITE + source.getName() + " > " + ChatColor.AQUA + ChatColor.translateAlternateColorCodes('&', message);
+		message = getTag() + ChatColor.WHITE + source.getName() + " > " + ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.translateAlternateColorCodes('&', message);
+		sendMessageToMembers(message);
+		return GuildResult.SUCCESS;
+	}
+	
+	public GuildResult internalMessage(Player source, String message) {
+		if( ! isInTheGuild(source))
+			return GuildResult.PLAYER_NOT_HERE;
+		message = ChatColor.GRAY + "(Guilde) " + ChatColor.WHITE + source.getName() + ChatColor.GRAY + " > " + message;
+		sendMessageToMembers(message);
+		return GuildResult.SUCCESS;
+	}
+	
+	public void sendMessageToMembers(String message) {
 		for(UUID uuid : members.keySet()) {
 			Player to = Bukkit.getPlayer(uuid);
 			if(to != null)
 				to.sendMessage(message);
 		}
-		return GuildResult.SUCCESS;
 	}
 	
 	public String getTag() {
@@ -196,6 +213,38 @@ public class Guild extends FileDataRPG {
 			p.sendMessage(message);
 		});
 		super.delete();
+	}
+
+	public boolean playerJoin(Player player, String token) {
+		if( ! isInviteValid(token))
+			return false;
+		GuildResult result = addPlayerToGuild(player);
+		if(result == GuildResult.SUCCESS) {
+			sendMessageToMembers(getTag() + ChatColor.GREEN + "Le joueur " + ChatColor.DARK_GREEN + player.getName() + ChatColor.GREEN + " a rejoint la guilde.");
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "Vous avez bien rejoint la guilde " + getGuildName() + ChatColor.GREEN + ".");
+			pendingInvite.removeIf(in -> in.getToken().equals(token));
+			return true;
+		}
+		if(result == GuildResult.ALREADY_HERE) {
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous êtes déjà dans cette guilde !");
+		}
+		if(result == GuildResult.GUILD_FULL) {
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Cette guilde a atteint le nombre maximum de membres en son sein !");
+		}
+		return false;
+	}
+	
+	public GuildResult playerLeaves(Player player, boolean banned) {
+		GuildRank rank = getPlayerRank(player);
+		if(rank == GuildRank.MASTER)
+			return GuildResult.MASTER_CANNOT_LEAVE;
+		if(rank == GuildRank.NOT_A_MEMBER)
+			return GuildResult.PLAYER_NOT_HERE;
+		members.remove(player.getUniqueId());
+		saveMembers();
+		sendMessageToMembers(getTag() + ChatColor.RED + "Le joueur " + ChatColor.DARK_RED + player.getName() + ChatColor.RED + " a quitté la guilde.");
+		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez quitté votre guilde.");
+		return GuildResult.SUCCESS;
 	}
 	
 }
