@@ -17,8 +17,12 @@ public class DefineStructure extends CommandStructure {
 		super(context);
 	}
 
-	public final static String REGEX = "define %[A-Za-z0-9_]+ as closest [A-Za-z0-9]+ from %[A-Za-z0-9_]+ (within|in|around) [0-9.]+";	//define %defined as [closest] from %target within dist
+	public final static String REGEX = "define %[A-Za-z0-9_]+ as (location at (.*)|closest [A-Za-z0-9]+ from %[A-Za-z0-9_]+ (within|in|around) [0-9.]+)";	//define %defined as [closest] from %target within dist
 
+	public void read(String line) {
+		
+	}
+	
 	public void setSelectorString(String string) {
 		selector = Selector.fromString(string);
 		if(selector == Selector.NONE) {
