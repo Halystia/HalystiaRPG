@@ -46,6 +46,11 @@ public class MobAggroListener extends HalystiaListener {
 			return;
 		}
 		
+		if(main.getGuildManager().areInTheSameNoPvpGroup(invocs.getMasterOf(e.getEntity().getUniqueId()), e.getTarget().getUniqueId())) {
+			e.setCancelled(true);
+			return;
+		}
+		
 	}
 	
 	@EventHandler
