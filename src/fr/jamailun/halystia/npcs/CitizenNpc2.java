@@ -242,7 +242,7 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 				double z = Double.parseDouble(coos[3]);
 				Bukkit.getScheduler().runTaskLater(HalystiaRPG.getInstance(), new Runnable() {
 					public void run() {
-						p.teleport(new Location(npc.getEntity().getLocation().getWorld(), x, y, z));
+						p.teleport(new Location(npc.getEntity().getLocation().getWorld(), x, y, z, p.getLocation().getYaw(), p.getLocation().getPitch()));
 					}
 				}, delay * TIME_BETWEEN_MESSAGES);
 			} catch (NumberFormatException e) {
