@@ -1,5 +1,6 @@
 package fr.jamailun.halystia.guilds;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,8 @@ import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.utils.FileDataRPG;
 
 public class Guild extends FileDataRPG {
+	
+	public static final int TAG_LENGHT = 4;
 	
 	private String name, tag;
 	private Map<UUID, GuildRank> members;
@@ -43,6 +46,10 @@ public class Guild extends FileDataRPG {
 		config.set("created", System.currentTimeMillis());
 	}
 	
+	public List<String> getOfflinePlayersNames() {
+		return members.keySet().stream().map(id -> Bukkit.getOfflinePlayer(id).getName()).collect(Collectors.toList());
+	}
+	
 	public String getGuildName() {
 		return name;
 	}
@@ -63,7 +70,7 @@ public class Guild extends FileDataRPG {
 	
 	public GuildResult changeTag(String tag) {
 		tag = tag.toUpperCase(Locale.FRANCE);
-		if(tag.length() != 3)
+		if(tag.length() != TAG_LENGHT)
 			return GuildResult.WRONG_TAG_SIZE;
 		if(HalystiaRPG.getInstance().getGuildManager().tagExists(tag))
 			return GuildResult.TAG_ALREADY_EXISTS;
@@ -87,8 +94,6 @@ public class Guild extends FileDataRPG {
 	public GuildResult promote(Player player) {
 		if( ! isInTheGuild(player))
 			return GuildResult.PLAYER_NOT_HERE;
-		if( ! hasPermissions(player, GuildRank.RIGHT_ARM))
-			return GuildResult.NEED_TO_BE_RA;
 		GuildRank current = members.get(player.getUniqueId());
 		if(current == GuildRank.MASTER)
 			return GuildResult.IS_ALREADY_MASTER;
@@ -104,8 +109,6 @@ public class Guild extends FileDataRPG {
 	public GuildResult demote(Player player) {
 		if( ! isInTheGuild(player))
 			return GuildResult.PLAYER_NOT_HERE;
-		if( ! hasPermissions(player, GuildRank.RIGHT_ARM))
-			return GuildResult.NEED_TO_BE_RA;
 		GuildRank current = members.get(player.getUniqueId());
 		if(current == GuildRank.MASTER)
 			return GuildResult.MASTER_CANNOT_BE_DEMOTE;
@@ -166,6 +169,15 @@ public class Guild extends FileDataRPG {
 		return members.get(player.getUniqueId()).getPower() >= minimal.getPower();
 	}
 	
+	public List<String> getMembersDisplay() {
+		List<String> list = new ArrayList<>();
+		members.forEach((id, rank) -> {
+			String name = Bukkit.getOfflinePlayer(id).getName();
+			list.add(rank.getColor() + ChatColor.BOLD + name + rank.getColor() + " : " + rank.toString());
+		});
+		return list;
+	}
+	
 	private void saveMembers() {
 		synchronized (config) {
 			config.set("members", convertMembersToList(members));
@@ -182,7 +194,7 @@ public class Guild extends FileDataRPG {
 		if(config.contains("tag"))
 			tag = config.getString("tag");
 		else
-			tag = name.substring(0, 2).toUpperCase();
+			tag = name.substring(0, TAG_LENGHT - 1).toUpperCase();
 		members = convertMembersFromList(config.getStringList("members"));
 	}
 	
@@ -242,8 +254,13 @@ public class Guild extends FileDataRPG {
 			return GuildResult.PLAYER_NOT_HERE;
 		members.remove(player.getUniqueId());
 		saveMembers();
-		sendMessageToMembers(getTag() + ChatColor.RED + "Le joueur " + ChatColor.DARK_RED + player.getName() + ChatColor.RED + " a quitté la guilde.");
-		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez quitté votre guilde.");
+		if(banned) {
+			sendMessageToMembers(getTag() + ChatColor.RED + "Le joueur " + ChatColor.DARK_RED + player.getName() + ChatColor.RED + " a été renvoyé de la guilde.");
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez été renvoyé votre guilde.");
+		} else {
+			sendMessageToMembers(getTag() + ChatColor.RED + "Le joueur " + ChatColor.DARK_RED + player.getName() + ChatColor.RED + " a quitté la guilde.");
+			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez quitté votre guilde.");
+		}
 		return GuildResult.SUCCESS;
 	}
 	

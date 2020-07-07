@@ -25,7 +25,7 @@ public class QuestsAdvancement {
 	public QuestsAdvancement(UUID uuid, Set<QuestState> quests) {
 		this.uuid = uuid;
 		this.quests = new HashSet<>(quests);
-		System.out.println("résumé de playerADV : ("+quests+ " entrées) :");
+	//	System.out.println("résumé de playerADV : ("+quests+ " entrées) :");
 	//	for(QuestState st : quests)
 	//		System.out.println("- " + st.getQuest().getID() + " > ("+st.getStep()+","+st.getData()+") : known/started/finished ? " + st.isKnown()+"/"+st.isStarted()+"/"+st.isFinished()+".");
 	}

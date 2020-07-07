@@ -41,7 +41,7 @@ public class SpellAnalyzer extends Spell {
 					continue;
 				if (line.startsWith("{")) {
 					data = false;
-					System.out.println("Data Completed. Data : "+this.data.toString());
+		//			System.out.println("Data Completed. Data : "+this.data.toString());
 					continue;
 				}
 				if (line.startsWith("}")) {

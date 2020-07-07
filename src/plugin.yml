@@ -33,7 +33,7 @@ commands:
     permission-message: §cTu n'es pas considéré comme étant un joueur !
     description: Ouvre une GUI pour sélectionner les skills passifs.
   guilds:
-    aliases: guild, gld
+    aliases: [gld, guild]
     usage: /guilds <args>
     permission: halystia.rpg.player
     permission-message: §cTu n'es pas considéré comme étant un joueur !

@@ -1,20 +1,28 @@
 package fr.jamailun.halystia.guilds;
 
+import org.bukkit.ChatColor;
+
 public enum GuildRank {
 
-	MASTER(100, "Chef"),
-	RIGHT_ARM(80, "Bras droit"),
-	CAPITAIN(50, "Capitaine"),
-	MEMBER(10, "Membre"),
-	NOT_A_MEMBER(0, "§4Erreur")
+	MASTER(100, "Chef", ChatColor.GOLD),
+	RIGHT_ARM(80, "Bras droit", ChatColor.DARK_GRAY),
+	CAPITAIN(50, "Capitaine", ChatColor.BLUE),
+	MEMBER(10, "Membre", ChatColor.GRAY),
+	NOT_A_MEMBER(0, "Non membre", ChatColor.DARK_GRAY)
 	;
 	
 	private final int power;
 	private final String display;
+	private final ChatColor color;
 	
-	private GuildRank(int power, String display) {
+	private GuildRank(int power, String display, ChatColor color) {
 		this.power = power;
 		this.display = display;
+		this.color = color;
+	}
+	
+	public String getColor() {
+		return color + "";
 	}
 	
 	@Override

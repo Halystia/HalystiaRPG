@@ -1,5 +1,6 @@
 package fr.jamailun.halystia.guilds;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,6 +23,9 @@ public class GuildManager {
 	
 	public GuildManager(String path) {
 		this.path = path;
+		File dir = new File(path);
+		if( ! dir.exists() )
+			dir.mkdirs();
 		guilds = new HashSet<>();
 		reload();
 	}
