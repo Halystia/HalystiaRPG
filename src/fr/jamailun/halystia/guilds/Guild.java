@@ -44,6 +44,7 @@ public class Guild extends FileDataRPG {
 		config.set("tag", tag);
 		config.set("members", convertMembersToList(members));
 		config.set("created", System.currentTimeMillis());
+		save();
 	}
 	
 	public List<String> getOfflinePlayersNames() {
@@ -138,7 +139,7 @@ public class Guild extends FileDataRPG {
 			return GuildResult.PLAYER_NOT_HERE;
 		if( ! hasPermissions(source, GuildRank.CAPITAIN))
 			return GuildResult.NEED_TO_BE_CAPTAIN;
-		message = getTag() + ChatColor.WHITE + source.getName() + " > " + ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.translateAlternateColorCodes('&', message);
+		message = getTag() + ChatColor.WHITE + "" + ChatColor.BOLD + source.getName() + " > " + ChatColor.YELLOW + "" + ChatColor.BOLD + ChatColor.translateAlternateColorCodes('&', message);
 		sendMessageToMembers(message);
 		return GuildResult.SUCCESS;
 	}
@@ -160,7 +161,7 @@ public class Guild extends FileDataRPG {
 	}
 	
 	public String getTag() {
-		return ChatColor.GOLD + "" + ChatColor.BOLD + "[" + tag + "]";
+		return ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + tag + ChatColor.GOLD + "] " + ChatColor.WHITE;
 	}
 	
 	public boolean hasPermissions(Player player, GuildRank minimal) {

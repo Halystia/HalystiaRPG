@@ -95,6 +95,10 @@ public class GuildCommand extends HalystiaCommand {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut une guilde pour effectuer cette commande.");
 				return true;
 			}
+			if(rank == GuildRank.MASTER) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Impossible de quitter une guilde dont vous êtes le maître !");
+				return true;
+			}
 			confirmLeave(p, guild);
 			return true;
 		}
@@ -348,7 +352,14 @@ public class GuildCommand extends HalystiaCommand {
 		Guild guild = guilds.getGuild((Player)sender);
 		GuildRank rank = guild == null ? GuildRank.NOT_A_MEMBER : guild.getPlayerRank((Player)sender);
 		if(args.length <= 1)
-			return subCommands.entrySet().stream().filter(entry -> entry.getKey().startsWith(args[0]) && entry.getValue().getPower() <= rank.getPower()).map(entry -> entry.getKey()).collect(Collectors.toList());
+			return subCommands.entrySet().stream()
+					.filter(entry -> 
+						entry.getKey().startsWith(args[0])
+						&& entry.getValue().getPower() <= rank.getPower()
+						&& ! ( ((entry.getKey().equals("join") || entry.getKey().equals("create")) && rank != GuildRank.NOT_A_MEMBER) )
+						&& ! ( ((entry.getKey().equals("leave")) && rank == GuildRank.MASTER) )
+					).map(entry -> entry.getKey())
+					.collect(Collectors.toList());
 		if(args.length <= 2) {
 			if(args[0].equalsIgnoreCase("promote") || args[0].equalsIgnoreCase("demote") || args[0].equalsIgnoreCase("kick") )
 				if(rank.getPower() >= GuildRank.RIGHT_ARM.getPower())
@@ -382,37 +393,44 @@ public class GuildCommand extends HalystiaCommand {
 		}
 		sender.sendMessage(ChatColor.GREEN + "/" + label + " message <message>" + ChatColor.WHITE + " : Envoie un message uniquement aux gens de votre guilde.");
 		sender.sendMessage(ChatColor.GREEN + "/" + label + " gui" + ChatColor.WHITE + " : Ouvre la GUI de la guilde.");
-		sender.sendMessage(ChatColor.GREEN + "/" + label + " leave" + ChatColor.WHITE + " : Quitter définitivement la guilde.");
+		if(rank != GuildRank.MASTER)
+			sender.sendMessage(ChatColor.GREEN + "/" + label + " leave" + ChatColor.WHITE + " : Quitter définitivement la guilde.");
 	}
 	
 	private void confirmDisband(Player p, Guild guild) {
 		new YesNoGUI(ChatColor.DARK_RED + "Dissoudre la guilde " + ChatColor.BOLD + "définitivement" + ChatColor.DARK_RED + " ?", main) {
 			@Override
 			public void onFinish(Response response) {
-				if(response == Response.NO)
+				if(response == Response.NO) {
+					p.closeInventory();
 					return;
+				}
 				guilds.disbandGuild(p, guild);
 			}
 		}.show(p);
 	}
 	
 	private void confirmLeave(Player p, Guild guild) {
-		new YesNoGUI(ChatColor.DARK_RED + "Quitter la guilde " + ChatColor.BOLD + "définitivement" + ChatColor.DARK_RED + " ?", main) {
+		new YesNoGUI(ChatColor.DARK_RED + "Quitter votre guilde " + ChatColor.DARK_RED + " ?", main) {
 			@Override
 			public void onFinish(Response response) {
-				if(response == Response.NO)
+				if(response == Response.NO) {
+					p.closeInventory();
 					return;
+				}
 				guild.playerLeaves(p, false);
 			}
 		}.show(p);
 	}
 	
 	private void confirmKick(Player p, Guild guild, Player target) {
-		new YesNoGUI(ChatColor.DARK_RED + "Renvoyer "+target.getName()+" " + ChatColor.BOLD + "définitivement" + ChatColor.DARK_RED + " ?", main) {
+		new YesNoGUI(ChatColor.DARK_RED + "Renvoyer "+target.getName()+" " + " ?", main) {
 			@Override
 			public void onFinish(Response response) {
-				if(response == Response.NO)
+				if(response == Response.NO) {
+					p.closeInventory();
 					return;
+				}
 				guild.playerLeaves(target, true);
 			}
 		}.show(p);
