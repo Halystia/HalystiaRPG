@@ -44,6 +44,7 @@ public class GuildCommand extends HalystiaCommand {
 		subCommands.put("demote", GuildRank.RIGHT_ARM);
 		subCommands.put("kick", GuildRank.RIGHT_ARM);
 		subCommands.put("disband", GuildRank.MASTER);
+		subCommands.put("pvp", GuildRank.MASTER);
 		subCommands.put("edit-tag", GuildRank.MASTER);
 	}
 	private final GuildManager guilds;
@@ -128,6 +129,30 @@ public class GuildCommand extends HalystiaCommand {
 			if(args[1].length() < 5)
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le nom de la guilde doit faire au moins 5 caractères de long !");
 			guilds.createGuild(p, args[1]);
+			return true;
+		}
+		
+		if(args[0].equalsIgnoreCase("pvp")) {
+			if(guild == null) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut une guilde pour effectuer cette commande.");
+				return true;
+			}
+			if(rank.getPower() < GuildRank.MASTER.getPower()) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Seul le maître de guilde peut autoriser ou non le pvp !");
+				return true;
+			}
+			if( ! ( args[1].equalsIgnoreCase("enable") || args[1].equalsIgnoreCase("disable")) ) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Les valeurs autorisées sont : 'enable' ou 'disable'.");
+				return true;
+			}
+			boolean now = guild.allowsPVP();
+			boolean enable = args[1].equalsIgnoreCase("enable");
+			if(now == enable) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le PvP est déjà " + (enable ? "autorisé" : "interdit") + " !");
+				return true;
+			}
+			guild.setPvp(enable);
+			guild.sendMessageToMembers(guild.getTag() + ChatColor.YELLOW + "" + ChatColor.BOLD + "Nouvelle règle pour le PvP : " + (enable ? ChatColor.GREEN + "autorisé" : ChatColor.RED + "interdit")+ ChatColor.YELLOW + "" + ChatColor.BOLD +".");
 			return true;
 		}
 		
