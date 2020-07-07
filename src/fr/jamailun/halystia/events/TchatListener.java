@@ -16,6 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.guilds.Guild;
 import fr.jamailun.halystia.guis.EditChunkGUI;
 import fr.jamailun.halystia.guis.EditMobGUI;
 import fr.jamailun.halystia.players.Classe;
@@ -101,12 +102,14 @@ public class TchatListener extends HalystiaListener {
 		
 		Classe classe = pc.getClasse();
 		int level = pc.getLevel();
+		Guild guild = main.getGuildManager().getGuild(p);
 		
 		//generate Message for in-game players
+		TextComponent prefixGuild = new TextComponent( guild == null ? "" : guild.getTag());
 		TextComponent prefixLevel = new TextComponent( classe == Classe.NONE ? GRAY+"[0]" : Classe.getColor(level)+(level>=100?BOLD+"":"")+"["+level+"]");
 		prefixLevel.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(BLUE+"Classe : " + Classe.getColor(pc.getLevel()) + classe.getTitlename(level)).create()));
 		TextComponent prefixName = new TextComponent(WHITE + " " + p.getName() + GRAY + " > ");
-		TextComponent msg = new TextComponent(WHITE + ChatColor.translateAlternateColorCodes('&', e.getMessage()));
+		TextComponent msg = new TextComponent(WHITE + (p.hasPermission("halystia.rpg.master") ? ChatColor.translateAlternateColorCodes('&', e.getMessage()) : e.getMessage()));
 		TextComponent crown = new TextComponent("");
 		Royaume r = main.getDataBase().getKingdom(p);
 		if(r != null) {
@@ -145,7 +148,7 @@ public class TchatListener extends HalystiaListener {
 		String msgNormal = "<"+prefixNormal + nameNormal + WHITE + "> " + ChatColor.translateAlternateColorCodes('&', e.getMessage());
 		for(Player pl : Bukkit.getOnlinePlayers()) {
 			if( HalystiaRPG.isInRpgWorld(pl) )
-				pl.spigot().sendMessage(crown, prefixLevel, prefixName, msg);
+				pl.spigot().sendMessage(crown, prefixGuild, prefixLevel, prefixName, msg);
 			else
 				pl.sendMessage(msgNormal);
 		}
