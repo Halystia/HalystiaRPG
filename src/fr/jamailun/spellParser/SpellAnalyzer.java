@@ -45,8 +45,7 @@ public class SpellAnalyzer extends Spell {
 					continue;
 				}
 				if (line.startsWith("}")) {
-					if(tokenizer.readLine(line, n))
-						System.out.println("End of deserialization.");
+					tokenizer.readLine(line, n);
 					break;
 				}
 				if (data) {

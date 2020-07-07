@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
-
 import fr.jamailun.spellParser.SpellAnalyzer;
 
 public class SpellLoader {
@@ -23,19 +21,28 @@ public class SpellLoader {
 		reloadSpells();
 	}
 	
+	private int allSpells = 0;
+	private int errors = 0;
+	
 	public void reloadSpells() {
-		manager.clearNotLegacy();;
+		allSpells = errors = 0;
+		manager.clearNotLegacy();
 		try {
 			Files.walk(Paths.get(directory)).filter(Files::isRegularFile).filter(f -> f.toFile().getAbsolutePath().endsWith(".spell")).forEach(f -> {
 				//String name = FilenameUtils.removeExtension(f.toFile().getName());
-				System.out.println("Read not legacy spell '"+FilenameUtils.removeExtension(f.toFile().getName()));
+				//System.out.println("Read not legacy spell '"+FilenameUtils.removeExtension(f.toFile().getName()));
 				SpellAnalyzer spell = new SpellAnalyzer(f.toFile());
+				allSpells++;
 				if(spell.isValid())
 					manager.registerSpell(spell);
+				else
+					errors++;
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if(allSpells > 0)
+			System.out.println("Finished reading " + allSpells + " spells files. " + errors + " errors found.");
 	}
 	
 }
