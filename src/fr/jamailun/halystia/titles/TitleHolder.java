@@ -7,6 +7,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.Player;
 
+import fr.jamailun.halystia.guilds.Guild;
+import fr.jamailun.halystia.guilds.GuildManager;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.ClasseManager;
 import fr.jamailun.halystia.players.PlayerData;
@@ -18,11 +20,13 @@ public class TitleHolder extends PlaceholderExpansion {
 	private final TitlesManager titles;
 	private final DataHandler bdd;
 	private final ClasseManager players;
+	private final GuildManager guilds;
 
-	public TitleHolder(TitlesManager titles, DataHandler bdd, ClasseManager players) {
+	public TitleHolder(TitlesManager titles, DataHandler bdd, ClasseManager players, GuildManager guilds) {
 		this.titles = titles;
 		this.bdd = bdd;
 		this.players = players;
+		this.guilds = guilds;
 	}
 
 	@Override
@@ -51,6 +55,11 @@ public class TitleHolder extends PlaceholderExpansion {
 			if(title == null)
 				return "";
 			return title.getDisplayName();
+		}
+		
+		if ( identifier.equals("guild") ) {
+			Guild guild = guilds.getGuild(p);
+			return guild == null ? "" : guild.getTag();
 		}
 
 		if ( identifier.equals("level") ) {
