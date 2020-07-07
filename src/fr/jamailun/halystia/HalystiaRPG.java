@@ -187,7 +187,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		
 		//PLACEHOLDERAPI
 		if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-			PlaceholderAPI.registerExpansion(new TitleHolder(titleMgr, bdd, classesMgr));
+			PlaceholderAPI.registerExpansion(new TitleHolder(titleMgr, bdd, classesMgr, guildsMgr));
 		} else {
 			getLogger().log(Level.WARNING, "PlaceHolderAPI not found or not enabled");
 		}

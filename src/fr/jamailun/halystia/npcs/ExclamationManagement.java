@@ -47,8 +47,6 @@ public class ExclamationManagement {
 			recipes.get(uuid).changeStatus(ex, player);
 			return;
 		}
-		
-
 	//	System.out.println("on se met en " + ex);
 		recipes.put(uuid, new Exclamation(player, ex, npc.getLocation()));
 	}
@@ -87,10 +85,12 @@ public class ExclamationManagement {
 		private final static double Y_DELTA = 1.7;
 		private ExclamationType type;
 		private final EntityArmorStand stand;
+		private Location loc;
 
 		public Exclamation(Player recipe, ExclamationType type, Location npcLoc) {
 			WorldServer s = ((CraftWorld)recipe.getWorld()).getHandle();
 			stand = new EntityArmorStand(s, npcLoc.getX(), npcLoc.getY() + Y_DELTA, npcLoc.getZ());
+			loc = new Location(recipe.getWorld(), npcLoc.getX(), npcLoc.getY() + Y_DELTA, npcLoc.getZ());
 			stand.setNoGravity(true);
 			
 			//stand.setRightArmPose(new Vector3f(50f, 00f, 20f));
@@ -130,6 +130,7 @@ public class ExclamationManagement {
 		public void move(Location loc, Player recipe) {
 			if(recipe == null)
 				return;
+			loc = new Location(recipe.getWorld(), loc.getX(), loc.getY() + Y_DELTA, loc.getZ());
 			stand.setLocation(loc.getX(), loc.getY() + Y_DELTA, loc.getZ(), 0, 0);
 			PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(stand);
 			((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packet);
@@ -141,9 +142,30 @@ public class ExclamationManagement {
 			PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(stand.getId());
 			((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packet);
 		}
+
+		private float rot = 0;
+		private double h = 0;
+		private boolean up = true;
+		public void rotate(Player recipe) {
+			if(recipe == null)
+				return;
+			rot = (rot + 6) % 360;
+			h += 0.005 * (up ? 1 : -1);
+			if(h > 0.06 || h < -0.06)
+				up = ! up;
+			stand.setLocation(loc.getX(), loc.getY() + h, loc.getZ(), rot, 0);
+			PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(stand);
+			((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packet);
+		}
 	}
 
 	public void purge(Player player) {
 		recipes.get(player.getUniqueId()).delete(player);
+	}
+
+	public void rotate() {
+		recipes.entrySet().stream().forEach(entry -> {
+			entry.getValue().rotate(Bukkit.getPlayer(entry.getKey()));
+		});
 	}
 }

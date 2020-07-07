@@ -80,10 +80,20 @@ public final class NpcManager {
 		            }
 		        }
 				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Completely reloaded HalystiaRPG and npcs.");
+				startRotateAllExclamations();
 			}
 		}.runTaskLater(main, 100L);
 		
 		clockToDoThings();
+	}
+	
+	private void startRotateAllExclamations() {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				npcs.forEach(npc -> npc.getExclamation().rotate());
+			}
+		}.runTaskTimer(main, 100L, 4L);
 	}
 	
 	public void reloadTextures() {

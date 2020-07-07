@@ -53,6 +53,14 @@ public class Guild extends FileDataRPG {
 		return members.keySet().stream().map(id -> Bukkit.getOfflinePlayer(id).getName()).collect(Collectors.toList());
 	}
 	
+	public void setPvp(boolean pvp) {
+		this.pvp = pvp;
+		synchronized (config) {
+			config.set("allows-pvp", pvp);
+			save();
+		}
+	}
+	
 	public String getGuildName() {
 		return name;
 	}
