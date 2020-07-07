@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
@@ -34,8 +35,28 @@ public class GuildManager {
 		return guilds.stream().filter(g -> g.isInTheGuild(player)).findAny().orElse(null);
 	}
 	
+	public Guild getGuild(UUID uuid) {
+		return guilds.stream().filter(g -> g.isInTheGuild(uuid)).findAny().orElse(null);
+	}
+	
 	public boolean hasAGuild(Player player) {
 		return getGuild(player) != null;
+	}
+	
+	/**
+	 * Check if two player can Fight each other
+	 * @param a first player's UUID
+	 * @param b second player's UUID
+	 * @return true if players are in the same Guild AND that guild deny pvp
+	 */
+	public boolean areInTheSameNoPvpGroup(UUID a, UUID b) {
+		Guild ga = getGuild(a);
+		Guild gb = getGuild(b);
+		if(ga == null || gb == null)
+			return false;
+		if(ga != gb)
+			return false;
+		return ! ga.allowsPVP();
 	}
 	
 	public GuildRank getRankOfPlayer(Player player) {

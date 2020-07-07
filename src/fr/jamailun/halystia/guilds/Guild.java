@@ -26,6 +26,7 @@ public class Guild extends FileDataRPG {
 	private Map<UUID, GuildRank> members;
 	private int maxMembers = 5;
 	private Set<GuildInvite> pendingInvite;
+	private boolean pvp = false;
 	
 	Guild(String path, String fileName) {
 		super(path, fileName);
@@ -44,6 +45,7 @@ public class Guild extends FileDataRPG {
 		config.set("tag", tag);
 		config.set("members", convertMembersToList(members));
 		config.set("created", System.currentTimeMillis());
+		config.set("allows-pvp", false);
 		save();
 	}
 	
@@ -57,6 +59,10 @@ public class Guild extends FileDataRPG {
 	
 	public boolean isInTheGuild(Player player) {
 		return members.containsKey(player.getUniqueId());
+	}
+	
+	public boolean isInTheGuild(UUID uuid) {
+		return members.containsKey(uuid);
 	}
 	
 	public GuildResult addPlayerToGuild(Player player) {
@@ -81,6 +87,10 @@ public class Guild extends FileDataRPG {
 			save();
 		}
 		return GuildResult.SUCCESS;
+	}
+	
+	public boolean allowsPVP() {
+		return pvp;
 	}
 	
 	String getPureTag() {
@@ -197,6 +207,7 @@ public class Guild extends FileDataRPG {
 		else
 			tag = name.substring(0, TAG_LENGHT - 1).toUpperCase();
 		members = convertMembersFromList(config.getStringList("members"));
+		pvp = config.getBoolean("allows-pvp");
 	}
 	
 	private static List<String> convertMembersToList(Map<UUID, GuildRank> members) {

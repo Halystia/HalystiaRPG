@@ -113,6 +113,16 @@ public class EntityDamageOtherListener extends HalystiaListener {
 					e.setCancelled(true);
 					return;
 				}
+				
+				if(main.getGuildManager().areInTheSameNoPvpGroup(invocs.getMasterOf(e.getDamager().getUniqueId()), p.getUniqueId())) {
+					if(damager instanceof Arrow)
+						damager.remove();
+					damages = 0;
+					e.setDamage(0);
+					e.setCancelled(true);
+
+					return;
+				}
 
 			}
 
@@ -457,6 +467,9 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		}
 		
 		if(cibleData != null) {
+			if(main.getGuildManager().areInTheSameNoPvpGroup(p.getUniqueId(), cibleData.getPlayerUUID())) {
+				return -1;
+			}
 			if ( Math.random() < 0.01 * cibleData.getSkillSetInstance().getLevel(SkillSet.SKILL_AGILITE) ) {
 				new PlayerUtils(p).sendDamageMarker(0, target.getLocation().add(0, 0.9, 0), HitType.DODGED);
 				new PlayerUtils(cibleData.getPlayer()).sendActionBar(ChatColor.GOLD + ""+ChatColor.BOLD+"Esquive !");
