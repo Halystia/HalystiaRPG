@@ -105,6 +105,7 @@ public class GuildManager {
 		}
 		Guild guild = new Guild(path, guildName.toLowerCase(Locale.ENGLISH).replaceAll(" ", "_"), player, guildName);
 		guilds.add(guild);
+		player.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "" + ChatColor.BOLD + "Votre guilde " + ChatColor.AQUA + "" + ChatColor.BOLD + guildName + ChatColor.GREEN + "" + ChatColor.BOLD + " a été créée avec succès.");
 		return guild;
 	}
 	

@@ -4,9 +4,9 @@ import org.bukkit.ChatColor;
 
 public enum GuildRank {
 
-	MASTER(100, "Chef", ChatColor.GOLD),
-	RIGHT_ARM(80, "Bras droit", ChatColor.DARK_GRAY),
-	CAPITAIN(50, "Capitaine", ChatColor.BLUE),
+	MASTER(100, "Maître de guilde", ChatColor.GOLD),
+	RIGHT_ARM(80, "Bras droit", ChatColor.BLUE),
+	CAPITAIN(50, "Capitaine", ChatColor.GREEN),
 	MEMBER(10, "Membre", ChatColor.GRAY),
 	NOT_A_MEMBER(0, "Non membre", ChatColor.DARK_GRAY)
 	;

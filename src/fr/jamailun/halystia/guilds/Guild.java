@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -25,14 +26,13 @@ public class Guild extends FileDataRPG {
 	private String name, tag;
 	private Map<UUID, GuildRank> members;
 	private int maxMembers = 5;
-	private Set<GuildInvite> pendingInvite;
+	private Set<GuildInvite> pendingInvite = new HashSet<>();
 	private boolean pvp = false;
 	
 	Guild(String path, String fileName) {
 		super(path, fileName);
 		members = new HashMap<>();
 		loadFile();
-		pendingInvite = new HashSet<>();
 	}
 	
 	public Guild(String path, String fileName, Player creator, String name) {
@@ -40,7 +40,7 @@ public class Guild extends FileDataRPG {
 		members = new HashMap<>();
 		members.put(creator.getUniqueId(), GuildRank.MASTER);
 		this.name = name;
-		this.tag = name.substring(0, 2).toUpperCase();
+		this.tag = name.substring(0, TAG_LENGHT-1).toUpperCase();
 		config.set("name", name);
 		config.set("tag", tag);
 		config.set("members", convertMembersToList(members));
@@ -102,30 +102,35 @@ public class Guild extends FileDataRPG {
 		return rank == null ? GuildRank.NOT_A_MEMBER : rank;
 	}
 	
-	public GuildResult promote(Player player) {
-		if( ! isInTheGuild(player))
+	public GuildRank getPlayerRank(UUID uuid) {
+		GuildRank rank = members.get(uuid);
+		return rank == null ? GuildRank.NOT_A_MEMBER : rank;
+	}
+	
+	public GuildResult promote(UUID uuid) {
+		if( ! isInTheGuild(uuid))
 			return GuildResult.PLAYER_NOT_HERE;
-		GuildRank current = members.get(player.getUniqueId());
+		GuildRank current = members.get(uuid);
 		if(current == GuildRank.MASTER)
 			return GuildResult.IS_ALREADY_MASTER;
 		if(current == GuildRank.RIGHT_ARM)
 			return GuildResult.CAN_ONLY_HAVE_ONE_MASTER;
 		if(current == GuildRank.CAPITAIN && guildHasRightArm())
 			return GuildResult.CAN_ONLY_HAVE_RIGHT_ARM;
-		members.replace(player.getUniqueId(), current.promote());
+		members.replace(uuid, current.promote());
 		saveMembers();
 		return GuildResult.SUCCESS;
 	}
 	
-	public GuildResult demote(Player player) {
-		if( ! isInTheGuild(player))
+	public GuildResult demote(UUID uuid) {
+		if( ! isInTheGuild(uuid))
 			return GuildResult.PLAYER_NOT_HERE;
-		GuildRank current = members.get(player.getUniqueId());
+		GuildRank current = members.get(uuid);
 		if(current == GuildRank.MASTER)
 			return GuildResult.MASTER_CANNOT_BE_DEMOTE;
 		if(current == GuildRank.MEMBER)
 			return GuildResult.IS_ALREADY_MEMBER;
-		members.replace(player.getUniqueId(), current.demote());
+		members.replace(uuid, current.demote());
 		saveMembers();
 		return GuildResult.SUCCESS;
 	}
@@ -258,20 +263,24 @@ public class Guild extends FileDataRPG {
 		return false;
 	}
 	
-	public GuildResult playerLeaves(Player player, boolean banned) {
-		GuildRank rank = getPlayerRank(player);
+	public GuildResult playerLeaves(UUID uuid, boolean banned) {
+		GuildRank rank = getPlayerRank(uuid);
 		if(rank == GuildRank.MASTER)
 			return GuildResult.MASTER_CANNOT_LEAVE;
 		if(rank == GuildRank.NOT_A_MEMBER)
 			return GuildResult.PLAYER_NOT_HERE;
-		members.remove(player.getUniqueId());
+		members.remove(uuid);
 		saveMembers();
+		OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
+		Player ifIsHere = off.getPlayer();
 		if(banned) {
-			sendMessageToMembers(getTag() + ChatColor.RED + "Le joueur " + ChatColor.DARK_RED + player.getName() + ChatColor.RED + " a été renvoyé de la guilde.");
-			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez été renvoyé votre guilde.");
+			sendMessageToMembers(getTag() + ChatColor.RED + "Le joueur " + ChatColor.DARK_RED + off.getName() + ChatColor.RED + " a été renvoyé de la guilde.");
+			if(ifIsHere != null)
+				ifIsHere.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez été renvoyé votre guilde.");
 		} else {
-			sendMessageToMembers(getTag() + ChatColor.RED + "Le joueur " + ChatColor.DARK_RED + player.getName() + ChatColor.RED + " a quitté la guilde.");
-			player.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez quitté votre guilde.");
+			sendMessageToMembers(getTag() + ChatColor.RED + "Le joueur " + ChatColor.DARK_RED + off.getName() + ChatColor.RED + " a quitté la guilde.");
+			if(ifIsHere != null)
+				ifIsHere.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez quitté votre guilde.");
 		}
 		return GuildResult.SUCCESS;
 	}

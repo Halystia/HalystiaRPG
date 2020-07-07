@@ -1,6 +1,7 @@
 package fr.jamailun.halystia.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -20,7 +22,8 @@ import fr.jamailun.halystia.guilds.GuildRank;
 import fr.jamailun.halystia.guilds.GuildResult;
 import fr.jamailun.halystia.utils.YesNoGUI;
 import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public class GuildCommand extends HalystiaCommand {
@@ -183,12 +186,12 @@ public class GuildCommand extends HalystiaCommand {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut être au moins bras droit pour promouvoir un joueur dans la guilde !");
 				return true;
 			}
-			Player target = Bukkit.getPlayerExact(args[1]);
+			OfflinePlayer target = Arrays.asList(Bukkit.getOfflinePlayers()).stream().filter(t -> t.getName().equals(args[1])).findAny().orElse(null);
 			if(target == null) {
-				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le joueur '" + args[1] + "' n'existe pas ou n'est pas connecté.");
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le joueur '" + args[1] + "' n'existe pas.");
 				return true;
 			}
-			GuildResult result = guild.promote(target);
+			GuildResult result = guild.promote(target.getUniqueId());
 			if(result == GuildResult.PLAYER_NOT_HERE) {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Ce joueur n'est pas dans la guilde...");
 				return true;
@@ -209,7 +212,7 @@ public class GuildCommand extends HalystiaCommand {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Une erreur est survenue : " + result + ".");
 				return true;
 			}
-			guild.sendMessageToMembers(guild.getTag() + ChatColor.GREEN + "Le joueur " + ChatColor.DARK_GREEN + target.getName() + ChatColor.GREEN + " a été promu " + ChatColor.GOLD + guild.getPlayerRank(target).toString() + ChatColor.GREEN + ".");
+			guild.sendMessageToMembers(guild.getTag() + ChatColor.GREEN + "Le joueur " + ChatColor.DARK_GREEN + target.getName() + ChatColor.GREEN + " a été promu " + ChatColor.GOLD + guild.getPlayerRank(target.getUniqueId()).toString() + ChatColor.GREEN + ".");
 			return true;
 		}
 		
@@ -222,12 +225,12 @@ public class GuildCommand extends HalystiaCommand {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut être au moins bras droit pour rétrograder un joueur dans la guilde !");
 				return true;
 			}
-			Player target = Bukkit.getPlayerExact(args[1]);
+			OfflinePlayer target = Arrays.asList(Bukkit.getOfflinePlayers()).stream().filter(t -> t.getName().equals(args[1])).findAny().orElse(null);
 			if(target == null) {
-				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le joueur '" + args[1] + "' n'existe pas ou n'est pas connecté.");
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le joueur '" + args[1] + "' n'existe pas.");
 				return true;
 			}
-			GuildResult result = guild.demote(target);
+			GuildResult result = guild.demote(target.getUniqueId());
 			if(result == GuildResult.PLAYER_NOT_HERE) {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Ce joueur n'est pas dans la guilde...");
 				return true;
@@ -244,7 +247,7 @@ public class GuildCommand extends HalystiaCommand {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Une erreur est survenue : " + result + ".");
 				return true;
 			}
-			guild.sendMessageToMembers(guild.getTag() + ChatColor.GREEN + "Le joueur " + ChatColor.DARK_GREEN + target.getName() + ChatColor.GREEN + " a été rétrogradé au rôle de " + ChatColor.GOLD + guild.getPlayerRank(target).toString() + ChatColor.GREEN + ".");
+			guild.sendMessageToMembers(guild.getTag() + ChatColor.GREEN + "Le joueur " + ChatColor.DARK_GREEN + target.getName() + ChatColor.GREEN + " a été rétrogradé au rôle de " + ChatColor.GOLD + guild.getPlayerRank(target.getUniqueId()).toString() + ChatColor.GREEN + ".");
 			return true;
 		}
 		
@@ -257,12 +260,16 @@ public class GuildCommand extends HalystiaCommand {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut être au moins bras droit pour renvoyer un joueur de la guilde !");
 				return true;
 			}
-			Player target = Bukkit.getPlayerExact(args[1]);
+			OfflinePlayer target = Arrays.asList(Bukkit.getOfflinePlayers()).stream().filter(t -> t.getName().equals(args[1])).findAny().orElse(null);
 			if(target == null) {
-				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le joueur '" + args[1] + "' n'existe pas ou n'est pas connecté.");
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le joueur '" + args[1] + "' n'existe pas.");
 				return true;
 			}
-			GuildRank targetRank = guild.getPlayerRank(target);
+			if(target.getUniqueId().equals(p.getUniqueId())) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous ne pouvez pas vous renvoyer vous même...");
+				return true;
+			}
+			GuildRank targetRank = guild.getPlayerRank(target.getUniqueId());
 			if(targetRank == GuildRank.MASTER) {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le maître de guilde ne peut pas être renvoyé !");
 				return true;
@@ -318,9 +325,10 @@ public class GuildCommand extends HalystiaCommand {
 			GuildInvite invite = guild.generateInvite(p);
 			target.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "-----------------------------------------------------------");
 			target.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "Le joueur " + ChatColor.DARK_GREEN + p.getName() + ChatColor.GREEN + " vous invite dans sa guilde : " + ChatColor.AQUA + guild.getGuildName());
-			TextComponent debut = new TextComponent(ChatColor.GREEN + "Pour la rejoindre, ");
+			TextComponent debut = new TextComponent(HalystiaRPG.PREFIX + ChatColor.GREEN + "Pour la rejoindre, ");
 			TextComponent clickable = new TextComponent(ChatColor.YELLOW + "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE + "cliquez ici");
-			clickable.setClickEvent(new ClickEvent(Action.RUN_COMMAND, "/" + label + " join " + invite.getToken()));
+			clickable.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + label + " join " + invite.getToken()));
+			clickable.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder( ChatColor.AQUA+"Rejoindre cette guilde !" ).create()));
 			TextComponent fin = new TextComponent(ChatColor.GREEN + ".");
 			target.spigot().sendMessage(debut, clickable, fin);
 			target.sendMessage(HalystiaRPG.PREFIX + ChatColor.GREEN + "-----------------------------------------------------------");
@@ -342,7 +350,8 @@ public class GuildCommand extends HalystiaCommand {
 
 	private void openGUI(Player p, Guild guild, GuildRank rank) {
 		// TODO openGUI()
-		p.sendMessage(ChatColor.RED + "Non implémenté pour le moment.");
+		//p.sendMessage(ChatColor.RED + "Non implémenté pour le moment.");
+		sendHelp(p, "guilds", rank);
 	}
 
 	@Override
@@ -361,11 +370,12 @@ public class GuildCommand extends HalystiaCommand {
 					).map(entry -> entry.getKey())
 					.collect(Collectors.toList());
 		if(args.length <= 2) {
-			if(args[0].equalsIgnoreCase("promote") || args[0].equalsIgnoreCase("demote") || args[0].equalsIgnoreCase("kick") )
+			if(args[0].equalsIgnoreCase("promote") || args[0].equalsIgnoreCase("demote") || args[0].equalsIgnoreCase("kick") ) {
 				if(rank.getPower() >= GuildRank.RIGHT_ARM.getPower())
-				return guild.getMembersDisplay().stream().filter(n -> !n.equals(sender.getName()) && n.toLowerCase().startsWith(args[0].toLowerCase())).collect(Collectors.toList());
+					return guild.getOfflinePlayersNames().stream().filter(n -> !n.equals(sender.getName()) && n.toLowerCase().startsWith(args[1].toLowerCase())).collect(Collectors.toList());
+			}
 			if(args[0].equalsIgnoreCase("invite"))
-				return Bukkit.getOnlinePlayers().stream().filter(pl -> ! pl.getUniqueId().equals(((Player)sender).getUniqueId()) && pl.getName().toLowerCase().startsWith(args[0].toLowerCase())).map(pl -> pl.getName()).collect(Collectors.toList());
+				return Bukkit.getOnlinePlayers().stream().filter(pl -> ! pl.getUniqueId().equals(((Player)sender).getUniqueId()) && pl.getName().toLowerCase().startsWith(args[1].toLowerCase())).map(pl -> pl.getName()).collect(Collectors.toList());
 		}
 		return new ArrayList<>();
 	}
@@ -401,10 +411,9 @@ public class GuildCommand extends HalystiaCommand {
 		new YesNoGUI(ChatColor.DARK_RED + "Dissoudre la guilde " + ChatColor.BOLD + "définitivement" + ChatColor.DARK_RED + " ?", main) {
 			@Override
 			public void onFinish(Response response) {
-				if(response == Response.NO) {
-					p.closeInventory();
+				p.closeInventory();
+				if(response == Response.NO)
 					return;
-				}
 				guilds.disbandGuild(p, guild);
 			}
 		}.show(p);
@@ -414,24 +423,22 @@ public class GuildCommand extends HalystiaCommand {
 		new YesNoGUI(ChatColor.DARK_RED + "Quitter votre guilde " + ChatColor.DARK_RED + " ?", main) {
 			@Override
 			public void onFinish(Response response) {
-				if(response == Response.NO) {
-					p.closeInventory();
+				p.closeInventory();
+				if(response == Response.NO)
 					return;
-				}
-				guild.playerLeaves(p, false);
+				guild.playerLeaves(p.getUniqueId(), false);
 			}
 		}.show(p);
 	}
 	
-	private void confirmKick(Player p, Guild guild, Player target) {
+	private void confirmKick(Player p, Guild guild, OfflinePlayer target) {
 		new YesNoGUI(ChatColor.DARK_RED + "Renvoyer "+target.getName()+" " + " ?", main) {
 			@Override
 			public void onFinish(Response response) {
-				if(response == Response.NO) {
-					p.closeInventory();
+				p.closeInventory();
+				if(response == Response.NO)
 					return;
-				}
-				guild.playerLeaves(target, true);
+				guild.playerLeaves(target.getUniqueId(), true);
 			}
 		}.show(p);
 	}
