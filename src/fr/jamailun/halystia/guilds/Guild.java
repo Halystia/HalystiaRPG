@@ -21,7 +21,7 @@ import fr.jamailun.halystia.utils.FileDataRPG;
 
 public class Guild extends FileDataRPG {
 	
-	public static final int TAG_LENGHT = 4;
+	public static final int[] TAG_LENGHT = {3, 4};
 	
 	private String name, tag;
 	private Map<UUID, GuildRank> members;
@@ -40,7 +40,7 @@ public class Guild extends FileDataRPG {
 		members = new HashMap<>();
 		members.put(creator.getUniqueId(), GuildRank.MASTER);
 		this.name = name;
-		this.tag = name.substring(0, TAG_LENGHT-1).toUpperCase();
+		this.tag = name.substring(0, TAG_LENGHT[TAG_LENGHT.length - 1]-1).toUpperCase();
 		config.set("name", name);
 		config.set("tag", tag);
 		config.set("members", convertMembersToList(members));
@@ -85,7 +85,7 @@ public class Guild extends FileDataRPG {
 	
 	public GuildResult changeTag(String tag) {
 		tag = tag.toUpperCase(Locale.FRANCE);
-		if(tag.length() != TAG_LENGHT)
+		if(tag.length() < TAG_LENGHT[0] || tag.length() > TAG_LENGHT[TAG_LENGHT.length - 1])
 			return GuildResult.WRONG_TAG_SIZE;
 		if(HalystiaRPG.getInstance().getGuildManager().tagExists(tag))
 			return GuildResult.TAG_ALREADY_EXISTS;
@@ -218,7 +218,7 @@ public class Guild extends FileDataRPG {
 		if(config.contains("tag"))
 			tag = config.getString("tag");
 		else
-			tag = name.substring(0, TAG_LENGHT - 1).toUpperCase();
+			tag = name.substring(0, TAG_LENGHT[TAG_LENGHT.length - 1] - 1).toUpperCase();
 		members = convertMembersFromList(config.getStringList("members"));
 		pvp = config.getBoolean("allows-pvp");
 	}

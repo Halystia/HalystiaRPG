@@ -318,7 +318,7 @@ public class GuildCommand extends HalystiaCommand {
 			}
 			GuildResult result = guild.changeTag(args[1]);
 			if(result == GuildResult.WRONG_TAG_SIZE) {
-				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le tag doit faire exactement " + Guild.TAG_LENGHT + " caractères de long.");
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Le tag doit faire entre " + Guild.TAG_LENGHT[0] + " et " + Guild.TAG_LENGHT[Guild.TAG_LENGHT.length - 1] + " caractères de long.");
 				return true;
 			}
 			if(result == GuildResult.TAG_ALREADY_EXISTS) {
