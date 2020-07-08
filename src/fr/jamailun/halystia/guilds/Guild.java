@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.utils.FileDataRPG;
+import fr.jamailun.halystia.utils.MenuGUI;
 
 public class Guild extends FileDataRPG {
 	
@@ -29,10 +30,23 @@ public class Guild extends FileDataRPG {
 	private Set<GuildInvite> pendingInvite = new HashSet<>();
 	private boolean pvp = false;
 	
-	Guild(String path, String fileName) {
+	private final GuildChest chest;
+	private int powerToPutItems = 1, powerToGetItems = 50;
+	private int chestPages = 1;
+	
+	public Guild(String path, String fileName) {
 		super(path, fileName);
 		members = new HashMap<>();
 		loadFile();
+		
+		chest = new GuildChest(this, config.getConfigurationSection("chest.pages"));
+	}
+	
+	void saveChest(MenuGUI gui) {
+		synchronized (config) {
+			//TODO
+			save();
+		}
 	}
 	
 	public Guild(String path, String fileName, Player creator, String name) {
@@ -45,8 +59,20 @@ public class Guild extends FileDataRPG {
 		config.set("tag", tag);
 		config.set("members", convertMembersToList(members));
 		config.set("created", System.currentTimeMillis());
-		config.set("allows-pvp", false);
+		config.set("allows.pvp", false);
+		config.set("chest.pages.number", 1);
 		save();
+		
+		chest = new GuildChest(this, config.getConfigurationSection("chest.pages"));
+	}
+	
+	public void playerRequestOpenChest(Player player) {
+		int power = getPlayerRank(player).getPower();
+		if(powerToPutItems > power) {
+			player.sendMessage(getTag() + ChatColor.RED + "Il faut un rang supérieur pour ouvrir le coffre de guilde.");
+			return;
+		}
+		chest.openPlayer(player, power >= powerToGetItems);
 	}
 	
 	public List<String> getOfflinePlayersNames() {
@@ -56,7 +82,7 @@ public class Guild extends FileDataRPG {
 	public void setPvp(boolean pvp) {
 		this.pvp = pvp;
 		synchronized (config) {
-			config.set("allows-pvp", pvp);
+			config.set("allows.pvp", pvp);
 			save();
 		}
 	}
@@ -71,6 +97,20 @@ public class Guild extends FileDataRPG {
 	
 	public boolean isInTheGuild(UUID uuid) {
 		return members.containsKey(uuid);
+	}
+	
+	public int getHowManyChestPages() {
+		return chestPages;
+	}
+	
+	public void addNewPage() {
+		if(chestPages > 10)
+			return;
+		chestPages ++;
+		synchronized (config) {
+			config.set("chest.pages.number", chestPages);
+			save();
+		}
 	}
 	
 	public GuildResult addPlayerToGuild(Player player) {
@@ -184,7 +224,7 @@ public class Guild extends FileDataRPG {
 	}
 	
 	public String getTag() {
-		return ChatColor.GOLD + "[" + ChatColor.LIGHT_PURPLE + tag + ChatColor.GOLD + "] " + ChatColor.WHITE;
+		return ChatColor.GRAY + "[" + ChatColor.WHITE + tag + ChatColor.GRAY + "] " + ChatColor.WHITE;
 	}
 	
 	public boolean hasPermissions(Player player, GuildRank minimal) {
@@ -220,7 +260,8 @@ public class Guild extends FileDataRPG {
 		else
 			tag = name.substring(0, TAG_LENGHT[TAG_LENGHT.length - 1] - 1).toUpperCase();
 		members = convertMembersFromList(config.getStringList("members"));
-		pvp = config.getBoolean("allows-pvp");
+		pvp = config.getBoolean("allows.pvp");
+		chestPages = config.getInt("chest.pages.number");
 	}
 	
 	private static List<String> convertMembersToList(Map<UUID, GuildRank> members) {
