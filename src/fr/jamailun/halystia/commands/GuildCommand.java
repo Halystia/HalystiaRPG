@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -20,6 +21,7 @@ import fr.jamailun.halystia.guilds.GuildInvite;
 import fr.jamailun.halystia.guilds.GuildManager;
 import fr.jamailun.halystia.guilds.GuildRank;
 import fr.jamailun.halystia.guilds.GuildResult;
+import fr.jamailun.halystia.guis.GuildGui;
 import fr.jamailun.halystia.utils.YesNoGUI;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -28,12 +30,14 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class GuildCommand extends HalystiaCommand {
 
+	private static Stream<String> owoWhatsThis = Arrays.asList("enable", "disable").stream();
 	private static final Map<String, GuildRank> subCommands = new HashMap<>();
 	static {
 		subCommands.put("help", GuildRank.NOT_A_MEMBER);
 		subCommands.put("create", GuildRank.NOT_A_MEMBER);
 		subCommands.put("join", GuildRank.NOT_A_MEMBER);
 		subCommands.put("message", GuildRank.MEMBER);
+		subCommands.put("chest", GuildRank.MEMBER);
 		subCommands.put("members", GuildRank.MEMBER);
 		subCommands.put("leave", GuildRank.MEMBER);
 		subCommands.put("msg", GuildRank.MEMBER);
@@ -82,6 +86,15 @@ public class GuildCommand extends HalystiaCommand {
 		
 		if(args[0].equalsIgnoreCase("help")) {
 			sendHelp(p, label, rank);
+			return true;
+		}
+		
+		if(args[0].equalsIgnoreCase("chest")) {
+			if(guild == null) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut une guilde pour effectuer cette commande.");
+				return true;
+			}
+			guild.playerRequestOpenChest(p);
 			return true;
 		}
 		
@@ -374,9 +387,11 @@ public class GuildCommand extends HalystiaCommand {
 	}
 
 	private void openGUI(Player p, Guild guild, GuildRank rank) {
-		// TODO openGUI()
-		//p.sendMessage(ChatColor.RED + "Non implémenté pour le moment.");
-		sendHelp(p, "guilds", rank);
+		if(guild == null) {
+			sendHelp(p, "guilds,", rank);
+			return;
+		}
+		new GuildGui(p, guild, rank);
 	}
 
 	@Override
@@ -401,6 +416,8 @@ public class GuildCommand extends HalystiaCommand {
 			}
 			if(args[0].equalsIgnoreCase("invite"))
 				return Bukkit.getOnlinePlayers().stream().filter(pl -> ! pl.getUniqueId().equals(((Player)sender).getUniqueId()) && pl.getName().toLowerCase().startsWith(args[1].toLowerCase())).map(pl -> pl.getName()).collect(Collectors.toList());
+			if(args[0].equalsIgnoreCase("pvp"))
+				return owoWhatsThis.filter(s -> s.startsWith(args[1])).collect(Collectors.toList());
 		}
 		return new ArrayList<>();
 	}
@@ -416,6 +433,7 @@ public class GuildCommand extends HalystiaCommand {
 		if(rank.getPower() >= GuildRank.MASTER.getPower()) {
 			sender.sendMessage(ChatColor.DARK_RED + "/" + label + " disband" + ChatColor.WHITE + " : Détruire à jamais la guilde.");
 			sender.sendMessage(ChatColor.BLUE + "/" + label + " edit-tag" + ChatColor.WHITE + " : Modifie le tag de la guilde.");
+			sender.sendMessage(ChatColor.BLUE + "/" + label + " pvp <enable/disable>" + ChatColor.WHITE + " : Active ou désactive le PvP dans la guilde.");
 		}
 		if(rank.getPower() >= GuildRank.RIGHT_ARM.getPower()) {
 			sender.sendMessage(ChatColor.GOLD + "/" + label + " promote <joueur>" + ChatColor.WHITE + " : Promouvoir un joueur.");
@@ -427,6 +445,7 @@ public class GuildCommand extends HalystiaCommand {
 			sender.sendMessage(ChatColor.DARK_GREEN + "/" + label + " invite <joueur>" + ChatColor.WHITE + " : Inviter un joueur dans notre guilde.");
 		}
 		sender.sendMessage(ChatColor.GREEN + "/" + label + " message <message>" + ChatColor.WHITE + " : Envoie un message uniquement aux gens de votre guilde.");
+		sender.sendMessage(ChatColor.GREEN + "/" + label + " chest" + ChatColor.WHITE + " : Ouvre le coffre de guilde.");
 		sender.sendMessage(ChatColor.GREEN + "/" + label + " gui" + ChatColor.WHITE + " : Ouvre la GUI de la guilde.");
 		if(rank != GuildRank.MASTER)
 			sender.sendMessage(ChatColor.GREEN + "/" + label + " leave" + ChatColor.WHITE + " : Quitter définitivement la guilde.");

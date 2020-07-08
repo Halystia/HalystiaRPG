@@ -33,6 +33,7 @@ public class Guild extends FileDataRPG {
 	private final GuildChest chest;
 	private int powerToPutItems = 1, powerToGetItems = 50;
 	private int chestPages = 1;
+	private int level = 1;
 	
 	public Guild(String path, String fileName) {
 		super(path, fileName);
@@ -42,11 +43,17 @@ public class Guild extends FileDataRPG {
 		chest = new GuildChest(this, config.getConfigurationSection("chest.pages"));
 	}
 	
-	void saveChest(MenuGUI gui) {
+	void saveChest(MenuGUI gui, int page) {
 		synchronized (config) {
-			//TODO
+			for(int i = 0; i < gui.getSize() - 9; i++) {
+				config.set("chest.pages."+page+"."+i, gui.getInventory().getItem(i));
+			}
 			save();
 		}
+	}
+	
+	public int getLevel() {
+		return level;
 	}
 	
 	public Guild(String path, String fileName, Player creator, String name) {
@@ -85,6 +92,16 @@ public class Guild extends FileDataRPG {
 			config.set("allows.pvp", pvp);
 			save();
 		}
+	}
+	
+	public String getMasterName() {
+		for(UUID uuid : members.keySet()) {
+			OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+			if(op == null)
+				break;
+			return op.getName();
+		}
+		return ChatColor.DARK_RED + "Erreur";
 	}
 	
 	public String getGuildName() {
@@ -261,6 +278,8 @@ public class Guild extends FileDataRPG {
 			tag = name.substring(0, TAG_LENGHT[TAG_LENGHT.length - 1] - 1).toUpperCase();
 		members = convertMembersFromList(config.getStringList("members"));
 		pvp = config.getBoolean("allows.pvp");
+		if( ! config.contains("chest.pages.number"))
+			config.set("chest.pages.number", 1);
 		chestPages = config.getInt("chest.pages.number");
 	}
 	
