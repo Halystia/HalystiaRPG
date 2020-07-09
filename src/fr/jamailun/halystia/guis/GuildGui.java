@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -14,12 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.guilds.Guild;
 import fr.jamailun.halystia.guilds.GuildRank;
+import fr.jamailun.halystia.shops.Trade;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.MenuGUI;
 
 public class GuildGui {
 	
-	private final static int SLOT_CHEST = 20, SLOT_RESUME = 4, SLOT_MEMBRES = 22;
+	private final static int SLOT_CHEST = 20, SLOT_RESUME = 4, SLOT_MEMBRES = 22, SLOT_MANAGE = 24;
 	
 	private final static ItemStack MUR = new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName(ChatColor.GRAY+"").toItemStack();
 	public GuildGui(Player p, Guild guild, GuildRank rank) {
@@ -41,7 +43,16 @@ public class GuildGui {
 					openListMembres(p, guild, rank);
 					return;
 				}
+				if(e.getSlot() == SLOT_MANAGE) {
+					if(rank != GuildRank.MASTER) {
+						p.playSound(p.getLocation(), Sound.ENTITY_GHAST_SCREAM, 3f, 1.5f);
+						return;
+					}
+					openManage(p, guild, rank);
+					return;
+				}
 			}
+		
 		};
 		for(int i = 0; i < gui.getSize(); i++)
 			gui.addOption(MUR, i);
@@ -60,7 +71,86 @@ public class GuildGui {
 		gui.addOption(new ItemBuilder(Material.CHEST).setName(ChatColor.BLUE + "Coffre de guilde").toItemStack(), SLOT_CHEST);
 		
 		gui.addOption(new ItemBuilder(Material.PLAYER_HEAD).setName(ChatColor.BLUE + "Liste des membres").setSkullOwner(p.getName()).toItemStack(), SLOT_MEMBRES);
+
+		gui.addOption(new ItemBuilder(Material.WRITABLE_BOOK).setName((rank == GuildRank.MASTER ? ChatColor.GREEN : ChatColor.RED) + "Gestion de la guilde").toItemStack(), SLOT_MANAGE);
 		
+		gui.show(p);
+	}
+	
+	private static final int M_SLOT_PVP = 11, M_SLOT_TAG = 13, M_SLOT_CHEST = 15;
+	private void openManage(Player p, Guild guild, GuildRank rank) {
+		
+		int chestLevel = guild.getHowManyChestPages();
+		int guildLevelRequired = chestLevel + 1;
+		int BERequired = chestLevel * 64;
+		
+		MenuGUI gui = new MenuGUI(ChatColor.DARK_BLUE + "Guilde " + guild.getGuildName(), 9*3, HalystiaRPG.getInstance()) {
+			
+			@Override
+			public void onClose(InventoryCloseEvent e) {
+				removeFromList();
+			}
+			
+			@Override
+			public void onClick(InventoryClickEvent e) {
+				e.setCancelled(true);
+				if(e.getSlot() == getSize() - 1) {
+					new GuildGui(p, guild, rank);
+					return;
+				}
+				if(e.getSlot() == M_SLOT_PVP) {
+					guild.setPvp( ! guild.allowsPVP());
+					addOption(
+							new ItemBuilder(guild.allowsPVP() ? Material.LIME_DYE : Material.GRAY_DYE)
+							.setName(guild.allowsPVP() ? ChatColor.GREEN + "PvP actif" : ChatColor.RED + "PvP inactif")
+							.setLore(ChatColor.GRAY + "Cliquez pour changer")
+							.toItemStack(),
+					M_SLOT_PVP);
+					return;
+				}
+				if(e.getSlot() == M_SLOT_CHEST) {
+					if(guild.getLevel() < guildLevelRequired) {
+						p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut que la guilde soit niveau " + ChatColor.DARK_RED + guildLevelRequired + ChatColor.RED + ".");
+						return;
+					}
+					Trade trade = new Trade(null, new ItemStack(Material.EMERALD_BLOCK, BERequired));
+					if( ! trade.trade(p, true)) {
+						p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut les " + ChatColor.DARK_RED + BERequired + ChatColor.RED + " blocs d'émeraudes requis !");
+						return;
+					}
+					p.sendMessage(ChatColor.GREEN + "Succès : coffre amélioré !");
+					guild.addNewPage();
+					openManage(p, guild, rank);
+					return;
+				}
+			}
+		
+		};
+		for(int i = 0; i < gui.getSize(); i++)
+			gui.addOption(MUR, i);
+		gui.addOption(
+				new ItemBuilder(guild.allowsPVP() ? Material.LIME_DYE : Material.GRAY_DYE)
+				.setName(guild.allowsPVP() ? ChatColor.GREEN + "PvP actif" : ChatColor.RED + "PvP inactif")
+				.setLore(ChatColor.GRAY + "Cliquez pour changer")
+				.toItemStack(),
+		M_SLOT_PVP);
+		gui.addOption(
+				new ItemBuilder(Material.PAPER).setName(ChatColor.GRAY + "Tag : " + ChatColor.YELLOW + guild.getTag())
+				.setLore(ChatColor.WHITE + "Pour le changer : "+ChatColor.YELLOW + "/guild edit-tag <tag>")
+				.addLoreLine(ChatColor.WHITE + " ")
+				.addLoreLine(ChatColor.DARK_GRAY + "Obtenir de l'aide : /guild help")
+				.toItemStack(),
+		M_SLOT_TAG);
+		gui.addOption(
+				new ItemBuilder(chestLevel < 10 ? Material.GOLD_BLOCK : Material.EMERALD_BLOCK).setName(ChatColor.YELLOW + "Améliorer le coffre de guilde")
+				.setLore(ChatColor.GRAY + "Niveau actuel : " + ChatColor.YELLOW + chestLevel)
+				.addLoreLine(ChatColor.DARK_GRAY + "Items : " + guild.getHowManyItemsInChest() + "/" + (9*5*chestLevel))
+				.addLoreLine(ChatColor.WHITE + " ")
+				.addLoreLine(chestLevel < 10 ? ChatColor.GRAY + "Niveau requis : " + ChatColor.BLUE + guildLevelRequired : ChatColor.GOLD + "Niveau max !")
+				.addLoreLine(chestLevel < 10 ? ChatColor.GRAY + "Blocs d'émeraudes requis : " + ChatColor.BLUE + BERequired : "")
+				.toItemStack(),
+		M_SLOT_CHEST);
+		gui.addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.GRAY + "Retour").toItemStack(), gui.getSize() - 1);
 		gui.show(p);
 	}
 	

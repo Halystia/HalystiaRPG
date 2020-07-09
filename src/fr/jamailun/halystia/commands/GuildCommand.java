@@ -165,7 +165,6 @@ public class GuildCommand extends HalystiaCommand {
 				return true;
 			}
 			guild.setPvp(enable);
-			guild.sendMessageToMembers(guild.getTag() + ChatColor.YELLOW + "" + ChatColor.BOLD + "Nouvelle règle pour le PvP : " + (enable ? ChatColor.GREEN + "autorisé" : ChatColor.RED + "interdit")+ ChatColor.YELLOW + "" + ChatColor.BOLD +".");
 			return true;
 		}
 		

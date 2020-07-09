@@ -109,8 +109,6 @@ public class Guild extends FileDataRPG {
 		return level;
 	}
 	
-	
-	
 	public void playerRequestOpenChest(Player player) {
 		int power = getPlayerRank(player).getPower();
 		if(powerToPutItems > power) {
@@ -125,6 +123,9 @@ public class Guild extends FileDataRPG {
 	}
 	
 	public void setPvp(boolean pvp) {
+		if(pvp != this.pvp)
+			sendMessageToMembers(getTag() + ChatColor.YELLOW + "" + ChatColor.BOLD + "Nouvelle règle pour le PvP : " + (pvp ? ChatColor.GREEN + "autorisé" : ChatColor.RED + "interdit")+ ChatColor.YELLOW + "" + ChatColor.BOLD +".");
+		
 		this.pvp = pvp;
 		synchronized (config) {
 			config.set("allows.pvp", pvp);
@@ -166,6 +167,10 @@ public class Guild extends FileDataRPG {
 			config.set("chest.pages.number", chestPages);
 			save();
 		}
+	}
+	
+	public int getHowManyItemsInChest() {
+		return chest.getHowManyItems();
 	}
 	
 	public GuildResult addPlayerToGuild(Player player) {
