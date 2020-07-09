@@ -11,10 +11,12 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.guis.GuildGui;
+import fr.jamailun.halystia.shops.Trade;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.MenuGUI;
 
@@ -94,6 +96,13 @@ public class GuildChest {
 						player.updateInventory();
 						return;
 					}
+					if(move == Move.STACK) {
+						addOption(new ItemBuilder(e.getCurrentItem()).setAmount(e.getCurrentItem().getAmount() + e.getCursor().getAmount()).toItemStack(), e.getSlot());
+						e.setCursor(null);
+						e.setCancelled(false);
+						player.updateInventory();
+						return;
+					}
 					if(move == Move.SWITCH) {
 						final ItemStack temp = e.getCursor();
 						e.setCursor(e.getCurrentItem());
@@ -149,11 +158,15 @@ public class GuildChest {
 		if(cursor == null || cursor.getType() == Material.AIR) {
 			return Move.TAKE;
 		}
+		if(Trade.areItemsTheSame(clicked, cursor)) {
+			if(clicked.getType().getMaxStackSize() < clicked.getAmount())
+				return Move.STACK;
+		}
 		return Move.SWITCH;
 	}
 	
 	private static enum Move {
-		NONE, TAKE, PUT, SWITCH
+		NONE, TAKE, PUT, SWITCH, STACK
 	}
 
 	public void addPage() {
@@ -168,6 +181,18 @@ public class GuildChest {
 		viewersPage.clear();
 		viewersPower.clear();
 		generatePages();
+	}
+
+	public int getHowManyItems() {
+		int total = 0;
+		for(MenuGUI gui : allPages) {
+			Inventory inv = gui.getInventory();
+			for(int s = 0; s < gui.getSize() - 9; s++) {
+				if(inv.getItem(s) != null && inv.getItem(s).getType() != Material.AIR)
+					total ++;
+			}
+		}
+		return total;
 	}
 	
 }
