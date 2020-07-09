@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,17 +26,19 @@ public class GuildChest {
 	private Map<UUID, Integer> viewersPage = new HashMap<>();
 	private MenuGUI[] allPages;
 	
+	private final ConfigurationSection section;
 	public GuildChest(Guild guild, ConfigurationSection section) {
 		this.guild = guild;
+		this.section = section;
 		maxPages = guild.getHowManyChestPages();
 		allPages = new MenuGUI[maxPages];
-		generatePages(section);
+		generatePages();
 	}
 
-	private void generatePages(ConfigurationSection section) {
+	private void generatePages() {
 		for(int i = 0; i < maxPages; i++) {
 			final int page = i;
-			allPages[i] = new MenuGUI(ChatColor.BLACK + "Coffre de guilde - Page " + (page+1), 9*6, HalystiaRPG.getInstance()) {
+			allPages[i] = new MenuGUI(ChatColor.BLACK + "Coffre de guilde - Page " + ChatColor.BOLD + (page+1), 9*6, HalystiaRPG.getInstance()) {
 				
 				@Override
 				public void onClose(InventoryCloseEvent e) {
@@ -103,9 +106,9 @@ public class GuildChest {
 			for(int j = 45; j <= 53; j++)
 				allPages[i].addOption(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(ChatColor.WHITE+"").toItemStack(), j);
 			if(i > 0)
-				allPages[i].addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE+""+ChatColor.BOLD+"<-").toItemStack(), 45);
+				allPages[i].addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE+""+ChatColor.BOLD+"("+(page)+") <-").toItemStack(), 45);
 			if(i< maxPages - 1)
-				allPages[i].addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE+""+ChatColor.BOLD+"->").toItemStack(), 53);
+				allPages[i].addOption(new ItemBuilder(Material.ARROW).setName(ChatColor.BLUE+""+ChatColor.BOLD+"-> ("+(page+2)+")").toItemStack(), 53);
 			allPages[i].addOption(new ItemBuilder(Material.BARRIER).setName(ChatColor.RED + "Retour").toItemStack(), 49);
 			ConfigurationSection pageSection = section.getConfigurationSection(""+page);
 			if(pageSection == null)
@@ -125,8 +128,10 @@ public class GuildChest {
 	}
 	
 	private void playerChangePage(Player player, boolean next) {
+		//player.closeInventory();
 		int currentPage = viewersPage.get(player.getUniqueId());
 		int newPage = currentPage + (next ? 1 : -1);
+		viewersPage.put(player.getUniqueId(), newPage);
 		try {
 			allPages[newPage].show(player);
 		} catch (IndexOutOfBoundsException e) {
@@ -149,6 +154,20 @@ public class GuildChest {
 	
 	private static enum Move {
 		NONE, TAKE, PUT, SWITCH
+	}
+
+	public void addPage() {
+		for(UUID uid : viewersPage.keySet()) {
+			Player pl = Bukkit.getPlayer(uid);
+			if(pl != null)
+				pl.closeInventory();
+		}
+		for(int i = 0; i < maxPages; i++)
+			guild.saveChest(allPages[i], i);
+		maxPages ++;
+		viewersPage.clear();
+		viewersPower.clear();
+		generatePages();
 	}
 	
 }

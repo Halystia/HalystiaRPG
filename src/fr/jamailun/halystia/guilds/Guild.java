@@ -33,12 +33,30 @@ public class Guild extends FileDataRPG {
 	private final GuildChest chest;
 	private int powerToPutItems = 1, powerToGetItems = 50;
 	private int chestPages = 1;
-	private int level = 1;
+	private int level = 1, xp = 0;
 	
 	public Guild(String path, String fileName) {
 		super(path, fileName);
 		members = new HashMap<>();
 		loadFile();
+		
+		chest = new GuildChest(this, config.getConfigurationSection("chest.pages"));
+	}
+	
+	public Guild(String path, String fileName, Player creator, String name) {
+		super(path, fileName);
+		members = new HashMap<>();
+		members.put(creator.getUniqueId(), GuildRank.MASTER);
+		this.name = name;
+		this.tag = name.substring(0, TAG_LENGHT[TAG_LENGHT.length - 1]-1).toUpperCase();
+		config.set("name", name);
+		config.set("tag", tag);
+		config.set("xp", 0);
+		config.set("members", convertMembersToList(members));
+		config.set("created", System.currentTimeMillis());
+		config.set("allows.pvp", false);
+		config.set("chest.pages.number", 1);
+		save();
 		
 		chest = new GuildChest(this, config.getConfigurationSection("chest.pages"));
 	}
@@ -52,26 +70,46 @@ public class Guild extends FileDataRPG {
 		}
 	}
 	
+	public void addExp(Player player, int exp) {
+		if(exp < 0)
+			return;
+		xp += exp;
+		int newLevel = expToLevel(xp);
+		if(newLevel > level) {
+			level = newLevel;
+			sendMessageToMembers(getTag() + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "La guilde passe niveau " + ChatColor.GOLD + "" + ChatColor.BOLD + newLevel + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + " !");
+			maxMembers = 5 + (level * 2);
+		}
+	}
+	
+	public void upgradeGuildChest() {
+		if(chestPages >= 10)
+			return;
+		chestPages ++;
+		sendMessageToMembers(getTag() + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "Le coffre de guilde a été amélioré et passe niveau " + chestPages + " !");
+		synchronized (config) {
+			config.set("chest.pages.number", chestPages);
+			save();
+		}
+		chest.addPage();
+	}
+	
+	public static int expToLevel(int exp) {
+		return (int) Math.max(1, 0.5 * Math.pow(exp, 0.12));
+	}
+	
+	void saveXp() {
+		synchronized (config) {
+			config.set("xp", xp);
+			save();
+		}
+	}
+	
 	public int getLevel() {
 		return level;
 	}
 	
-	public Guild(String path, String fileName, Player creator, String name) {
-		super(path, fileName);
-		members = new HashMap<>();
-		members.put(creator.getUniqueId(), GuildRank.MASTER);
-		this.name = name;
-		this.tag = name.substring(0, TAG_LENGHT[TAG_LENGHT.length - 1]-1).toUpperCase();
-		config.set("name", name);
-		config.set("tag", tag);
-		config.set("members", convertMembersToList(members));
-		config.set("created", System.currentTimeMillis());
-		config.set("allows.pvp", false);
-		config.set("chest.pages.number", 1);
-		save();
-		
-		chest = new GuildChest(this, config.getConfigurationSection("chest.pages"));
-	}
+	
 	
 	public void playerRequestOpenChest(Player player) {
 		int power = getPlayerRank(player).getPower();
@@ -272,6 +310,7 @@ public class Guild extends FileDataRPG {
 	
 	private void loadFile() {
 		name = config.getString("name");
+		xp = config.getInt("xp");
 		if(config.contains("tag"))
 			tag = config.getString("tag");
 		else
