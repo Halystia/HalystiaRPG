@@ -9,6 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -74,6 +75,34 @@ public class GuildChest {
 							playerChangePage(player, true);
 						return;
 					}
+					if(e.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
+						int amount;
+						if(e.getCurrentItem() == null) {
+							if(e.getCursor() == null)
+								return;
+							amount = e.getCursor().getAmount();
+						} else {
+							amount = e.getCurrentItem().getAmount();
+						}
+						final int maxSize = e.getCurrentItem().getType().getMaxStackSize();
+						for(int s = 0; s < getSize() - 9; s ++) {
+							if(s == e.getSlot())
+								continue;
+							ItemStack stack = getInventory().getItem(s);
+							if( Trade.areItemsTheSame(stack, e.getCurrentItem()) ) {
+								amount += stack.getAmount();
+								if(amount > maxSize) {
+									addOption(new ItemBuilder(stack).setAmount(amount - maxSize).toItemStack(), s);
+									amount = maxSize;
+									break;
+								}
+								addOption(new ItemStack(Material.AIR), s);
+							}
+						}
+						e.setCursor(null);
+						addOption(new ItemBuilder(e.getCurrentItem()).setAmount(amount).toItemStack(), e.getSlot());
+						return;
+					}
 					Move move = getMovement(e.getCurrentItem(), e.getCursor());
 					if(move == Move.NONE)
 						return;
@@ -97,7 +126,8 @@ public class GuildChest {
 						return;
 					}
 					if(move == Move.STACK) {
-						addOption(new ItemBuilder(e.getCurrentItem()).setAmount(e.getCurrentItem().getAmount() + e.getCursor().getAmount()).toItemStack(), e.getSlot());
+						int newAmount = e.getCurrentItem().getAmount() + e.getCursor().getAmount();
+						addOption(new ItemBuilder(e.getCurrentItem()).setAmount(newAmount).toItemStack(), e.getSlot());
 						e.setCursor(null);
 						e.setCancelled(false);
 						player.updateInventory();
@@ -159,7 +189,7 @@ public class GuildChest {
 			return Move.TAKE;
 		}
 		if(Trade.areItemsTheSame(clicked, cursor)) {
-			if(clicked.getType().getMaxStackSize() < clicked.getAmount())
+			if(clicked.getType().getMaxStackSize() > cursor.getAmount() + clicked.getAmount())
 				return Move.STACK;
 		}
 		return Move.SWITCH;
