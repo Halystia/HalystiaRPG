@@ -75,21 +75,30 @@ public class GuildChest {
 							playerChangePage(player, true);
 						return;
 					}
+					if(e.getAction() == InventoryAction.PLACE_ONE && (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR)) {
+						addOption(new ItemBuilder(e.getCursor()).setAmount(1).toItemStack(), e.getSlot());
+						e.getCursor().setAmount(e.getCursor().getAmount() - 1);
+						e.setCancelled(true);
+						return;
+					}
+					if(e.getAction() == InventoryAction.PICKUP_HALF && (e.getCursor() == null || e.getCursor().getType() == Material.AIR)) {
+						int amount = e.getCurrentItem().getAmount();
+						int half = amount / 2;
+						int remaining = amount - half;
+						addOption(new ItemBuilder(e.getCurrentItem()).setAmount(remaining).toItemStack(), e.getSlot());
+						e.setCursor(new ItemBuilder(e.getCurrentItem()).setAmount(half).toItemStack());
+						e.setCancelled(true);
+						return;
+					}
 					if(e.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
-						int amount;
-						if(e.getCurrentItem() == null) {
-							if(e.getCursor() == null)
-								return;
-							amount = e.getCursor().getAmount();
-						} else {
-							amount = e.getCurrentItem().getAmount();
-						}
-						final int maxSize = e.getCurrentItem().getType().getMaxStackSize();
+						int amount = e.getCursor().getAmount();
+						final int maxSize = e.getCursor().getType().getMaxStackSize();
+						e.setCancelled(true);
 						for(int s = 0; s < getSize() - 9; s ++) {
 							if(s == e.getSlot())
 								continue;
 							ItemStack stack = getInventory().getItem(s);
-							if( Trade.areItemsTheSame(stack, e.getCurrentItem()) ) {
+							if( Trade.areItemsTheSame(stack, e.getCursor()) ) {
 								amount += stack.getAmount();
 								if(amount > maxSize) {
 									addOption(new ItemBuilder(stack).setAmount(amount - maxSize).toItemStack(), s);
@@ -99,8 +108,8 @@ public class GuildChest {
 								addOption(new ItemStack(Material.AIR), s);
 							}
 						}
+						addOption(new ItemBuilder(e.getCursor()).setAmount(amount).toItemStack(), e.getSlot());
 						e.setCursor(null);
-						addOption(new ItemBuilder(e.getCurrentItem()).setAmount(amount).toItemStack(), e.getSlot());
 						return;
 					}
 					Move move = getMovement(e.getCurrentItem(), e.getCursor());
