@@ -18,9 +18,10 @@ import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.utils.FileDataRPG;
+import fr.jamailun.halystia.utils.Levelable;
 import fr.jamailun.halystia.utils.MenuGUI;
 
-public class Guild extends FileDataRPG {
+public class Guild extends FileDataRPG implements Levelable {
 	
 	public static final int[] TAG_LENGHT = {3, 4};
 	
@@ -74,7 +75,7 @@ public class Guild extends FileDataRPG {
 		if(exp < 0)
 			return;
 		xp += exp;
-		int newLevel = expToLevel(xp);
+		int newLevel = getLevelWithExp(xp);
 		if(newLevel > level) {
 			level = newLevel;
 			sendMessageToMembers(getTag() + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + "La guilde passe niveau " + ChatColor.GOLD + "" + ChatColor.BOLD + newLevel + ChatColor.LIGHT_PURPLE + "" + ChatColor.BOLD + " !");
@@ -94,7 +95,8 @@ public class Guild extends FileDataRPG {
 		chest.addPage();
 	}
 	
-	public static int expToLevel(int exp) {
+	@Override
+	public int getLevelWithExp(int exp) {
 		return (int) Math.max(1, 0.5 * Math.pow(exp, 0.12));
 	}
 	
@@ -105,8 +107,14 @@ public class Guild extends FileDataRPG {
 		}
 	}
 	
+	@Override
 	public int getLevel() {
 		return level;
+	}
+	
+	@Override
+	public int getExpAmount() {
+		return xp;
 	}
 	
 	public void playerRequestOpenChest(Player player) {
@@ -201,7 +209,7 @@ public class Guild extends FileDataRPG {
 		return pvp;
 	}
 	
-	String getPureTag() {
+	public String getPureTag() {
 		return tag;
 	}
 	
@@ -316,6 +324,7 @@ public class Guild extends FileDataRPG {
 	private void loadFile() {
 		name = config.getString("name");
 		xp = config.getInt("xp");
+		level = getLevelWithExp(xp);
 		if(config.contains("tag"))
 			tag = config.getString("tag");
 		else
