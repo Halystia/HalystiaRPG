@@ -21,7 +21,7 @@ import fr.jamailun.halystia.utils.MenuGUI;
 
 public class GuildGui {
 	
-	private final static int SLOT_CHEST = 20, SLOT_RESUME = 4, SLOT_MEMBRES = 22, SLOT_MANAGE = 24;
+	private final static int SLOT_CHEST = 19, SLOT_RESUME = 4, SLOT_MEMBRES = 21, SLOT_MANAGE = 23, SLOT_XP = 25;
 	
 	private final static ItemStack MUR = new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName(ChatColor.GRAY+"").toItemStack();
 	public GuildGui(Player p, Guild guild, GuildRank rank) {
@@ -51,6 +51,10 @@ public class GuildGui {
 					openManage(p, guild, rank);
 					return;
 				}
+				if(e.getSlot() == SLOT_XP) {
+					openListMembres(p, guild, rank);
+					return;
+				}
 			}
 		
 		};
@@ -58,13 +62,14 @@ public class GuildGui {
 			gui.addOption(MUR, i);
 		
 		gui.addOption(
-				new ItemBuilder(Material.BOOK).setName(ChatColor.GOLD + guild.getGuildName())
-				.addLoreLine(ChatColor.GRAY + "Tag : " + ChatColor.GREEN + guild.getTag())
+				new ItemBuilder(Material.BOOK).setName(ChatColor.GOLD + "" + ChatColor.BOLD + guild.getGuildName())
+				.addLoreLine(ChatColor.GRAY + "Tag : " + ChatColor.GREEN + guild.getPureTag().toUpperCase())
 				.addLoreLine(ChatColor.GRAY + " ")
 				.addLoreLine(ChatColor.GRAY + "Dirigeant : " + ChatColor.YELLOW + guild.getMasterName())
 				.addLoreLine(ChatColor.GRAY + "Nombre de membres : " + ChatColor.YELLOW + guild.getOfflinePlayersNames().size())
 				.addLoreLine(ChatColor.GRAY + " ")
 				.addLoreLine(ChatColor.GRAY + "Niveau : " + ChatColor.YELLOW + guild.getLevel())
+				.addLoreLine(ChatColor.GRAY + "Expérience : " + ChatColor.YELLOW + guild.getExpAmount())
 				.toItemStack()
 		, SLOT_RESUME);
 		
@@ -72,7 +77,9 @@ public class GuildGui {
 		
 		gui.addOption(new ItemBuilder(Material.PLAYER_HEAD).setName(ChatColor.BLUE + "Liste des membres").setSkullOwner(p.getName()).toItemStack(), SLOT_MEMBRES);
 
-		gui.addOption(new ItemBuilder(Material.WRITABLE_BOOK).setName((rank == GuildRank.MASTER ? ChatColor.GREEN : ChatColor.RED) + "Gestion de la guilde").toItemStack(), SLOT_MANAGE);
+		gui.addOption(new ItemBuilder(Material.WRITABLE_BOOK).setName((rank == GuildRank.MASTER ? ChatColor.BLUE : ChatColor.RED) + "Gestion de la guilde").toItemStack(), SLOT_MANAGE);
+		
+		gui.addOption(new ItemBuilder(Material.EXPERIENCE_BOTTLE).setName(ChatColor.BLUE + "Gérer la répartition d'exp").toItemStack(), SLOT_XP);
 		
 		gui.show(p);
 	}
