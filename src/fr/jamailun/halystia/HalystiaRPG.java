@@ -149,7 +149,7 @@ public final class HalystiaRPG extends JavaPlugin {
 			return;
 		}
 		//MANAGERS
-		guildsMgr = new GuildManager(PATH + "/guilds");
+		guildsMgr = new GuildManager(this, PATH + "/guilds");
 		effMgr = new PlayerEffectsManager(this);
 		classesMgr = new ClasseManager(this, bdd);
 		shopMgr = new ShopManager(PATH, "shopsData");
@@ -221,6 +221,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		final long debut = System.currentTimeMillis();
 		Bukkit.getOnlinePlayers().forEach(pl -> pl.closeInventory());
 		classesMgr.saveData(false);
+		guildsMgr.saveExp();
 		jobs.saveJobs();
 		shopMgr.despawnAll();
 		mobMgr.purge();

@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FilenameUtils;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 
@@ -22,13 +23,24 @@ public class GuildManager {
 	private final String path;
 	private final Set<Guild> guilds;
 	
-	public GuildManager(String path) {
+	public GuildManager(HalystiaRPG main, String path) {
 		this.path = path;
 		File dir = new File(path);
 		if( ! dir.exists() )
 			dir.mkdirs();
 		guilds = new HashSet<>();
 		reload();
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				saveExp();
+			}
+		}.runTaskTimer(main, 60*20L, 3*60*20L);
+	}
+	
+	public void saveExp() {
+		guilds.forEach(Guild::saveXp);
 	}
 	
 	public Guild getGuild(Player player) {
@@ -41,6 +53,25 @@ public class GuildManager {
 	
 	public boolean hasAGuild(Player player) {
 		return getGuild(player) != null;
+	}
+	
+	
+	/**
+	 * Give some exp to the guild of a player.
+	 * @param player : Player who won the exp
+	 * @param exp : amount of experience
+	 * @return the remaining amout of experience the player should win.
+	 */
+	public int playerWonExperience(Player player, int exp) {
+		Guild guild = getGuild(player);
+		if(guild == null)
+			return exp;
+		double toGet = ((double)exp) * guild.getExpPercentOfPlayer(player.getUniqueId());
+		int round = (int) Math.round(toGet);
+		if(round == 0)
+			return exp;
+		guild.addExp(player, round);
+		return exp - round;
 	}
 	
 	/**

@@ -1,13 +1,18 @@
 package fr.jamailun.halystia.guilds;
 
+import static org.bukkit.ChatColor.DARK_GRAY;
+import static org.bukkit.ChatColor.GOLD;
+import static org.bukkit.ChatColor.GRAY;
+import static org.bukkit.ChatColor.GREEN;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
@@ -17,6 +22,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.utils.FileDataRPG;
 import fr.jamailun.halystia.utils.Levelable;
 import fr.jamailun.halystia.utils.MenuGUI;
@@ -26,7 +32,8 @@ public class Guild extends FileDataRPG implements Levelable {
 	public static final int[] TAG_LENGHT = {3, 4};
 	
 	private String name, tag;
-	private Map<UUID, GuildRank> members;
+	private List<GuildMemberData> members;
+	//private Map<UUID, GuildRank> members;
 	private int maxMembers = 5;
 	private Set<GuildInvite> pendingInvite = new HashSet<>();
 	private boolean pvp = false;
@@ -38,7 +45,7 @@ public class Guild extends FileDataRPG implements Levelable {
 	
 	public Guild(String path, String fileName) {
 		super(path, fileName);
-		members = new HashMap<>();
+		members = new ArrayList<>();
 		loadFile();
 		
 		chest = new GuildChest(this, config.getConfigurationSection("chest.pages"));
@@ -46,8 +53,8 @@ public class Guild extends FileDataRPG implements Levelable {
 	
 	public Guild(String path, String fileName, Player creator, String name) {
 		super(path, fileName);
-		members = new HashMap<>();
-		members.put(creator.getUniqueId(), GuildRank.MASTER);
+		members = new ArrayList<>();
+		members.add(new GuildMemberData(creator, GuildRank.MASTER));
 		this.name = name;
 		this.tag = name.substring(0, TAG_LENGHT[TAG_LENGHT.length - 1]-1).toUpperCase();
 		config.set("name", name);
@@ -97,7 +104,12 @@ public class Guild extends FileDataRPG implements Levelable {
 	
 	@Override
 	public int getLevelWithExp(int exp) {
-		return (int) Math.max(1, 0.5 * Math.pow(exp, 0.12));
+		return (int) Math.max(1, 0.5 * Math.pow(Math.max(0, exp), 0.12));
+	}
+	
+	@Override
+	public int getExpForLevel(int level) {
+		return (int) Math.exp( Math.log( 2 * Math.min(20, Math.max(0, level))) / 0.12 );
 	}
 	
 	void saveXp() {
@@ -127,7 +139,7 @@ public class Guild extends FileDataRPG implements Levelable {
 	}
 	
 	public List<String> getOfflinePlayersNames() {
-		return members.keySet().stream().map(id -> Bukkit.getOfflinePlayer(id).getName()).collect(Collectors.toList());
+		return members.stream().map(data -> data.getUUID()).map(id -> Bukkit.getOfflinePlayer(id).getName()).collect(Collectors.toList());
 	}
 	
 	public void setPvp(boolean pvp) {
@@ -142,8 +154,8 @@ public class Guild extends FileDataRPG implements Levelable {
 	}
 	
 	public String getMasterName() {
-		for(UUID uuid : members.keySet()) {
-			OfflinePlayer op = Bukkit.getOfflinePlayer(uuid);
+		for(GuildMemberData data : members) {
+			OfflinePlayer op = Bukkit.getOfflinePlayer(data.getUUID());
 			if(op == null)
 				break;
 			return op.getName();
@@ -156,11 +168,11 @@ public class Guild extends FileDataRPG implements Levelable {
 	}
 	
 	public boolean isInTheGuild(Player player) {
-		return members.containsKey(player.getUniqueId());
+		return isInTheGuild(player.getUniqueId());
 	}
 	
 	public boolean isInTheGuild(UUID uuid) {
-		return members.containsKey(uuid);
+		return getData(uuid) != null;
 	}
 	
 	public int getHowManyChestPages() {
@@ -186,7 +198,7 @@ public class Guild extends FileDataRPG implements Levelable {
 			return GuildResult.ALREADY_HERE;
 		if(members.size() >= maxMembers)
 			return GuildResult.GUILD_FULL;
-		members.put(player.getUniqueId(), GuildRank.MEMBER);
+		members.add( new GuildMemberData(player, GuildRank.MEMBER) );
 		saveMembers();
 		return GuildResult.SUCCESS;
 	}
@@ -214,39 +226,44 @@ public class Guild extends FileDataRPG implements Levelable {
 	}
 	
 	public GuildRank getPlayerRank(Player player) {
-		GuildRank rank = members.get(player.getUniqueId());
-		return rank == null ? GuildRank.NOT_A_MEMBER : rank;
+		return getPlayerRank(player.getUniqueId());
 	}
 	
 	public GuildRank getPlayerRank(UUID uuid) {
-		GuildRank rank = members.get(uuid);
-		return rank == null ? GuildRank.NOT_A_MEMBER : rank;
+		GuildMemberData data = getData(uuid);
+		return data == null ? GuildRank.NOT_A_MEMBER : data.getRank();
 	}
 	
 	public GuildResult promote(UUID uuid) {
-		if( ! isInTheGuild(uuid))
+		GuildMemberData data = getData(uuid);
+		if( data == null)
 			return GuildResult.PLAYER_NOT_HERE;
-		GuildRank current = members.get(uuid);
+		GuildRank current = data.getRank();
 		if(current == GuildRank.MASTER)
 			return GuildResult.IS_ALREADY_MASTER;
 		if(current == GuildRank.RIGHT_ARM)
 			return GuildResult.CAN_ONLY_HAVE_ONE_MASTER;
 		if(current == GuildRank.CAPITAIN && guildHasRightArm())
 			return GuildResult.CAN_ONLY_HAVE_RIGHT_ARM;
-		members.replace(uuid, current.promote());
+		data.setRank(current.promote());
 		saveMembers();
 		return GuildResult.SUCCESS;
 	}
 	
+	private GuildMemberData getData(UUID uuid) {
+		return members.stream().filter(data -> data.getUUID().equals(uuid)).findFirst().orElse(null);
+	}
+	
 	public GuildResult demote(UUID uuid) {
-		if( ! isInTheGuild(uuid))
+		GuildMemberData data = getData(uuid);
+		if( data == null)
 			return GuildResult.PLAYER_NOT_HERE;
-		GuildRank current = members.get(uuid);
+		GuildRank current = data.getRank();
 		if(current == GuildRank.MASTER)
 			return GuildResult.MASTER_CANNOT_BE_DEMOTE;
 		if(current == GuildRank.MEMBER)
 			return GuildResult.IS_ALREADY_MEMBER;
-		members.replace(uuid, current.demote());
+		data.setRank(current.demote());
 		saveMembers();
 		return GuildResult.SUCCESS;
 	}
@@ -284,11 +301,7 @@ public class Guild extends FileDataRPG implements Levelable {
 	}
 	
 	public void sendMessageToMembers(String message) {
-		for(UUID uuid : members.keySet()) {
-			Player to = Bukkit.getPlayer(uuid);
-			if(to != null)
-				to.sendMessage(message);
-		}
+		forAllMembers(p -> p.sendMessage(message));
 	}
 	
 	public String getTag() {
@@ -296,15 +309,14 @@ public class Guild extends FileDataRPG implements Levelable {
 	}
 	
 	public boolean hasPermissions(Player player, GuildRank minimal) {
-		if( ! members.containsKey(player.getUniqueId()))
-			return false;
-		return members.get(player.getUniqueId()).getPower() >= minimal.getPower();
+		return members.stream().filter(data -> data.getUUID().equals(player.getUniqueId())).anyMatch(data -> data.getRank().getPower() >= minimal.getPower());
 	}
 	
 	public List<String> getMembersDisplay() {
 		List<String> list = new ArrayList<>();
-		members.forEach((id, rank) -> {
-			String name = Bukkit.getOfflinePlayer(id).getName();
+		members.stream().forEach(data -> {
+			String name = Bukkit.getOfflinePlayer(data.getUUID()).getName();
+			GuildRank rank = data.getRank();
 			list.add(rank.getColor() + ChatColor.BOLD + name + rank.getColor() + " : " + rank.toString());
 		});
 		return list;
@@ -318,7 +330,7 @@ public class Guild extends FileDataRPG implements Levelable {
 	}
 	
 	public boolean guildHasRightArm() {
-		return members.containsValue(GuildRank.RIGHT_ARM);
+		return members.stream().anyMatch(data -> data.getRank() == GuildRank.RIGHT_ARM);
 	}
 	
 	private void loadFile() {
@@ -336,33 +348,35 @@ public class Guild extends FileDataRPG implements Levelable {
 		chestPages = config.getInt("chest.pages.number");
 	}
 	
-	private static List<String> convertMembersToList(Map<UUID, GuildRank> members) {
-		return members.entrySet().stream().map(entry -> entry.getKey().toString() + ":" + entry.getValue().getPower()).collect(Collectors.toList());
+	private static List<String> convertMembersToList(List<GuildMemberData> members) {
+		return members.stream().map(data -> data.serialize()).collect(Collectors.toList());
 	}
 	
-	private static Map<UUID, GuildRank> convertMembersFromList(List<String> stringList) {
-		Map<UUID, GuildRank> members = new HashMap<>();
+	private static List<GuildMemberData> convertMembersFromList(List<String> stringList) {
+		List<GuildMemberData> members = new ArrayList<>();
 		for(String entry : stringList) {
-			try {
-			String[] parts = entry.split(":");
-			UUID uuid = UUID.fromString(parts[0]);
-			GuildRank rank = GuildRank.getFromPower(Integer.parseInt(parts[1]));
-			if(rank != GuildRank.NOT_A_MEMBER)
-				members.put(uuid, rank);
-			} catch (IndexOutOfBoundsException | IllegalArgumentException e) {
-				System.err.println("Error while reading guild members. Line '"+entry+"'.");
-			}
+			GuildMemberData data = new GuildMemberData(entry);
+			if(data.getRank() != GuildRank.NOT_A_MEMBER)
+				members.add(data);
 		}
 		return members;
 	}
 
 	void disband() {
 		String message = HalystiaRPG.PREFIX + tag + ChatColor.RED + " > " + ChatColor.DARK_RED + "" + ChatColor.BOLD + "La guilde a été supprimée par le maître de guilde.";
-		Bukkit.getOnlinePlayers().stream().filter(p -> members.containsKey(p.getUniqueId())).forEach(p -> {
+		forAllMembers(p -> {
 			p.playSound(p.getLocation(), Sound.ENTITY_ELDER_GUARDIAN_DEATH, 10f, .7f);
 			p.sendMessage(message);
 		});
 		super.delete();
+	}
+	
+	public void forAllMembers(Consumer<Player> action) {
+		for(GuildMemberData data : members) {
+			Player pl = Bukkit.getPlayer(data.getUUID());
+			if(pl != null)
+				action.accept(pl);
+		}
 	}
 
 	public boolean playerJoin(Player player, String token) {
@@ -390,7 +404,7 @@ public class Guild extends FileDataRPG implements Levelable {
 			return GuildResult.MASTER_CANNOT_LEAVE;
 		if(rank == GuildRank.NOT_A_MEMBER)
 			return GuildResult.PLAYER_NOT_HERE;
-		members.remove(uuid);
+		members.removeIf(data -> data.getUUID().equals(uuid));
 		saveMembers();
 		OfflinePlayer off = Bukkit.getOfflinePlayer(uuid);
 		Player ifIsHere = off.getPlayer();
@@ -404,6 +418,41 @@ public class Guild extends FileDataRPG implements Levelable {
 				ifIsHere.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "" + ChatColor.BOLD + "Vous avez quitté votre guilde.");
 		}
 		return GuildResult.SUCCESS;
+	}
+
+	public double getExpPercentOfPlayer(UUID uniqueId) {
+		try {
+			return members.stream().filter(data -> data.getUUID().equals(uniqueId)).findAny().get().getExpPercent();
+		} catch (NoSuchElementException e) {
+			return 0;
+		}
+	}
+
+	public String generatePercentBar() {
+		if(level == 20)
+			return GOLD + "Niveau max !";
+		double percent = getPercentXp();
+		
+		StringBuilder builder = new StringBuilder(DARK_GRAY+"[");
+		for(int i = 1; i <= 15; i++) {
+			double currentPercent = ((double)i) / ((double)15);
+			if(currentPercent <= percent)
+				builder.append(GREEN+PlayerData.BAR_CHAR);
+			else
+				builder.append(GRAY+PlayerData.BAR_CHAR);
+		}
+		builder.append(DARK_GRAY+"]");
+		return builder.toString();
+	}
+	
+	public double getPercentXp() {
+		int level = getLevel();
+		double lvlN0 = level == 1 ? 0 : getExpForLevel(level);
+		double lvlN1 = getExpForLevel(level + 1);
+		double filled = getExpAmount() - lvlN0;
+		double upper = lvlN1 - lvlN0;
+		double percent = filled / upper;
+		return percent;
 	}
 	
 }

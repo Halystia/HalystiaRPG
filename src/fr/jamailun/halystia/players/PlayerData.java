@@ -26,13 +26,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.constants.DamageReason;
 import fr.jamailun.halystia.events.EntityDamageOtherListener;
+import fr.jamailun.halystia.utils.Levelable;
 import fr.jamailun.halystia.utils.PlayerUtils;
 
 /**
  * RAM value of all datas concerning a {@link org.bukkit.entity.Player Player}.
  * @author jamailun
  */
-public class PlayerData {
+public class PlayerData implements Levelable {
 	
 	/**
 	 * Maximum level a player can obtain.
@@ -82,7 +83,7 @@ public class PlayerData {
 	 * @return true if the level is different !
 	 */
 	public boolean calculateLevel() {
-		double level = (1.5 / 11)*Math.pow(exp+1, .51);
+		double level = getLevelWithExp(exp);
 		if(level < 1)
 			level = 1;
 		if(level > LEVEL_MAX)
@@ -98,7 +99,13 @@ public class PlayerData {
 		return different;
 	}
 
-	public int getExpRequired(int level) {
+	@Override
+	public int getLevelWithExp(int exp) {
+		return (int) ( (1.5 / 11)*Math.pow(exp+1, .51) );
+	}
+	
+	@Override
+	public int getExpForLevel(int level) {
 		double xp = 49.7358406536 * Math.pow(level, 1.960784431373);
 		if(xp < 0)
 			xp = 0;
@@ -136,6 +143,7 @@ public class PlayerData {
 	 * Get current level of Player. 
 	 * @return level. 0 if player has no class.
 	 */
+	@Override
 	public int getLevel() {
 		return level;
 	}
@@ -144,6 +152,7 @@ public class PlayerData {
 	 * Get amount of experiences points.
 	 * @return raw amount of experience.
 	 */
+	@Override
 	public int getExpAmount() {
 		return exp;
 	}
@@ -176,8 +185,9 @@ public class PlayerData {
 	public void addXp(int xp) {
 		if(classe == Classe.NONE || !playerValid || xp <= 0)
 			return;
-		exp += xp;
-		new PlayerUtils(player).sendActionBar(GREEN+"+ " + GOLD + xp + GREEN + " xp");
+		int remaining = HalystiaRPG.getInstance().getGuildManager().playerWonExperience(player, xp);
+		exp += remaining;
+		new PlayerUtils(player).sendActionBar(GREEN+"+ " + GOLD + remaining + GREEN + " xp");
 		if( calculateLevel() ) {
 			player.sendMessage(HalystiaRPG.PREFIX + LIGHT_PURPLE + "Félicitation ! " + GREEN + "Tu passes niveau " + DARK_GREEN + "" + BOLD + level + GREEN + " !");
 			player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 2f, 1.1f);
@@ -380,8 +390,8 @@ public class PlayerData {
 	
 	public double getPercentXp() {
 		int level = getLevel();
-		double lvlN0 = level == 1 ? 0 : getExpRequired(level);
-		double lvlN1 = getExpRequired(level + 1);
+		double lvlN0 = level == 1 ? 0 : getExpForLevel(level);
+		double lvlN1 = getExpForLevel(level + 1);
 		double filled = getExpAmount() - lvlN0;
 		double upper = lvlN1 - lvlN0;
 		double percent = filled / upper;

@@ -73,7 +73,7 @@ public class MainClasseGUI extends MenuGUI {
 			int lvl = pc.getLevel();
 			head.addLoreLine(BLUE + "Rang : " + LIGHT_PURPLE + classe.getTitlename(lvl));
 			head.addLoreLine(BLUE + "Niveau : " + DARK_PURPLE + lvl);
-			head.addLoreLine(DARK_GRAY + "Expérience : " + pc.getExpAmount() + "/" + pc.getExpRequired(lvl+1));
+			head.addLoreLine(DARK_GRAY + "Expérience : " + pc.getExpAmount() + "/" + pc.getExpForLevel(lvl+1));
 			head.addLoreLine(pc.getExpBar(20));
 			head.addLoreLine(" ");
 			head.addLoreLine(LIGHT_PURPLE + "Karma : " + pc.getNiceKarma() + " points");

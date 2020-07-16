@@ -58,7 +58,7 @@ public class CommandSetXp extends HalystiaCommand {
 					level = PlayerData.LEVEL_MAX;
 				if(level < 0)
 					level = 0;
-				xp = data.getExpRequired(level);
+				xp = data.getExpForLevel(level);
 			} else {
 				xp = Integer.parseInt(args[1]);
 			}

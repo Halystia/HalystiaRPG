@@ -38,6 +38,11 @@ public class GuildMemberData {
 		return rank;
 	}
 	
+	public void setRank(GuildRank rank) {
+		if(rank != GuildRank.NOT_A_MEMBER)
+			this.rank = rank;
+	}
+	
 	public UUID getUUID() {
 		return uuid;
 	}

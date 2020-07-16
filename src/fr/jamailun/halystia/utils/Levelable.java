@@ -8,4 +8,6 @@ public interface Levelable {
 	
 	int getLevelWithExp(int exp);
 	
+	int getExpForLevel(int level);
+	
 }

@@ -70,6 +70,7 @@ public class GuildGui {
 				.addLoreLine(ChatColor.GRAY + " ")
 				.addLoreLine(ChatColor.GRAY + "Niveau : " + ChatColor.YELLOW + guild.getLevel())
 				.addLoreLine(ChatColor.GRAY + "Expérience : " + ChatColor.YELLOW + guild.getExpAmount())
+				.addLoreLine(ChatColor.GRAY + guild.generatePercentBar())
 				.toItemStack()
 		, SLOT_RESUME);
 		
