@@ -222,6 +222,9 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				uuidDamager = e.getEntity().getUniqueId();
 			}
 			pcible.damage(damages, uuidDamager, reason);
+			if(e.getDamager() != null) {
+				e.getEntity().setVelocity(e.getEntity().getVelocity().add(e.getDamager().getLocation().getDirection().multiply(.8)));
+			}
 			e.setDamage(0);
 			e.setCancelled(true);
 			return;

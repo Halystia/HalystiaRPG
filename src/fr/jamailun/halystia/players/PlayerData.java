@@ -120,7 +120,7 @@ public class PlayerData implements Levelable {
 	}
 	
 	public void playerEquipItem(EquipmentSlot slot, ItemStack item) {
-		stats.changeEquipment(slot, item);
+		stats.changeEquipment(slot, item, level);
 		updateHealthBar();
 	}
 	
@@ -214,6 +214,7 @@ public class PlayerData implements Levelable {
 		stats.recalculateLevel(level);
 		fullHealth();
 		fullMana();
+		//TODO change skill repartitions if level go down
 	}
 	
 	/**
