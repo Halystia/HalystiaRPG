@@ -44,9 +44,12 @@ public class PlayerArmor {
 		}
 	}
 	
-	public void updateItem(EquipmentSlot slot, ItemStack item) {
-		items.replace(slot, new RpgEquipment(item));
-		
+	public void updateItem(EquipmentSlot slot, ItemStack item, int playerCurrentLevel) {
+		RpgEquipment equipment = new RpgEquipment(item);
+		if(equipment.getLevel() > playerCurrentLevel)
+			items.remove(slot);
+		else
+			items.put(slot, new RpgEquipment(item));
 		recalculate();
 	}
 

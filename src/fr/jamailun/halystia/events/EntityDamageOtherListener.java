@@ -39,6 +39,7 @@ import fr.jamailun.halystia.spells.newSpells.epeiste.AcierPrecis;
 import fr.jamailun.halystia.spells.newSpells.epeiste.Damocles;
 import fr.jamailun.halystia.spells.spellEntity.InvocationsManager;
 import fr.jamailun.halystia.utils.PlayerUtils;
+import fr.jamailun.halystia.utils.RpgEquipment;
 import net.citizensnpcs.api.CitizensAPI;
 
 public class EntityDamageOtherListener extends HalystiaListener {
@@ -454,6 +455,10 @@ public class EntityDamageOtherListener extends HalystiaListener {
 					p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée au maniement de cet objet !");
 					return -1;
 				}
+				if(new RpgEquipment(p.getInventory().getItemInMainHand()).getLevel() > pc.getLevel()) {
+					p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas le niveau adaptée au maniement de cet objet !");
+					return -1;
+				}
 			}
 
 			if(p.getInventory().getItemInOffHand() != null) {
@@ -461,6 +466,10 @@ public class EntityDamageOtherListener extends HalystiaListener {
 				if(classe != ob && ob != Classe.NONE) {
 					//e.setCancelled(true);
 					p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée au maniement de cet objet !");
+					return -1;
+				}
+				if(new RpgEquipment(p.getInventory().getItemInOffHand()).getLevel() > pc.getLevel()) {
+					p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas le niveau adaptée au maniement de cet objet !");
 					return -1;
 				}
 			}

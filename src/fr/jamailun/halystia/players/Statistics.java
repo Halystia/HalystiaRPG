@@ -83,8 +83,8 @@ public class Statistics {
 		recalculateLevel(level);
 	}
 	
-	public void changeEquipment(EquipmentSlot slot, ItemStack item) {
-		playerArmor.updateItem(slot, item);
+	public void changeEquipment(EquipmentSlot slot, ItemStack item, int playerCurrentLevel) {
+		playerArmor.updateItem(slot, item, playerCurrentLevel);
 		calculateArmor();
 	}
 }

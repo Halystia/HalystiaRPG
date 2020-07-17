@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 import com.codingforcookies.armorequip.ArmorEquipEvent;
 import com.codingforcookies.armorequip.ArmorEquipEvent.EquipMethod;
@@ -16,6 +17,7 @@ import com.codingforcookies.armorequip.ArmorType;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.players.Classe;
 import fr.jamailun.halystia.players.PlayerData;
+import fr.jamailun.halystia.utils.RpgEquipment;
 
 public class PlayerEquipmentListener extends HalystiaListener {
 
@@ -45,6 +47,11 @@ public class PlayerEquipmentListener extends HalystiaListener {
 					p.updateInventory();
 					return;
 				}
+			}
+			if(new RpgEquipment(e.getNewArmorPiece()).getLevel() > pc.getLevel()) {
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas le niveau adaptée au maniement de cet objet !");
+				e.setCancelled(true);
+				return;
 			}
 			pc.playerEquipItem(translate(e.getType()), e.getNewArmorPiece());
 		} catch(NullPointerException ee) {
@@ -78,6 +85,20 @@ public class PlayerEquipmentListener extends HalystiaListener {
 			e.setCancelled(true);
 			return;
 		}
+		ItemStack item = p.getInventory().getItem(e.getNewSlot());
+		if(item != null) {
+			Classe ob = main.getTradeManager().getClasseOfItem(item);
+			if(pc.getClasse() != ob && ob != Classe.NONE) {
+				e.setCancelled(true);
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée pour équiper cet objet !");
+				return;
+			}
+			if(new RpgEquipment(item).getLevel() > pc.getLevel()) {
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas le niveau adaptée au maniement de cet objet !");
+				return;
+			}
+		}
+
 		pc.playerEquipItem(EquipmentSlot.HAND, p.getInventory().getItem(e.getNewSlot()));
 	}
 	
@@ -101,6 +122,11 @@ public class PlayerEquipmentListener extends HalystiaListener {
 					p.updateInventory();
 					return;
 				}
+				if(new RpgEquipment(e.getMainHandItem()).getLevel() > pc.getLevel()) {
+					p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas le niveau adaptée au maniement de cet objet !");
+					e.setCancelled(true);
+					return;
+				}
 			}
 			if(e.getOffHandItem() != null) {
 				Classe ob = main.getTradeManager().getClasseOfItem(e.getOffHandItem());
@@ -108,6 +134,11 @@ public class PlayerEquipmentListener extends HalystiaListener {
 					e.setCancelled(true);
 					p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée pour équiper cet objet !");
 					p.updateInventory();
+					return;
+				}
+				if(new RpgEquipment(e.getOffHandItem()).getLevel() > pc.getLevel()) {
+					p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas le niveau adaptée au maniement de cet objet !");
+					e.setCancelled(true);
 					return;
 				}
 			}
