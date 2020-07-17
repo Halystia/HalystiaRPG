@@ -308,7 +308,12 @@ public class Guild extends FileDataRPG implements Levelable {
 	}
 	
 	public String getTag() {
-		return ChatColor.GRAY + "[" + ChatColor.WHITE + tag + ChatColor.GRAY + "] " + ChatColor.WHITE;
+		return getTag(true);
+	}
+	
+	public String getTag(boolean friend) {
+		ChatColor color = friend ? ChatColor.GOLD : ChatColor.GRAY;
+		return color + "[" + ChatColor.WHITE + tag + color + "] " + ChatColor.WHITE;
 	}
 	
 	public boolean hasPermissions(Player player, GuildRank minimal) {

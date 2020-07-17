@@ -55,6 +55,14 @@ public class GuildManager {
 		return getGuild(player) != null;
 	}
 	
+	public boolean arePlayersFriends(Player a, Player b) {
+		Guild ga = getGuild(a);
+		Guild gb = getGuild(b);
+		if(ga == null || gb == null)
+			return false;
+		return ga == gb;
+	}
+	
 	
 	/**
 	 * Give some exp to the guild of a player.

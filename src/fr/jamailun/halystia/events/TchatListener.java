@@ -105,7 +105,6 @@ public class TchatListener extends HalystiaListener {
 		Guild guild = main.getGuildManager().getGuild(p);
 		
 		//generate Message for in-game players
-		TextComponent prefixGuild = new TextComponent( guild == null ? "" : guild.getTag());
 		TextComponent prefixLevel = new TextComponent( classe == Classe.NONE ? GRAY+"[0]" : Classe.getColor(level)+(level>=100?BOLD+"":"")+"["+level+"]");
 		prefixLevel.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(BLUE+"Classe : " + Classe.getColor(pc.getLevel()) + classe.getTitlename(level)).create()));
 		TextComponent prefixName = new TextComponent(WHITE + " " + p.getName() + GRAY + " > ");
@@ -147,10 +146,12 @@ public class TchatListener extends HalystiaListener {
 		String nameNormal = p.getName();
 		String msgNormal = "<"+prefixNormal + nameNormal + WHITE + "> " + ChatColor.translateAlternateColorCodes('&', e.getMessage());
 		for(Player pl : Bukkit.getOnlinePlayers()) {
-			if( HalystiaRPG.isInRpgWorld(pl) )
+			if( HalystiaRPG.isInRpgWorld(pl) ) {
+				TextComponent prefixGuild = new TextComponent( guild == null ? "" : guild.getTag(main.getGuildManager().arePlayersFriends(p, pl)));
 				pl.spigot().sendMessage(crown, prefixGuild, prefixLevel, prefixName, msg);
-			else
+			} else {
 				pl.sendMessage(msgNormal);
+			}
 		}
 		Bukkit.getConsoleSender().sendMessage(msgNormal);
 		
