@@ -10,6 +10,8 @@ import static org.bukkit.ChatColor.LIGHT_PURPLE;
 import static org.bukkit.ChatColor.RED;
 import static org.bukkit.ChatColor.WHITE;
 
+import java.text.DecimalFormat;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -92,6 +94,8 @@ public class SkillsGUI {
 		gui.show(p);
 	}
 	
+	private final DecimalFormat dec = new DecimalFormat("#.##");
+	
 	private void updateGUI() {
 		remaining = (level / 2) - skills.getTotalPoints();
 		gui.addOption(new ItemBuilder(Material.PAPER).setName(LIGHT_PURPLE+"Points restants : "+ (remaining == 0 ? RED : GREEN) +remaining ).toItemStack(), 4);
@@ -102,7 +106,7 @@ public class SkillsGUI {
 		gui.addOption(new ItemBuilder(Material.SKELETON_SKULL).setName(BLUE + "Force").addLoreLine("Augmente de 1% les chances de donner un coup critique.")
 				.addLoreLine(WHITE + "Actuellement niveau " + GOLD + levelForce + ITALIC + " (+"+(levelForce*1)+"%)").toItemStack(), 10);
 		gui.addOption(new ItemBuilder(Material.BOOK).setName(BLUE + "Intelligence").addLoreLine("Augmente de 0,1 la régénération de mana.")
-				.addLoreLine(WHITE + "Actuellement niveau " + GOLD + levelIntel + ITALIC + " (+"+(levelIntel*0.2)+" mana/sec)").toItemStack(), 12);
+				.addLoreLine(WHITE + "Actuellement niveau " + GOLD + levelIntel + ITALIC + " (+"+dec.format(levelIntel*0.2)+" mana/sec)").toItemStack(), 12);
 		gui.addOption(new ItemBuilder(Material.COOKED_BEEF).setName(BLUE + "Constitution").addLoreLine("Augmente de 2% les chances de ne pas perdre de faim.")
 				.addLoreLine(WHITE + "Actuellement niveau " + GOLD + levelConsti + ITALIC + " (+"+(levelConsti*2)+"%)").toItemStack(), 14);
 		gui.addOption(new ItemBuilder(Material.FEATHER).setName(BLUE + "Agilité").addLoreLine("Augmente de 1% les chances d'esquiver un coup.")
