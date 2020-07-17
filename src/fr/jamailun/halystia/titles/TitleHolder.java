@@ -59,7 +59,7 @@ public class TitleHolder extends PlaceholderExpansion {
 		
 		if ( identifier.equals("guild") ) {
 			Guild guild = guilds.getGuild(p);
-			return guild == null ? "" : guild.getTag();
+			return guild == null ? "" : guild.getTag(false);
 		}
 
 		if ( identifier.equals("level") ) {
