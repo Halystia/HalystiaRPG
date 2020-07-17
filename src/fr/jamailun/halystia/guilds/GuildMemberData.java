@@ -61,14 +61,20 @@ public class GuildMemberData {
 		return ((double)xpPercent) / 100.0;
 	}
 	
+	public int getExpPercentInt() {
+		return xpPercent;
+	}
+	
 	public Date getJoinedDate() {
 		return new Date(joinedDate);
 	}
 	
-	public void changeExpGiven(int percent) {
-		if(percent < 0 || percent > 100)
-			return;
-		this.xpGiven = percent;
+	public void changeExpPercent(int percent) {
+		if(percent < 0)
+			percent = 0;
+		if(percent > 100)
+			percent = 100;
+		this.xpPercent = percent;
 	}
 	
 	public String serialize() {

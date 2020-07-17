@@ -6,6 +6,7 @@ import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -82,6 +83,7 @@ public class Guild extends FileDataRPG implements Levelable {
 		if(exp < 0)
 			return;
 		xp += exp;
+		getData(player.getUniqueId()).addExpGiven(exp);
 		int newLevel = getLevelWithExp(xp);
 		if(newLevel > level) {
 			level = newLevel;
@@ -114,6 +116,7 @@ public class Guild extends FileDataRPG implements Levelable {
 	
 	void saveXp() {
 		synchronized (config) {
+			saveMembers();
 			config.set("xp", xp);
 			save();
 		}
@@ -427,15 +430,30 @@ public class Guild extends FileDataRPG implements Levelable {
 			return 0;
 		}
 	}
+	
+	public int getExpPercentOfPlayerInt(UUID uniqueId) {
+		try {
+			return members.stream().filter(data -> data.getUUID().equals(uniqueId)).findAny().get().getExpPercentInt();
+		} catch (NoSuchElementException e) {
+			return 0;
+		}
+	}
+	
+	public double getExpGivenOfPlayer(UUID uniqueId) {
+		try {
+			return members.stream().filter(data -> data.getUUID().equals(uniqueId)).findAny().get().getExpGiven();
+		} catch (NoSuchElementException e) {
+			return 0;
+		}
+	}
 
 	public String generatePercentBar() {
 		if(level == 20)
 			return GOLD + "Niveau max !";
 		double percent = getPercentXp();
-		
 		StringBuilder builder = new StringBuilder(DARK_GRAY+"[");
-		for(int i = 1; i <= 15; i++) {
-			double currentPercent = ((double)i) / ((double)15);
+		for(int i = 1; i <= 20; i++) {
+			double currentPercent = ((double)i) / ((double)20);
 			if(currentPercent <= percent)
 				builder.append(GREEN+PlayerData.BAR_CHAR);
 			else
@@ -455,4 +473,19 @@ public class Guild extends FileDataRPG implements Levelable {
 		return percent;
 	}
 	
+	public Date getJoinedDate(UUID uuid) {
+		return getData(uuid).getJoinedDate();
+	}
+	
+	public void changeExpPercent(UUID uuid, int percent) {
+		if(percent < 0)
+			percent = 0;
+		if(percent > 100)
+			percent = 100;
+		try {
+			members.stream().filter(data -> data.getUUID().equals(uuid)).findAny().get().changeExpPercent(percent);
+		} catch (NoSuchElementException e) {
+			return;
+		}
+	}
 }
