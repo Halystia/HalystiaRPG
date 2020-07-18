@@ -8,7 +8,7 @@ import fr.jamailun.halystia.guilds.Guild;
 public class GuildHouse {
 
 	private final String id;
-	private final HouseSize size;
+	private HouseSize size;
 	private final int cx, cz;
 	private String owner;
 	
@@ -51,6 +51,11 @@ public class GuildHouse {
 		}
 		owner = guild.getGuildName();
 		section.set("owner", owner);
+	}
+	
+	public void changeSize(HouseSize size, ConfigurationSection section) {
+		this.size = size;
+		section.set("size", size.toString());
 	}
 	
 	public HouseSize getSize() {

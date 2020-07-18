@@ -107,6 +107,12 @@ commands:
     permission: halystia.rpg.world
     permission-message: §cIl te faut le droit de manipuler le monde RPG !
     description: Editer les donjons du monde.
+  edit-house:
+    aliases: edit-houses
+    usage: /edit-house <args>
+    permission: halystia.rpg.world
+    permission-message: §cIl te faut le droit de manipuler le monde RPG !
+    description: Editer les maisons de guilde du monde.
   #> SET LES VALEURS <#
   set-roi:
     usage: /set-roi <royaume> <joueur>

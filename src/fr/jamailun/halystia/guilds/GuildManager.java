@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.guilds.houses.GuildHouse;
 import fr.jamailun.halystia.guilds.houses.GuildHousesRegistry;
 
 public class GuildManager {
@@ -33,8 +34,12 @@ public class GuildManager {
 		guilds = new HashSet<>();
 		reload();
 		
-		houses = new GuildHousesRegistry(globalPath);
-		
+		houses = new GuildHousesRegistry(globalPath, this);
+		for(GuildHouse house : houses.getAllHouses()) {
+			if(house.hasOwner()) {
+				getGuild(house.getGuildOwnerName()).configureHouse(house);
+			}
+		}
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -53,6 +58,10 @@ public class GuildManager {
 	
 	public Guild getGuild(Player player) {
 		return guilds.stream().filter(g -> g.isInTheGuild(player)).findAny().orElse(null);
+	}
+	
+	public Guild getGuild(String guildName) {
+		return guilds.stream().filter(g -> g.getGuildName().equals(guildName)).findAny().orElse(null);
 	}
 	
 	public Guild getGuild(UUID uuid) {

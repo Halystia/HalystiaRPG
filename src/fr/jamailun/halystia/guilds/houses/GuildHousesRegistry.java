@@ -6,18 +6,22 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.guilds.Guild;
+import fr.jamailun.halystia.guilds.GuildManager;
 import fr.jamailun.halystia.utils.FileDataRPG;
 
 public class GuildHousesRegistry extends FileDataRPG {
 
 	private final Map<Chunk, GuildHouse> houses = new HashMap<>();
+	private final GuildManager guilds;
 	
-	public GuildHousesRegistry(String path) {
+	public GuildHousesRegistry(String path, GuildManager guilds) {
 		super(path, "house-registry");
+		this.guilds = guilds;
 		synchronized (config) {
 			config.getKeys(false).forEach(key -> {
 				GuildHouse house = new GuildHouse(config.getConfigurationSection(key));
@@ -40,6 +44,26 @@ public class GuildHousesRegistry extends FileDataRPG {
 	
 	public GuildHouse getHouseAt(Chunk chunk) {
 		return houses.entrySet().stream().filter(entry -> entry.getKey().getX() == chunk.getX() && entry.getKey().getZ() == chunk.getZ()).map(e -> e.getValue()).findFirst().orElse(null);
+	}
+	
+	public void unregisterHouse(String id) {
+		GuildHouse house = getHouse(id);
+		if(house.hasOwner()) {
+			guilds.getGuild(house.getGuildOwnerName()).sendMessageToMembers(ChatColor.RED + "Votre maison a été détruite par un administrateur. COntactez-les pour un remboursement éventuel.");
+		}
+		house.changeOwnerShip(null, config.getConfigurationSection(id));
+		Chunk c = null;
+		for(Chunk ch : houses.keySet()) {
+			if(ch.getX() == house.getChunkX() && ch.getZ() == house.getChunkZ()) {
+				c = ch;
+				break;
+			}
+		}
+		houses.remove(c);
+		synchronized (config) {
+			config.set(id, null);
+			save();
+		}
 	}
 	
 	public boolean generateHouse(String id, HouseSize size, Chunk chunk) {
@@ -66,6 +90,15 @@ public class GuildHousesRegistry extends FileDataRPG {
 			save();
 		}
 		return true;
+	}
+
+	public void changeSize(GuildHouse house, HouseSize size) {
+		if(size == HouseSize.UNDEFINED)
+			return;
+		synchronized (config) {
+			house.changeSize(size, config.getConfigurationSection(house.getID()));
+			save();
+		}
 	}
 	
 }

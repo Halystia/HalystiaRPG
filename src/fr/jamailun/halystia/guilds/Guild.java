@@ -23,6 +23,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.guilds.houses.GuildHouse;
 import fr.jamailun.halystia.players.PlayerData;
 import fr.jamailun.halystia.utils.FileDataRPG;
 import fr.jamailun.halystia.utils.Levelable;
@@ -34,7 +35,6 @@ public class Guild extends FileDataRPG implements Levelable {
 	
 	private String name, tag;
 	private List<GuildMemberData> members;
-	//private Map<UUID, GuildRank> members;
 	private int maxMembers = 5;
 	private Set<GuildInvite> pendingInvite = new HashSet<>();
 	private boolean pvp = false;
@@ -43,6 +43,8 @@ public class Guild extends FileDataRPG implements Levelable {
 	private int powerToPutItems = 1, powerToGetItems = 50;
 	private int chestPages = 1;
 	private int level = 1, xp = 0;
+	
+	private GuildHouse house;
 	
 	public Guild(String path, String fileName) {
 		super(path, fileName);
@@ -77,6 +79,18 @@ public class Guild extends FileDataRPG implements Levelable {
 			}
 			save();
 		}
+	}
+	
+	void configureHouse(GuildHouse house) {
+		this.house = house;
+	}
+	
+	public boolean hasHouse() {
+		return house != null;
+	}
+	
+	public GuildHouse getHouse() {
+		return house;
 	}
 	
 	public void addExp(Player player, int exp) {
