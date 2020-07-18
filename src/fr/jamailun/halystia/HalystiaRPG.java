@@ -149,7 +149,7 @@ public final class HalystiaRPG extends JavaPlugin {
 			return;
 		}
 		//MANAGERS
-		guildsMgr = new GuildManager(this, PATH + "/guilds");
+		guildsMgr = new GuildManager(this, PATH + "/guilds", PATH);
 		effMgr = new PlayerEffectsManager(this);
 		classesMgr = new ClasseManager(this, bdd);
 		shopMgr = new ShopManager(PATH, "shopsData");

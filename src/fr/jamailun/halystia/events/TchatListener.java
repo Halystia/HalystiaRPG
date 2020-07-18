@@ -127,9 +127,6 @@ public class TchatListener extends HalystiaListener {
 					.mapToInt(str -> Integer.parseInt(str))
 					.max().getAsInt();
 			
-			//System.out.println("find weight of " + p.getName() + " = " + weight);
-			
-			
 			prefixNormal = p.getEffectivePermissions()
 					.stream()
 					.map(perm -> perm.getPermission())
@@ -137,7 +134,6 @@ public class TchatListener extends HalystiaListener {
 					.map(str -> str.replace("prefix."+weight+".", ""))
 					.findFirst().get();
 		} catch (NoSuchElementException ee) {
-			//Bukkit.getLogger().log(Level.WARNING, "Impossible de retrouver les propriété de tchat de " + p.getName()+".");
 			prefixNormal = Classe.getColor(pc.getLevel()) + "";
 		}
 		

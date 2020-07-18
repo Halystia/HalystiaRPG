@@ -44,6 +44,8 @@ public class PlayerMovementsListener extends HalystiaListener {
 		if(old.equals(current))
 			return;
 		
+		//TODO fixer les enfers
+		
 		chunks.title(p, old, current);
 
 		players.replace(p, current);

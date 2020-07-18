@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.guilds.houses.GuildHousesRegistry;
 
 public class GuildManager {
 
@@ -22,8 +23,9 @@ public class GuildManager {
 	
 	private final String path;
 	private final Set<Guild> guilds;
+	private final GuildHousesRegistry houses;
 	
-	public GuildManager(HalystiaRPG main, String path) {
+	public GuildManager(HalystiaRPG main, String path, String globalPath) {
 		this.path = path;
 		File dir = new File(path);
 		if( ! dir.exists() )
@@ -31,12 +33,18 @@ public class GuildManager {
 		guilds = new HashSet<>();
 		reload();
 		
+		houses = new GuildHousesRegistry(globalPath);
+		
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				saveExp();
 			}
 		}.runTaskTimer(main, 60*20L, 3*60*20L);
+	}
+	
+	public GuildHousesRegistry getHousesRegistry() {
+		return houses;
 	}
 	
 	public void saveExp() {
