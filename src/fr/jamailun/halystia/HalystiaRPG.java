@@ -221,7 +221,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		final long debut = System.currentTimeMillis();
 		Bukkit.getOnlinePlayers().forEach(pl -> pl.closeInventory());
 		classesMgr.saveData(false);
-		guildsMgr.saveExp();
+		guildsMgr.saveData();
 		jobs.saveJobs();
 		shopMgr.despawnAll();
 		mobMgr.purge();

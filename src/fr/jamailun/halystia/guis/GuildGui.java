@@ -22,7 +22,7 @@ import fr.jamailun.halystia.utils.MenuGUI;
 
 public class GuildGui {
 	
-	private final static int SLOT_CHEST = 20, SLOT_RESUME = 4, SLOT_MEMBRES = 22, SLOT_MANAGE = 24;//, SLOT_XP = 25;
+	private final static int SLOT_CHEST = 19, SLOT_RESUME = 4, SLOT_MEMBRES = 21, SLOT_MANAGE = 23, SLOT_HOUSE = 25;
 	
 	private final static ItemStack MUR = new ItemBuilder(Material.LIGHT_GRAY_STAINED_GLASS_PANE).setName(ChatColor.GRAY+"").toItemStack();
 	public GuildGui(Player p, Guild guild, GuildRank rank) {
@@ -52,10 +52,15 @@ public class GuildGui {
 					openManage(p, guild, rank);
 					return;
 				}
-				/*if(e.getSlot() == SLOT_XP) {
-					openListMembres(p, guild, rank);
+				if(e.getSlot() == SLOT_HOUSE) {
+					if(guild.hasHouse()) {
+						guild.getHouse().teleport(p);
+					} else {
+						p.sendMessage(guild.getTag() + ChatColor.YELLOW + "Votre guilde ne possède pas de maison. Voici le marché des maisons du jeu");
+						new BuyHouseGUI(p);
+					}
 					return;
-				}*/
+				}
 			}
 		
 		};
@@ -81,8 +86,10 @@ public class GuildGui {
 
 		gui.addOption(new ItemBuilder(Material.WRITABLE_BOOK).setName((rank == GuildRank.MASTER ? ChatColor.BLUE : ChatColor.RED) + "Gestion de la guilde").toItemStack(), SLOT_MANAGE);
 		
-		//gui.addOption(new ItemBuilder(Material.EXPERIENCE_BOTTLE).setName(ChatColor.BLUE + "Gérer la répartition d'exp").toItemStack(), SLOT_XP);
-		
+		if(guild.hasHouse())
+			gui.addOption(new ItemBuilder(Material.EXPERIENCE_BOTTLE).setName(ChatColor.BLUE + "Se téléporter à votre maison").toItemStack(), SLOT_HOUSE);
+		else
+			gui.addOption(new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(ChatColor.DARK_GRAY + "La guilde ne possède pas de maison").toItemStack(), SLOT_HOUSE);
 		gui.show(p);
 	}
 	

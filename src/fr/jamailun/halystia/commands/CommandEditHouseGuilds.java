@@ -32,7 +32,7 @@ import fr.jamailun.halystia.guilds.houses.HouseSize;
 public class CommandEditHouseGuilds extends HalystiaCommand {
 
 	private static final Set<String> firsts = new HashSet<>(Arrays.asList(
-		"create", "goto", "delete", "size", "list"
+		"create", "goto", "delete", "size", "list", "set-entrance"
 	));
 	
 	private final GuildManager guilds;
@@ -71,6 +71,10 @@ public class CommandEditHouseGuilds extends HalystiaCommand {
 				p.sendMessage(RED + "/"+label + " create <id> <size>");
 				return true;
 			}
+			if(guilds.getHousesRegistry().getHouse(args[1]) != null) {
+				p.sendMessage(RED + "Cet id de maison existe déjà.");
+				return true;
+			}
 			if(! args[1].matches("[a-zA-Z0-9]+")) {
 				p.sendMessage(RED + "Le nom ne doit contenir que des caractères alphanumériques.");
 				return true;
@@ -83,7 +87,7 @@ public class CommandEditHouseGuilds extends HalystiaCommand {
 			if ( guilds.getHousesRegistry().generateHouse(args[1], size, p.getLocation().getChunk()) ) {
 				p.sendMessage(GREEN + "Succès : la maison a été créée.");
 			} else {
-				p.sendMessage(RED + "Une erreur est survenue. Soit l'id existe déjà, soit il y a déjà une maison sur ce chunk.");
+				p.sendMessage(RED + "Une erreur est survenue. Il y a déjà une maison sur ce chunk.");
 			}
 			return true;
 		}
@@ -94,11 +98,11 @@ public class CommandEditHouseGuilds extends HalystiaCommand {
 				return true;
 			}
 			String id = args[1];
-			if ( ! guilds.getHousesRegistry().houseIdExists(id) ) {
+			GuildHouse house = guilds.getHousesRegistry().getHouse(id);
+			if ( house == null ) {
 				p.sendMessage(HalystiaRPG.PREFIX + RED + "L'id '"+DARK_RED+id+RED+"' n'existe pas.");
 				return true;
 			}
-			GuildHouse house = guilds.getHousesRegistry().getHouse(id);
 			int x = house.getChunkX() * 16 + (house.getChunkX() >= 0 ? 8 : -8);
 			int z = house.getChunkZ() * 16 + (house.getChunkZ() >= 0 ? 8 : -8);
 			p.teleport(new Location(Bukkit.getWorld(HalystiaRPG.WORLD), x, 100, z));
@@ -119,6 +123,23 @@ public class CommandEditHouseGuilds extends HalystiaCommand {
 			guilds.getHousesRegistry().unregisterHouse(id);
 			p.sendMessage(HalystiaRPG.PREFIX + DARK_RED + "" + BOLD + "Maison détruite.");
 			p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 6f, .7f);
+			return true;
+		}
+		
+		if(args[0].equals("set-entrance")) {
+			if(args.length < 2) {
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "/"+label+" set-entrance <id>");
+				return true;
+			}
+			String id = args[1];
+			GuildHouse house = guilds.getHousesRegistry().getHouse(id);
+			if ( house == null ) {
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "L'id '"+DARK_RED+id+RED+"' n'existe pas.");
+				return true;
+			}
+			guilds.getHousesRegistry().changeEntrance(house, p.getLocation());
+			p.sendMessage(HalystiaRPG.PREFIX + GREEN + "Entrée déplacée.");
+			p.playSound(p.getLocation(), Sound.ITEM_FIRECHARGE_USE, 6f, 1.8f);
 			return true;
 		}
 		
@@ -170,6 +191,7 @@ public class CommandEditHouseGuilds extends HalystiaCommand {
 		p.sendMessage(AQUA + "/" + label + " delete <id>" + WHITE + ": Supprime la maison où vous vous trouvez.");
 		p.sendMessage(AQUA + "/" + label + " size <id> [size] " + WHITE + ": Change (ou lis) la taille de la maison où vous vous trouvez.");
 		p.sendMessage(AQUA + "/" + label + " goto <id> " + WHITE + ": Vous téléporte à une maison.");
+		p.sendMessage(AQUA + "/" + label + " set-entrance <id> " + WHITE + ": Change l'entrée d'une maison.");
 		p.sendMessage(AQUA + "/" + label + " list " + WHITE + ": Liste les maisons existantes.");
 	}
 

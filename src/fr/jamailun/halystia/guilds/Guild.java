@@ -39,6 +39,7 @@ public class Guild extends FileDataRPG implements Levelable {
 	private Set<GuildInvite> pendingInvite = new HashSet<>();
 	private boolean pvp = false;
 	
+	private int units = 0;
 	private final GuildChest chest;
 	private int powerToPutItems = 1, powerToGetItems = 50;
 	private int chestPages = 1;
@@ -67,9 +68,19 @@ public class Guild extends FileDataRPG implements Levelable {
 		config.set("created", System.currentTimeMillis());
 		config.set("allows.pvp", false);
 		config.set("chest.pages.number", 1);
+		config.set("units", 0);
 		save();
 		
 		chest = new GuildChest(this, config.getConfigurationSection("chest.pages"));
+	}
+	
+	public int getHowManyUnits() {
+		return units;
+	}
+	
+	public int deltaUnits(int delta) {
+		units += delta;
+		return units;
 	}
 	
 	void saveChest(MenuGUI gui, int page) {
@@ -128,10 +139,11 @@ public class Guild extends FileDataRPG implements Levelable {
 		return (int) Math.exp( Math.log( 2 * Math.min(20, Math.max(0, level))) / 0.12 );
 	}
 	
-	void saveXp() {
+	void saveData() {
 		synchronized (config) {
 			saveMembers();
 			config.set("xp", xp);
+			config.set("units", units);
 			save();
 		}
 	}
@@ -359,6 +371,7 @@ public class Guild extends FileDataRPG implements Levelable {
 		name = config.getString("name");
 		xp = config.getInt("xp");
 		level = getLevelWithExp(xp);
+		units = config.getInt("units");
 		if(config.contains("tag"))
 			tag = config.getString("tag");
 		else

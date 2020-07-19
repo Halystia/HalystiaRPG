@@ -43,7 +43,7 @@ public class GuildManager {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				saveExp();
+				saveData();
 			}
 		}.runTaskTimer(main, 60*20L, 3*60*20L);
 	}
@@ -52,8 +52,8 @@ public class GuildManager {
 		return houses;
 	}
 	
-	public void saveExp() {
-		guilds.forEach(Guild::saveXp);
+	public void saveData() {
+		guilds.forEach(Guild::saveData);
 	}
 	
 	public Guild getGuild(Player player) {

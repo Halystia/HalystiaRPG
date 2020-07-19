@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.guilds.Guild;
@@ -51,7 +53,7 @@ public class GuildHousesRegistry extends FileDataRPG {
 		if(house.hasOwner()) {
 			guilds.getGuild(house.getGuildOwnerName()).sendMessageToMembers(ChatColor.RED + "Votre maison a été détruite par un administrateur. COntactez-les pour un remboursement éventuel.");
 		}
-		house.changeOwnerShip(null, config.getConfigurationSection(id));
+		house.changeOwnerShip(null);
 		Chunk c = null;
 		for(Chunk ch : houses.keySet()) {
 			if(ch.getX() == house.getChunkX() && ch.getZ() == house.getChunkZ()) {
@@ -64,6 +66,10 @@ public class GuildHousesRegistry extends FileDataRPG {
 			config.set(id, null);
 			save();
 		}
+	}
+	
+	public List<GuildHouse> getAllBuyableHouses() {
+		return houses.values().stream().filter(h -> ! h.hasOwner()).collect(Collectors.toList());
 	}
 	
 	public boolean generateHouse(String id, HouseSize size, Chunk chunk) {
@@ -85,10 +91,13 @@ public class GuildHousesRegistry extends FileDataRPG {
 			return false;
 		if(house.hasOwner())
 			return false;
+		if(guild.getHowManyUnits() < house.getSize().getCost())
+			return false;
 		synchronized (config) {
-			house.changeOwnerShip(guild, config.getConfigurationSection(id));
+			house.changeOwnerShip(guild);
 			save();
 		}
+		guild.sendMessageToMembers(ChatColor.GREEN + "" + ChatColor.BOLD + "Votre guilde a fait l'acquisition d'une maison !");
 		return true;
 	}
 
@@ -96,7 +105,14 @@ public class GuildHousesRegistry extends FileDataRPG {
 		if(size == HouseSize.UNDEFINED)
 			return;
 		synchronized (config) {
-			house.changeSize(size, config.getConfigurationSection(house.getID()));
+			house.changeSize(size);
+			save();
+		}
+	}
+	
+	public void changeEntrance(GuildHouse house, Location entrance) {
+		synchronized (config) {
+			house.changeEntrance(entrance);
 			save();
 		}
 	}

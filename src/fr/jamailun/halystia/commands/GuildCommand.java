@@ -21,6 +21,7 @@ import fr.jamailun.halystia.guilds.GuildInvite;
 import fr.jamailun.halystia.guilds.GuildManager;
 import fr.jamailun.halystia.guilds.GuildRank;
 import fr.jamailun.halystia.guilds.GuildResult;
+import fr.jamailun.halystia.guis.BuyHouseGUI;
 import fr.jamailun.halystia.guis.GuildGui;
 import fr.jamailun.halystia.utils.YesNoGUI;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -37,11 +38,13 @@ public class GuildCommand extends HalystiaCommand {
 		subCommands.put("create", GuildRank.NOT_A_MEMBER);
 		subCommands.put("join", GuildRank.NOT_A_MEMBER);
 		subCommands.put("message", GuildRank.MEMBER);
+		subCommands.put("house", GuildRank.MEMBER);
 		subCommands.put("chest", GuildRank.MEMBER);
 		subCommands.put("members", GuildRank.MEMBER);
 		subCommands.put("leave", GuildRank.MEMBER);
 		subCommands.put("msg", GuildRank.MEMBER);
 		subCommands.put("gui", GuildRank.MEMBER);
+		subCommands.put("house-list", GuildRank.MEMBER);
 		subCommands.put("invite", GuildRank.CAPITAIN);
 		subCommands.put("broadcast", GuildRank.CAPITAIN);
 		subCommands.put("promote", GuildRank.RIGHT_ARM);
@@ -95,6 +98,28 @@ public class GuildCommand extends HalystiaCommand {
 				return true;
 			}
 			guild.playerRequestOpenChest(p);
+			return true;
+		}
+		
+		if(args[0].equalsIgnoreCase("house")) {
+			if(guild == null) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut une guilde pour effectuer cette commande.");
+				return true;
+			}
+			if( ! guild.hasHouse() ) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Votre guilde ne possède pas de maison !");
+				return true;
+			}
+			guild.getHouse().teleport(p);
+			return true;
+		}
+		
+		if(args[0].equalsIgnoreCase("house")) {
+			if(guild == null) {
+				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut une guilde pour effectuer cette commande.");
+				return true;
+			}
+			new BuyHouseGUI(p);
 			return true;
 		}
 		

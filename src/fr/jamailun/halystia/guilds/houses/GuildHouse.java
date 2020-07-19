@@ -1,27 +1,37 @@
 package fr.jamailun.halystia.guilds.houses;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 
+import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.guilds.Guild;
 
 public class GuildHouse {
 
+	private final ConfigurationSection section;
 	private final String id;
 	private HouseSize size;
 	private final int cx, cz;
+	private Location entrance;
 	private String owner;
 	
 	public GuildHouse(ConfigurationSection section) {
+		this.section = section;
 		id = section.getString("id");
 		size = HouseSize.fromString(section.getString("size"));
 		if(section.contains("owner"))
 			owner = section.getString("owner");
 		this.cx = section.getInt("chunk.x");
 		this.cz = section.getInt("chunk.z");
+		if(section.contains("entrance"))
+			this.entrance = section.getLocation("entrance");
 	}
 	
 	public GuildHouse(String id, HouseSize size, Chunk chunk, ConfigurationSection section) {
+		this.section = section;
 		this.id = id;
 		this.size = size;
 		this.cx = chunk.getX();
@@ -44,7 +54,7 @@ public class GuildHouse {
 		return owner;
 	}
 	
-	public void changeOwnerShip(Guild guild, ConfigurationSection section) {
+	void changeOwnerShip(Guild guild) {
 		if(guild == null) {
 			owner = null;
 			return;
@@ -53,9 +63,14 @@ public class GuildHouse {
 		section.set("owner", owner);
 	}
 	
-	public void changeSize(HouseSize size, ConfigurationSection section) {
+	void changeSize(HouseSize size) {
 		this.size = size;
 		section.set("size", size.toString());
+	}
+	
+	void changeEntrance(Location entrance) {
+		this.entrance = entrance;
+		section.set("entrance", entrance);
 	}
 	
 	public HouseSize getSize() {
@@ -68,6 +83,15 @@ public class GuildHouse {
 	
 	public int getChunkZ() {
 		return cz;
+	}
+
+	public void teleport(Player p) {
+		if(entrance == null) {
+			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Cette maison n'a pas d'entrée paramétrée...");
+			return;
+		}
+		p.teleport(entrance);
+		p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Vous avez été téléporté à votre maison de guilde.");
 	}
 	
 }
