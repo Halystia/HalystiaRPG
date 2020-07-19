@@ -56,7 +56,7 @@ public class GuildGui {
 					if(guild.hasHouse()) {
 						guild.getHouse().teleport(p);
 					} else {
-						p.sendMessage(guild.getTag() + ChatColor.YELLOW + "Votre guilde ne possède pas de maison. Voici le marché des maisons du jeu");
+						p.sendMessage(guild.getTag() + ChatColor.YELLOW + "Votre guilde ne possède pas de maison. Voici le marché des maisons de guilde du jeu.");
 						new BuyHouseGUI(p);
 					}
 					return;
@@ -73,6 +73,7 @@ public class GuildGui {
 				.addLoreLine(ChatColor.GRAY + " ")
 				.addLoreLine(ChatColor.GRAY + "Dirigeant : " + ChatColor.YELLOW + guild.getMasterName())
 				.addLoreLine(ChatColor.GRAY + "Nombre de membres : " + ChatColor.YELLOW + guild.getOfflinePlayersNames().size())
+				.addLoreLine(ChatColor.GRAY + "Unités de guilde : " + ChatColor.YELLOW + guild.getHowManyUnits())
 				.addLoreLine(ChatColor.GRAY + " ")
 				.addLoreLine(ChatColor.GRAY + "Niveau : " + ChatColor.YELLOW + guild.getLevel())
 				.addLoreLine(ChatColor.GRAY + "Expérience : " + ChatColor.YELLOW + guild.getExpAmount())

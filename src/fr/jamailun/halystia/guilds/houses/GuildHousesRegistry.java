@@ -93,6 +93,7 @@ public class GuildHousesRegistry extends FileDataRPG {
 			return false;
 		if(guild.getHowManyUnits() < house.getSize().getCost())
 			return false;
+		guild.deltaUnits(house.getSize().getCost());
 		synchronized (config) {
 			house.changeOwnerShip(guild);
 			save();
