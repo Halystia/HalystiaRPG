@@ -7,6 +7,7 @@ import fr.jamailun.halystia.commands.CommandCustomEnchant;
 import fr.jamailun.halystia.commands.CommandEditChunks;
 import fr.jamailun.halystia.commands.CommandEditDonjons;
 import fr.jamailun.halystia.commands.CommandEditEquipment;
+import fr.jamailun.halystia.commands.CommandEditHouseGuilds;
 import fr.jamailun.halystia.commands.CommandEditMobs;
 import fr.jamailun.halystia.commands.CommandEditNPC;
 import fr.jamailun.halystia.commands.CommandEditQuests;
@@ -75,6 +76,7 @@ public class CommandsManager {
 		new CommandEditDonjons(main, donjonsMgr);
 		new CommandEditEquipment(main);
 		new CommandReloadSpells(main);
+		new CommandEditHouseGuilds(main, guilds);
 		
 		new CommandSetRoi(main);
 		new CommandSetXp(main);

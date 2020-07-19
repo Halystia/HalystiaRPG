@@ -55,7 +55,6 @@ public class BuyHouseGUI extends MenuGUI {
 				, slot);
 			}
 		}
-		show(p);
 	}
 
 	@Override
@@ -66,7 +65,10 @@ public class BuyHouseGUI extends MenuGUI {
 	@Override
 	public void onClick(InventoryClickEvent e) {
 		if(e.getSlot() == getSize() - 1) {
-			p.closeInventory();
+			if(guild == null)
+				p.closeInventory();
+			else
+				new GuildGui(p, guild, rank);
 			return;
 		}
 		if ( houses.isEmpty() || e.getSlot() >= houses.size() )
@@ -100,7 +102,7 @@ public class BuyHouseGUI extends MenuGUI {
 			@Override
 			public void onFinish(Response response) {
 				if(response == Response.NO) {
-					new BuyHouseGUI(p);
+					new BuyHouseGUI(p).show(p);
 					return;
 				}
 				buyingAccepted(house);

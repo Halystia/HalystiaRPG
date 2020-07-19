@@ -114,12 +114,12 @@ public class GuildCommand extends HalystiaCommand {
 			return true;
 		}
 		
-		if(args[0].equalsIgnoreCase("house")) {
+		if(args[0].equalsIgnoreCase("house-list")) {
 			if(guild == null) {
 				p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Il faut une guilde pour effectuer cette commande.");
 				return true;
 			}
-			new BuyHouseGUI(p);
+			new BuyHouseGUI(p).show(p);
 			return true;
 		}
 		

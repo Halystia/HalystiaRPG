@@ -57,7 +57,7 @@ public class GuildGui {
 						guild.getHouse().teleport(p);
 					} else {
 						p.sendMessage(guild.getTag() + ChatColor.YELLOW + "Votre guilde ne possède pas de maison. Voici le marché des maisons de guilde du jeu.");
-						new BuyHouseGUI(p);
+						new BuyHouseGUI(p).show(p);
 					}
 					return;
 				}
