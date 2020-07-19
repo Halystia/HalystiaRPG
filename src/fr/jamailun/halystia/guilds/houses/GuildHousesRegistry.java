@@ -78,7 +78,7 @@ public class GuildHousesRegistry extends FileDataRPG {
 		if(houses.containsKey(chunk))
 			return false;
 		synchronized (config) {
-			GuildHouse house = new GuildHouse(id, size, chunk, config.getConfigurationSection("id"));
+			GuildHouse house = new GuildHouse(id, size, chunk, config.createSection("id"));
 			houses.put(chunk, house);
 			save();
 		}
