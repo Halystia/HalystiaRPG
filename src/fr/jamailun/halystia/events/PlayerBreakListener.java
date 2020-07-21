@@ -117,6 +117,7 @@ public class PlayerBreakListener extends HalystiaListener {
 		
 	}
 	
+	@EventHandler
 	public void blockPlaceEvent(BlockPlaceEvent e) {
 		if( ! HalystiaRPG.isRpgWorld(e.getBlock().getWorld()))
 			return;
