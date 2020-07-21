@@ -8,16 +8,19 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.constants.Equipment;
+import fr.jamailun.halystia.guilds.houses.GuildHouse;
 import fr.jamailun.halystia.jobs.JobResult;
 import fr.jamailun.halystia.jobs.JobsManager;
 
@@ -45,6 +48,23 @@ public class PlayerBreakListener extends HalystiaListener {
 		
 		if(p.getGameMode() == GameMode.CREATIVE)
 			return;
+		
+		GuildHouse house = main.getGuildManager().getHousesRegistry().getHouseAt(e.getBlock().getChunk());
+		if(house != null) {
+			e.setCancelled(true);
+			if( ! house.hasOwner())
+				return;
+			if(main.getGuildManager().getGuild(house.getGuildOwnerName()).isInTheGuild(p)) {
+				if(e.getBlock().getRelative(BlockFace.DOWN).getType() == GuildHouse.BLOCK_SUPPORT_IN_HOUSES) {
+					e.setCancelled(false);
+				} else {
+					p.sendMessage(HalystiaRPG.PREFIX + RED + "Impossible de retirer ce bloc.");
+				}
+			} else {
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "Impossible de placer un bloc ici : cette maison n'est pas à ta guilde !");
+			}
+			return;
+		}
 		
 		final Location loc = e.getBlock().getLocation();
 		if(main.getChunkManager().isBuildable(loc)) {
@@ -95,6 +115,29 @@ public class PlayerBreakListener extends HalystiaListener {
 				return;
 		}
 		
+	}
+	
+	public void blockPlaceEvent(BlockPlaceEvent e) {
+		if( ! HalystiaRPG.isRpgWorld(e.getBlock().getWorld()))
+			return;
+		Player p = e.getPlayer();
+		
+		GuildHouse house = main.getGuildManager().getHousesRegistry().getHouseAt(e.getBlock().getChunk());
+		if(house != null) {
+			e.setCancelled(true);
+			if( ! house.hasOwner())
+				return;
+			if(main.getGuildManager().getGuild(house.getGuildOwnerName()).isInTheGuild(p)) {
+				if(e.getBlock().getRelative(BlockFace.DOWN).getType() == GuildHouse.BLOCK_SUPPORT_IN_HOUSES) {
+					e.setCancelled(false);
+				} else {
+					p.sendMessage(HalystiaRPG.PREFIX + RED + "Impossible de placer un bloc ici.");
+				}
+			} else {
+				p.sendMessage(HalystiaRPG.PREFIX + RED + "Impossible de placer un bloc ici : cette maison n'est pas à ta guilde !");
+			}
+			return;
+		}
 	}
 	
 	private void restaureBlock(Location loc, Material type, int sec) {

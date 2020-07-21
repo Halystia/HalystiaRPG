@@ -3,6 +3,7 @@ package fr.jamailun.halystia.guilds.houses;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
@@ -11,6 +12,8 @@ import fr.jamailun.halystia.guilds.Guild;
 
 public class GuildHouse {
 
+	public static final Material BLOCK_SUPPORT_IN_HOUSES = Material.BROWN_GLAZED_TERRACOTTA;
+	
 	private final ConfigurationSection section;
 	private final String id;
 	private HouseSize size;
