@@ -123,6 +123,9 @@ public class PlayerBreakListener extends HalystiaListener {
 			return;
 		Player p = e.getPlayer();
 		
+		if(p.getGameMode() == GameMode.CREATIVE)
+			return;
+		
 		GuildHouse house = main.getGuildManager().getHousesRegistry().getHouseAt(e.getBlock().getChunk());
 		if(house != null) {
 			e.setCancelled(true);
