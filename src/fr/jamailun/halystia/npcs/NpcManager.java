@@ -26,7 +26,6 @@ import org.mcmonkey.sentinel.SentinelTrait;
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.npcs.ExclamationManagement.ExclamationType;
 import fr.jamailun.halystia.quests.Quest;
-import fr.jamailun.halystia.quests.QuestManager;
 import fr.jamailun.halystia.quests.players.QuestsAdvancement;
 import fr.jamailun.halystia.quests.steps.QuestStep;
 import fr.jamailun.halystia.quests.steps.QuestStepBring;
@@ -209,17 +208,6 @@ public final class NpcManager {
 			});
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-	}
-	
-	public void verifyQuests(QuestManager quests) {
-		for(RpgNpc npc : npcs) {
-			if(npc.hasQuest()) {
-				if( ! quests.getAllConfigIdsStream().collect(Collectors.toList()).contains(npc.getQuestName())) {
-					npc.changeQuest(null);
-					Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Le npc ["+npc.getConfigId()+"] a vu sa quete se faire reset car elle n'existait plus.");
-				}
-			}
 		}
 	}
 

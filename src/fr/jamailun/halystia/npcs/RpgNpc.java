@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import fr.jamailun.halystia.quests.Quest;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment.EquipmentSlot;
 
@@ -28,10 +27,6 @@ public interface RpgNpc extends Dialogable {
 	public String getDisplayName();
 	
 	public void changeSkin(Texture texture);
-	
-	public void changeQuest(Quest quest);
-	public boolean hasQuest();
-	public String getQuestName();
 	
 	public void changeMode(NpcMode mode);
 	public NpcMode getMode();

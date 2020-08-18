@@ -335,22 +335,8 @@ public class CitizenNpc extends FileDataRPG implements RpgNpc {
 		}
 	}
 	
-	public boolean hasQuest() {
-		//return questID != null && ! questID.isEmpty();
-		if( ! npc.hasTrait(HalystiaRpgTrait.class))
-			return false;
-		return npc.getTrait(HalystiaRpgTrait.class).hasQuest();
-	}
-	
 	public NpcMode getMode() {
 		return mode;
-	}
-	
-	public String getQuestName() {
-	//	return questID;
-		if( ! npc.hasTrait(HalystiaRpgTrait.class))
-			return null;
-		return npc.getTrait(HalystiaRpgTrait.class).getQuestName();
 	}
 	
 	public String getName() {

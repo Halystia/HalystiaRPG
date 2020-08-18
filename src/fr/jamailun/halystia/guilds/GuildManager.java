@@ -34,7 +34,7 @@ public class GuildManager {
 		guilds = new HashSet<>();
 		reload();
 		
-		houses = new GuildHousesRegistry(globalPath, this);
+		houses = new GuildHousesRegistry(globalPath, this, main);
 		for(GuildHouse house : houses.getAllHouses()) {
 			if(house.hasOwner()) {
 				getGuild(house.getGuildOwnerName()).configureHouse(house);

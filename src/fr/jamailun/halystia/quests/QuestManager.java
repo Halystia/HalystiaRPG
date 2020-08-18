@@ -19,7 +19,6 @@ import fr.jamailun.halystia.donjons.DonjonManager;
 import fr.jamailun.halystia.enemies.mobs.MobManager;
 import fr.jamailun.halystia.npcs.NpcManager;
 import fr.jamailun.halystia.npcs.RpgNpc;
-import fr.jamailun.halystia.npcs.traits.HalystiaRpgTrait;
 import fr.jamailun.halystia.quests.players.QuestState;
 import fr.jamailun.halystia.quests.players.QuestState.QuestStatus;
 import fr.jamailun.halystia.quests.players.QuestsAdvancement;
@@ -33,14 +32,14 @@ import fr.jamailun.halystia.sql.temporary.DataHandler;
 
 public class QuestManager {
 
-	private final Set<Quest> quests;
+	private final Set<Quest> quests = new HashSet<>();;
 	private final String path;
 	private final HalystiaRPG main;
 	private final NpcManager npcs;
 	private final MobManager mobs;
 	private final DonjonManager donjons;
 	
-	private Set<QuestsAdvancement> playersAdvancements;
+	private Set<QuestsAdvancement> playersAdvancements = new HashSet<>();;
 	
 	public QuestManager(String path, HalystiaRPG main, NpcManager npcs, MobManager mobs, DonjonManager donjons, DataHandler bdd) {
 		this.path = path;
@@ -48,11 +47,8 @@ public class QuestManager {
 		this.npcs = npcs;
 		this.mobs = mobs;
 		this.donjons = donjons;
-		quests = new HashSet<>();
 		
 		reload();
-		
-		playersAdvancements = new HashSet<>();
 	}
 	
 	public boolean hasDataAbout(Player player) {
@@ -111,24 +107,12 @@ public class QuestManager {
 	}
 	
 	public Set<Quest> getQuestsStartedByNPC(RpgNpc npc) {
-		return quests.stream().filter(q -> q.getNPCId().equals(npc.getConfigId())).collect(Collectors.toSet());
+		if(npc == null || quests == null)
+			return null;
+		return quests.stream().filter(q -> q.getNPCId() != null).filter(q -> q.getNPCId().equals(npc.getConfigId())).collect(Collectors.toSet());
 	}
 	
 	public void removeQuest(Quest quest) {
-		for(RpgNpc npc : npcs.getNpcs()) {
-			if( ! npc.getNPC().hasTrait(HalystiaRpgTrait.class) ) {
-				main.getConsole().sendMessage(ChatColor.RED + "Attention ! Le NPC (id="+npc.getConfigId()+") n'as pas le trait rpg !");
-				continue;
-			}
-			HalystiaRpgTrait trait = npc.getNPC().getTrait(HalystiaRpgTrait.class);
-			if( ! trait.hasQuest() )
-				continue;
-			if(trait.getQuestName().equals(quest.getID())) {
-				trait.resetQuest();
-				main.getConsole().sendMessage(ChatColor.GREEN + "Le NPC (id="+npc.getConfigId()+") était porteur de la quete '"+quest.getID()+"'. Il en a été libéré.");
-				break;
-			}
-		}
 		
 		for(QuestsAdvancement adv : playersAdvancements) {
 			adv.questRemoved(quest.getID());

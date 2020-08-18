@@ -171,8 +171,6 @@ public final class HalystiaRPG extends JavaPlugin {
 		banque = new Banque(PATH+"/banque", jobs);
 		spellLoader = new SpellLoader(PATH + "/spells", spellMgr);
 		
-		npcMgr.verifyQuests(questsMgr);
-		
 		new NaturalSpawnWorld(this, mobMgr, mobsChunksMgr, WORLD);
 		
 		//EVENTS

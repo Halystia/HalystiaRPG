@@ -28,7 +28,6 @@ import org.mcmonkey.sentinel.targeting.SentinelTargetLabel;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.npcs.traits.HalystiaRpgTrait;
-import fr.jamailun.halystia.quests.Quest;
 import fr.jamailun.halystia.utils.FileDataRPG;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.event.DespawnReason;
@@ -305,10 +304,6 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 		changeSkin(texture.getTexture(), texture.getSignature());
 	}
 	
-	public void changeQuest(Quest quest) {
-		npc.getTrait(HalystiaRpgTrait.class).editQuest(quest);
-	}
-	
 	public void changeMode(NpcMode mode) {
 		if(this.mode == mode)
 			return;
@@ -362,26 +357,8 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 		}
 	}
 	
-	public boolean hasQuest() {
-		if(npc == null) {
-			return false;
-		}
-		//return questID != null && ! questID.isEmpty();
-		if( ! npc.hasTrait(HalystiaRpgTrait.class)) {
-			return false;
-		}
-		return npc.getTrait(HalystiaRpgTrait.class).hasQuest();
-	}
-	
 	public NpcMode getMode() {
 		return mode;
-	}
-	
-	public String getQuestName() {
-	//	return questID;
-		if( ! npc.hasTrait(HalystiaRpgTrait.class))
-			return null;
-		return npc.getTrait(HalystiaRpgTrait.class).getQuestName();
 	}
 	
 	public String getConfigId() {
