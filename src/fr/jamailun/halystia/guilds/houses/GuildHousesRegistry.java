@@ -10,6 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.guilds.Guild;
@@ -21,15 +23,25 @@ public class GuildHousesRegistry extends FileDataRPG {
 	private final Map<Chunk, GuildHouse> houses = new HashMap<>();
 	private final GuildManager guilds;
 	
-	public GuildHousesRegistry(String path, GuildManager guilds) {
+	public GuildHousesRegistry(String path, GuildManager guilds, HalystiaRPG main) {
 		super(path, "house-registry");
 		this.guilds = guilds;
-		synchronized (config) {
-			config.getKeys(false).forEach(key -> {
-				GuildHouse house = new GuildHouse(config.getConfigurationSection(key));
-				houses.put(Bukkit.getWorld(HalystiaRPG.PREFIX).getChunkAt(house.getChunkX(), house.getChunkZ()), house);
-			});
-		}
+		
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				synchronized (config) {
+					World world = Bukkit.getWorld(HalystiaRPG.PREFIX);
+					if(world == null)
+						return;
+					config.getKeys(false).forEach(key -> {
+						GuildHouse house = new GuildHouse(config.getConfigurationSection(key));
+						houses.put(world.getChunkAt(house.getChunkX(), house.getChunkZ()), house);
+					});
+				}
+			}
+		}.runTaskTimer(main, 3*20L, 3*20L);
+		
 	}
 
 	public boolean houseIdExists(String id) {

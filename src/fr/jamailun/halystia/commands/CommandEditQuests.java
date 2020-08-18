@@ -79,6 +79,7 @@ public class CommandEditQuests extends HalystiaCommand {
 			p.sendMessage(GREEN+"Reload des quests effectué.");
 			return true;
 		}
+		
 		if ( args.length < 2) {
 			sendHelp(p, label);
 			return true;
