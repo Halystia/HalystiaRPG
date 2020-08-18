@@ -156,7 +156,7 @@ class JamailunStuffExtension extends JamailunItemModel {
 				.setArmor(9).setLevel(40)
 		.toItemStack());
 		items.put("conqE",
-				new RpgEquipment(Material.GOLDEN_SWORD).shineAndUnbreak().addEnchant(Enchantment.DAMAGE_UNDEAD, 5).addEnchant(Enchantment.FIRE_ASPECT, 1).setName(c() + "Épée de l'conquérant")
+				new RpgEquipment(Material.GOLDEN_SWORD).shineAndUnbreak().addEnchant(Enchantment.DAMAGE_UNDEAD, 5).addEnchant(Enchantment.FIRE_ASPECT, 1).setName(c() + "Épée du conquérant")
 				.setDamagesInt(80).setHealth(80).setLevel(40)
 		.toItemStack());
 		

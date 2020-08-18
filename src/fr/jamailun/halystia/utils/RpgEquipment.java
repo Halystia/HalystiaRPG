@@ -77,7 +77,7 @@ public class RpgEquipment {
 		for(String line : item.getLore()) {
 			try {
 				if(line.contains(LEVEL_BEGIN)) {
-					String nb = line.split(" ")[4];
+					String nb = line.split(" ")[3];
 					level = Integer.parseInt(nb);
 					continue;
 				}
@@ -113,6 +113,7 @@ public class RpgEquipment {
 				}
 			} catch(NumberFormatException | IndexOutOfBoundsException e) {
 				HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Erreur. " + e.getClass() + " -> " + e.getMessage());
+				HalystiaRPG.getInstance().getConsole().sendMessage(ChatColor.RED + "Ligne : ["+line+"]");
 			}
 			if( ! line.isEmpty() && ! line.equals(ChatColor.GRAY+""))
 				addionalLore.add(line);
@@ -163,18 +164,17 @@ public class RpgEquipment {
 	}
 	
 	public RpgEquipment setUnbreakable() {
-		item.setUnbreakable();
+		item = item.setUnbreakable();
 		return this;
 	}
 	
 	public RpgEquipment shine() {
-		item.shine();
+		item = item.shine();
 		return this;
 	}
 	
 	public RpgEquipment shineAndUnbreak() {
-		item.setUnbreakable();
-		item.shine();
+		item = item.shine().setUnbreakable();
 		return this;
 	}
 
