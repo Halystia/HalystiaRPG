@@ -38,6 +38,17 @@ public class TitleHolder extends PlaceholderExpansion {
 	public String getIdentifier() {
 		return "rpg";
 	}
+	
+	@Override
+	public boolean canRegister() {
+		return true;
+	}
+	
+	@Override
+	public boolean persist() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 
 	@Override
 	public String getVersion() {

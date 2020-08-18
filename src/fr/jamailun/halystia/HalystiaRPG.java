@@ -46,7 +46,6 @@ import fr.jamailun.halystia.sql.temporary.DataHandler;
 import fr.jamailun.halystia.sql.temporary.FileSaver;
 import fr.jamailun.halystia.titles.TitleHolder;
 import fr.jamailun.halystia.titles.TitlesManager;
-import me.clip.placeholderapi.PlaceholderAPI;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.trait.TraitInfo;
 
@@ -187,7 +186,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		
 		//PLACEHOLDERAPI
 		if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
-			PlaceholderAPI.registerExpansion(new TitleHolder(titleMgr, bdd, classesMgr, guildsMgr));
+			new TitleHolder(titleMgr, bdd, classesMgr, guildsMgr).register();
 		} else {
 			getLogger().log(Level.WARNING, "PlaceHolderAPI not found or not enabled");
 		}
