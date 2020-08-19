@@ -37,12 +37,12 @@ public class Statistics {
 	}
 	
 	public void recalculateLevel(int level) {
-		baseMaxHealth = 200 + (20 * level);
+		baseMaxHealth = 100 + (10 * (level-1));
 		baseMaxMana = level * 3;
 		baseSpeed = 1;
 		baseArmor = level / 10;
-		baseDamages = level / 5 + 1;
-		baseDamagesBuff = 1;
+		baseDamages = level / 5 + .9;
+		baseDamagesBuff = 1.0;
 		
 	//	Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "JOUEUR TOTAL : §aarmor="+getArmor()+", §dhealth="+getMaxHealth()+", §fspeed="+getSpeed()+", §cdmgs="+getDamages()+", §bmana="+getMaxMana()+".");
 	}

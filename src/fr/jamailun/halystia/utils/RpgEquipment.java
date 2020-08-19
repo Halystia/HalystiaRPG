@@ -75,44 +75,48 @@ public class RpgEquipment {
 	private String getSymbol(int value) {
 		return getSymbol((double)value);
 	}
+	private int readSymbol(String part) {
+		return ChatColor.stripColor(part).contains("+") ? 1 : -1;
+	}
 	
 	private void readItem() {
 		addionalLore = new ArrayList<>();
 		for(String line : item.getLore()) {
 			try {
+				String[] array = line.split(" ");
 				if(line.contains(LEVEL_BEGIN)) {
-					String nb = line.split(" ")[3];
+					String nb = array[3];
 					level = Integer.parseInt(nb);
 					continue;
 				}
 				if(line.contains(HEALTH_BEGIN)) {
-					String nb = line.split(" ")[4];
-					health = Integer.parseInt(nb);
+					String nb = array[4];
+					health = Integer.parseInt(nb) * readSymbol(array[3]);
 					continue;
 				}
 				if(line.contains(ARMOR_BEGIN)) {
-					String nb = line.split(" ")[3];
-					armor = Integer.parseInt(nb);
+					String nb = array[3];
+					armor = Integer.parseInt(nb) * readSymbol(array[2]);
 					continue;
 				}
 				if(line.contains(MANA_BEGIN)) {
-					String nb = line.split(" ")[4];
-					armor = Integer.parseInt(nb);
+					String nb = array[4];
+					armor = Integer.parseInt(nb) * readSymbol(array[3]);
 					continue;
 				}
 				if(line.contains(SPEED_BEGIN)) {
-					String nb = line.split(" ")[4];
-					speed = Double.parseDouble(nb);
+					String nb = array[4];
+					speed = Double.parseDouble(nb) * (double)readSymbol(array[3]);
 					continue;
 				}
 				if(line.contains(DAMAGES_INT_BEGIN)) {
-					String nb = line.split(" ")[3];
-					damagesInt = Integer.parseInt(nb);
+					String nb = array[3];
+					damagesInt = Integer.parseInt(nb) * readSymbol(array[2]);
 					continue;
 				}
 				if(line.contains(DAMAGES_BUFF_BEGIN)) {
-					String nb = line.split(" ")[4];
-					damageBuff = Double.parseDouble(nb);
+					String nb = array[4];
+					damageBuff = Double.parseDouble(nb) * (double)readSymbol(array[3]);
 					continue;
 				}
 			} catch(NumberFormatException | IndexOutOfBoundsException e) {
