@@ -80,6 +80,7 @@ public final class NpcManager {
 		        }
 				Bukkit.getConsoleSender().sendMessage(ChatColor.GREEN + "Completely reloaded HalystiaRPG and npcs.");
 				startRotateAllExclamations();
+				ExclamationManagement.cleanAtBegining(Bukkit.getWorld(HalystiaRPG.WORLD));
 			}
 		}.runTaskLater(main, 100L);
 		
@@ -92,7 +93,7 @@ public final class NpcManager {
 			public void run() {
 				npcs.forEach(npc -> npc.getExclamation().rotate());
 			}
-		}.runTaskTimer(main, 100L, 4L);
+		}.runTaskTimer(main, 30L, 4L);
 	}
 	
 	public void reloadTextures() {
@@ -251,6 +252,10 @@ public final class NpcManager {
 
 	public void purgeExclamations() {
 		npcs.stream().filter(r -> r instanceof CitizenNpc2).map(r -> (CitizenNpc2)r).forEach(n -> n.getExclamation().purge());
+	}
+	
+	public void purgeExclamationAtStop() {
+		npcs.stream().filter(r -> r instanceof CitizenNpc2).map(r -> (CitizenNpc2)r).forEach(n -> n.getExclamation().purgeWhenServerClose());
 	}
 
 	public void purgeExclamations(Player player) {
