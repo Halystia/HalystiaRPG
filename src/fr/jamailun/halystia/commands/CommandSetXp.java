@@ -51,8 +51,8 @@ public class CommandSetXp extends HalystiaCommand {
 		
 		int xp = -1;
 		try {
-			if(args[1].endsWith("L")) {
-				String levelS = args[1].replace("L", "");
+			if(args[1].toUpperCase().endsWith("L")) {
+				String levelS = args[1].toUpperCase().replace("L", "");
 				int level = Integer.parseInt(levelS);
 				if(level > PlayerData.LEVEL_MAX)
 					level = PlayerData.LEVEL_MAX;
