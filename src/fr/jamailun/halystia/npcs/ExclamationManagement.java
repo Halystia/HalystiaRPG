@@ -7,14 +7,18 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_15_R1.entity.CraftArmorStand;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import net.minecraft.server.v1_15_R1.ChatMessage;
 import net.minecraft.server.v1_15_R1.EntityArmorStand;
 import net.minecraft.server.v1_15_R1.EntityLiving;
 import net.minecraft.server.v1_15_R1.EnumItemSlot;
@@ -28,27 +32,20 @@ import net.minecraft.server.v1_15_R1.WorldServer;
 //belongs to 1 NPC
 public class ExclamationManagement {
 
-	private final Map<UUID, Exclamation> recipes;
+	private final Map<UUID, ExclamationServerSide> recipes = new HashMap<>();
 	private final RpgNpc npc;
 
 	public ExclamationManagement(RpgNpc npc) {
 		this.npc = npc;
-		recipes = new HashMap<>();
 	}
 
 	public void changeState(Player player, ExclamationType ex) {
 		final UUID uuid = player.getUniqueId();
 		if(recipes.containsKey(uuid)) {
-			if(recipes.get(uuid).type == ex) {
-	//			System.out.println("veut passer à "+ex+" : c'est déjà le cas !");
-				return;
-			}
-	//		System.out.println("passage de "+recipes.get(uuid).type+" vers -> " + ex);
 			recipes.get(uuid).changeStatus(ex, player);
 			return;
 		}
-	//	System.out.println("on se met en " + ex);
-		recipes.put(uuid, new Exclamation(player, ex, npc.getLocation()));
+		recipes.put(uuid, new ExclamationServerSide(npc.getLocation()));
 	}
 	
 	public void npcMoved() {
@@ -58,7 +55,7 @@ public class ExclamationManagement {
 			return;
 		}
 		recipes.forEach((uid, exc) -> {
-			exc.move(npc.getLocation(), Bukkit.getPlayer(uid));
+			exc.move(npc.getLocation());
 		});
 	}
 
@@ -75,19 +72,89 @@ public class ExclamationManagement {
 	
 	public void purge() {
 		recipes.forEach((uid, exc) -> {
-			exc.delete(Bukkit.getPlayer(uid));
+			exc.delete();
 		});
 		recipes.clear();
 	}
 
-	private final static class Exclamation {
+	private static interface Exclamation {
+		public void changeStatus(ExclamationType type, Player recipe);
+		public void move(Location loc, Player recipe);
+		public void delete(Player recipe);
+		public void rotate(Player recipe);
+	}
+	
+	private final static class ExclamationServerSide {
+		private final static double Y_DELTA = 1.7;
+		private final ArmorStand standServer;
+		private final EntityArmorStand standClient;
+		private Location loc;
+		
+		public ExclamationServerSide(Location npcLoc) {
+			loc = npcLoc.add( 0, Y_DELTA, 0 );
+			standServer = loc.getWorld().spawn(loc, ArmorStand.class);
+			
+			standServer.setGravity(false);
+			standServer.setArms(true);
+			standServer.setBasePlate(false);
+			standServer.setVisible(false);
+			standServer.setInvulnerable(true);
+			standServer.setMarker(true);
+			standServer.setSmall(true);
+			standServer.setCustomName("-exclamation");
+			standServer.setCustomNameVisible(false);
+			
+			standClient = ((CraftArmorStand) standServer).getHandle();
+		}
+		
+		public void changeStatus(ExclamationType type, Player recipe) {
+			if(recipe == null)
+				return;
+			PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(standClient.getId(), EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(new ItemStack(type.material)));
+			((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packet);
+		}
+		
+		public void move(Location loc) {
+			standServer.teleport( loc );
+		}
+
+		public void delete() {
+			standServer.remove();
+		}
+		
+		public void delete(Player recipe) {
+			if(recipe == null)
+				return;
+			PacketPlayOutEntityDestroy packet = new PacketPlayOutEntityDestroy(standClient.getId());
+			((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packet);
+		}
+
+		private float rot = 0;
+		private double h = 0;
+		private boolean up = true;
+		public void rotate(Player recipe) {
+			if(recipe == null)
+				return;
+			rot = (rot + 6) % 360;
+			h += 0.005 * (up ? 1 : -1);
+			if(h > 0.06 || h < -0.06)
+				up = ! up;
+			standServer.teleport( new Location(loc.getWorld(), loc.getX(),  loc.getY() + h,  loc.getZ(), rot, 0) );
+			standClient.setLocation(loc.getX(), loc.getY() + h, loc.getZ(), rot, 0);
+			PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(standClient);
+			((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packet);
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private final static class ExclamationClientSide implements Exclamation {
 
 		private final static double Y_DELTA = 1.7;
 		private ExclamationType type;
 		private final EntityArmorStand stand;
 		private Location loc;
 
-		public Exclamation(Player recipe, ExclamationType type, Location npcLoc) {
+		public ExclamationClientSide(Player recipe, ExclamationType type, Location npcLoc) {
 			WorldServer s = ((CraftWorld)recipe.getWorld()).getHandle();
 			stand = new EntityArmorStand(s, npcLoc.getX(), npcLoc.getY() + Y_DELTA, npcLoc.getZ());
 			loc = new Location(recipe.getWorld(), npcLoc.getX(), npcLoc.getY() + Y_DELTA, npcLoc.getZ());
@@ -111,6 +178,8 @@ public class ExclamationManagement {
 					stand.setInvulnerable(true);
 					stand.setMarker(true);
 					stand.setSmall(true);
+					stand.setCustomName(new ChatMessage("-"));
+					stand.setCustomNameVisible(false);
 					PacketPlayOutEntityMetadata packetData2 = new PacketPlayOutEntityMetadata(stand.getId(), stand.getDataWatcher(), true);
 					((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packetData2);
 				}
@@ -160,7 +229,24 @@ public class ExclamationManagement {
 	}
 
 	public void purge(Player player) {
+		if(player == null)
+			return;
 		recipes.get(player.getUniqueId()).delete(player);
+	}
+	
+	public static void cleanAtBegining(World world) {
+		world.getEntities().forEach(e -> {
+			if(e instanceof ArmorStand && e.getCustomName() != null) {
+				if((e.getCustomName().equals("-exclamation")||e.getCustomName().equals("-"))) {
+					e.remove();
+				}
+			}
+		});
+	}
+	
+	public void purgeWhenServerClose() {
+		recipes.values().forEach(ExclamationServerSide::delete);
+		recipes.clear();
 	}
 
 	public void rotate() {
