@@ -38,7 +38,10 @@ public class ClasseManager {
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				data.values().forEach(PlayerData::refillMana);
+				data.values().forEach(p -> {
+					p.refillMana();
+					p.refillFood();
+				});
 				saveCounter++;
 				exclCounter++;
 				if(saveCounter >= saveFrequence) {
@@ -54,6 +57,7 @@ public class ClasseManager {
 					}
 					saveData(true);
 				}
+				
 			}
 		}.runTaskTimer(main, 20L, 20L);
 	}

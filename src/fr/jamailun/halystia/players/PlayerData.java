@@ -534,5 +534,12 @@ public class PlayerData implements Levelable {
 			}
 		}.runTaskLater(HalystiaRPG.getInstance(), 20L);
 	}
+	
+	public void refillFood() {
+		if(player.isValid())
+			if( ! player.isSprinting())
+				if(player.getFoodLevel() < 20)
+					player.setFoodLevel(player.getFoodLevel() + 1);
+	}
 
 }

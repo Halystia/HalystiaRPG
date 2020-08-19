@@ -21,6 +21,7 @@ import fr.jamailun.halystia.events.PlayerFishListener;
 import fr.jamailun.halystia.events.PlayerInteractListener;
 import fr.jamailun.halystia.events.PlayerJoinLeaveListener;
 import fr.jamailun.halystia.events.PlayerMovementsListener;
+import fr.jamailun.halystia.events.PlayerSprintsListener;
 import fr.jamailun.halystia.events.SomeWorldListeners;
 import fr.jamailun.halystia.events.TchatListener;
 import fr.jamailun.halystia.jobs.JobsManager;
@@ -44,6 +45,7 @@ public class EventsManager {
 		
 		new MobAggroListener(main);
 		new BossListeners(main);
+		new PlayerSprintsListener(main);
 		
 		new MobDeathListener(main);
 		new MobSpawnListener(main);
