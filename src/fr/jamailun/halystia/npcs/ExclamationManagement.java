@@ -229,9 +229,10 @@ public class ExclamationManagement {
 	}
 
 	public void purge(Player player) {
-		if(player == null)
+		if(player == null || recipes.get(player.getUniqueId()) == null)
 			return;
 		recipes.get(player.getUniqueId()).delete(player);
+		recipes.remove(player.getUniqueId());
 	}
 	
 	public static void cleanAtBegining(World world) {

@@ -227,6 +227,7 @@ public final class HalystiaRPG extends JavaPlugin {
 		donjonsMgr.getBossManager().purge();
 		cache.applyCache();
 		npcMgr.purgeExclamations();
+		npcMgr.purgeExclamationAtStop();
 		console.sendMessage(PREFIX + ChatColor.GREEN + "Désactivation terminée en " + (System.currentTimeMillis() - debut) + "ms.");
 	}
 	
