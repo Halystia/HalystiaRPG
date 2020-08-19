@@ -10,7 +10,7 @@ Minecraft spigot plugin provides RPG features. Used on __play.halystia.xyz__.
 
 ## Discord
 
-> https://discord.gg/yp26mHZ
+> https://discord.gg/dh5bquV
 
 ## Usage
 
