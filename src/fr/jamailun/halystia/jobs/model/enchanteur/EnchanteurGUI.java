@@ -7,18 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -29,6 +24,7 @@ import fr.jamailun.halystia.jobs.JobType;
 import fr.jamailun.halystia.jobs.model.enchanteur.EnchanteurSources.Source;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.MenuGUI;
+import fr.jamailun.halystia.utils.RpgEquipment;
 
 public class EnchanteurGUI extends JobCraftGUI {
 
@@ -42,7 +38,7 @@ public class EnchanteurGUI extends JobCraftGUI {
 	public boolean isValidItem(ItemStack item) {
 		if( ! item.hasItemMeta())
 			return false;
-		if( ! item.getItemMeta().hasAttributeModifiers())
+		if ( (! item.getItemMeta().hasDisplayName()) || (!item.getItemMeta().hasLore()) )
 			return false;
 		ItemMeta meta = item.getItemMeta();
 		int enchants = 0;
@@ -69,31 +65,18 @@ public class EnchanteurGUI extends JobCraftGUI {
 	}
 	
 	private final DecimalFormat df = new DecimalFormat("#.##");
-	public ItemStack enchantItem(Player p, ItemStack item, Attribute attribut) {
+	public ItemStack enchantItem(Player p, ItemStack item, Source source) {
 		
 		int level = job.getPlayerLevel(p);
-		double karma = Math.random() - 0.7 + (0.08*level);
+		double karma = Math.random() - 0.71 + (0.07*level);
 
 		job.addExp((int)Math.abs((karma*40)), p);
 		
-		Operation op = Operation.ADD_SCALAR;
-		if(attribut == Attribute.GENERIC_ARMOR || attribut == Attribute.GENERIC_MAX_HEALTH)
-			op = Operation.ADD_NUMBER;
 		
-		EquipmentSlot slot = EquipmentSlot.OFF_HAND;
-		if(Equipment.HELMET.hasObject(item.getType()))
-			slot = EquipmentSlot.HEAD;
-		else if(Equipment.CHESTPLATE.hasObject(item.getType()))
-			slot = EquipmentSlot.CHEST;
-		else if(Equipment.LEGGINGS.hasObject(item.getType()))
-			slot = EquipmentSlot.LEGS;
-		else if(Equipment.BOOTS.hasObject(item.getType()))
-			slot = EquipmentSlot.FEET;
-		else if(Equipment.OFFENSIVE.hasObject(item.getType()))
-			slot = EquipmentSlot.HAND;
+		final boolean isPercentage = source.getSourceType().isPercentage();
 
-		double valeur = (op == Operation.ADD_NUMBER) ? karma + 1 : karma;
-		if(op == Operation.ADD_NUMBER) {
+		double valeur = isPercentage ? karma : karma + 1;
+		if(!isPercentage) {
 			karma *= 10;
 			if(karma < 0)
 				valeur = Math.floor(karma);
@@ -104,37 +87,21 @@ public class EnchanteurGUI extends JobCraftGUI {
 			if(Math.abs(valeur) > 0.1)
 				valeur = Math.signum(valeur) * 0.1;
 		}
+		
 		if(valeur < 0) {
 			p.playSound(p.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, .5f);
 			p.sendMessage(HalystiaRPG.PREFIX+ChatColor.RED+""+ChatColor.BOLD+"ÉCHEC ! "+ChatColor.YELLOW+"L'amélioration ne s'est pas bien passée... "
-			+ChatColor.RED +(op == Operation.ADD_SCALAR ? df.format(valeur)+"%": ((int)valeur)));
+			+ChatColor.RED +(isPercentage ? df.format(valeur)+"%": ((int)valeur)));
 		} else if (valeur > 0) {
 			p.playSound(p.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 10f, .9f);
 			p.sendMessage(HalystiaRPG.PREFIX+ChatColor.GREEN+""+ChatColor.BOLD+"SUCCÈS ! "+ChatColor.YELLOW+"L'amélioration s'est bien passée ! "
-			+ChatColor.GREEN+"+" +(op == Operation.ADD_SCALAR ? df.format(valeur)+"%": ((int)valeur)));
+			+ChatColor.GREEN+"+" +(isPercentage ? df.format(valeur)+"%": ((int)valeur)));
 		} else {
 			p.playSound(p.getLocation(), Sound.BLOCK_BAMBOO_STEP, 1f, .5f);
 			p.sendMessage(HalystiaRPG.PREFIX+ChatColor.GRAY+""+ChatColor.BOLD+"RATÉ "+ChatColor.YELLOW+"L'amélioration n'a pas eu lieu...");
 		}
 		//p.sendMessage("ATTR=§a"+attribut+"§f, karma=§a"+karma+"§7(valeur="+valeur+")§f, OP=§a"+op+"§f, slot=§a"+slot);
 		ItemMeta meta = item.getItemMeta();
-		
-		final EquipmentSlot fslot = slot;
-		final Operation fop = op;
-		if(meta.getAttributeModifiers(attribut) != null) {
-			Optional<AttributeModifier> optioMod = meta.getAttributeModifiers(attribut).stream().filter(mod -> mod.getSlot() == fslot && mod.getOperation() == fop).findFirst();
-			if(optioMod.isPresent()) {
-				AttributeModifier mod = optioMod.get();
-				meta.removeAttributeModifier(attribut, mod);
-				AttributeModifier newMod = new AttributeModifier(mod.getUniqueId(), mod.getName(), mod.getAmount() + valeur, op, slot);
-				meta.addAttributeModifier(attribut, newMod);
-			} else {
-				meta.addAttributeModifier(attribut, new AttributeModifier(UUID.randomUUID(), attribut.name(), valeur, op, slot));
-			}
-		} else {
-			meta.addAttributeModifier(attribut, new AttributeModifier(UUID.randomUUID(), attribut.name(), valeur, op, slot));
-		}
-		
 		
 		boolean addedLore = false;
 		if( meta.hasLore() ) {
@@ -175,8 +142,10 @@ public class EnchanteurGUI extends JobCraftGUI {
 		if(valeur != 0)
 			item.setItemMeta(meta);
 		
+		RpgEquipment equipment = new RpgEquipment(item);
+		equipment.delta(source.getSourceType(), valeur);
 		
-		return new ItemStack(item);
+		return equipment.toItemStack();
 	}
 
 	@Override
@@ -289,12 +258,12 @@ public class EnchanteurGUI extends JobCraftGUI {
 				if( ! (canEnchant && item.isPresent() && offrande.isPresent() && !out.isPresent()) ) {
 					return;
 				}
-				Attribute attr = EnchanteurSources.getFromItem(offrande.get());
-				if(attr == null) {
+				Source source = EnchanteurSources.getFromItem(offrande.get());
+				if(source == null) {
 					p.sendMessage(HalystiaRPG.PREFIX +ChatColor.RED+"Source de pouvoir non valable.");
 					return;
 				}
-				out = Optional.of(enchantItem(p, item.get(), attr));
+				out = Optional.of(enchantItem(p, item.get(), source));
 				addOption(out.get(), SLOT_OUT);
 				item = Optional.empty();
 				

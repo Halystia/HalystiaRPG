@@ -2,7 +2,6 @@ package fr.jamailun.halystia.jobs.model.enchanteur;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.constants.Rarity;
@@ -12,41 +11,40 @@ public final class EnchanteurSources {
 	
 	public static final String SOURCE = Rarity.COMMON.getColor()+"Source de";
 	
-	public static Attribute getFromItem(ItemStack item) {
+	public static Source getFromItem(ItemStack item) {
 		if( ! item.hasItemMeta() )
 			return null;
 		if(!item.getItemMeta().hasDisplayName())
 			return null;
 		String name = item.getItemMeta().getDisplayName();
 		Source source = Source.fromName(name);
-		if(source == null)
-			return null;
-		return source.getAttribute();
+		return source;
 	}
 	
 	public enum Source {
-		VIE(Attribute.GENERIC_MAX_HEALTH, "vie", ChatColor.RED, Material.ORANGE_DYE),
-		DMG(Attribute.GENERIC_ATTACK_DAMAGE, "sang", ChatColor.DARK_RED, Material.RED_DYE),
-		ARM(Attribute.GENERIC_ARMOR, "défense", ChatColor.DARK_GREEN, Material.GREEN_DYE),
-		KBR(Attribute.GENERIC_KNOCKBACK_RESISTANCE, "terre", ChatColor.GOLD, Material.BROWN_DYE),
-		ASP(Attribute.GENERIC_ATTACK_SPEED, "puissance", ChatColor.WHITE, Material.WHITE_DYE),
-		MVS(Attribute.GENERIC_MOVEMENT_SPEED, "vitesse", ChatColor.GOLD, Material.YELLOW_DYE);
+		VIE(SourceType.HEALTH, "vie", ChatColor.RED, Material.ORANGE_DYE),
+		DMG(SourceType.DEGATS_INT, "sang", ChatColor.DARK_RED, Material.RED_DYE),
+		ARM(SourceType.ARMOR, "défense", ChatColor.DARK_GREEN, Material.GREEN_DYE),
+		//KBR("terre", ChatColor.GOLD, Material.BROWN_DYE),
+		MAN(SourceType.MANA, "savoir", ChatColor.AQUA, Material.LIGHT_BLUE_DYE),
+		ASP(SourceType.DEGATS_P, "puissance", ChatColor.WHITE, Material.WHITE_DYE),
+		MVS(SourceType.SPEED, "vitesse", ChatColor.YELLOW, Material.YELLOW_DYE);
 		
-		private final Attribute a;
 		private final String n;
 		private final ChatColor c;
 		private final Material m;
-		private Source(Attribute a, String n, ChatColor c, Material m) {
-			this.a = a;
+		private final SourceType s;
+		private Source(SourceType s, String n, ChatColor c, Material m) {
 			this.n = n;
 			this.c = c;
 			this.m = m;
+			this.s = s;
+		}
+		public SourceType getSourceType() {
+			return s;
 		}
 		public String toString() {
 			return c+""+ChatColor.BOLD+n;
-		}
-		public Attribute getAttribute() {
-			return a;
 		}
 		public ItemStack getItem() {
 			return new ItemBuilder(m).setName(SOURCE+c+""+ChatColor.BOLD+" "+n).toItemStack(); //&e&lSource de&c&l 
@@ -62,6 +60,20 @@ public final class EnchanteurSources {
 		}
 		public String getName() {
 			return n;
+		}
+	}
+	
+	public enum SourceType {
+		HEALTH, ARMOR, DEGATS_INT, DEGATS_P(true), SPEED(true), MANA;
+		private final boolean b;
+		private SourceType() {
+			b = false;
+		}
+		private SourceType(boolean bb) {
+			b = bb;
+		}
+		public boolean isPercentage() {
+			return b;
 		}
 	}
 	

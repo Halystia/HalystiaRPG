@@ -1,5 +1,6 @@
 package fr.jamailun.halystia.utils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.jobs.model.enchanteur.EnchanteurSources.SourceType;
 import fr.jamailun.halystia.players.PlayerData;
 
 public class RpgEquipment {
@@ -41,6 +43,8 @@ public class RpgEquipment {
 		readItem();
 	}
 	
+	private final DecimalFormat deF = new DecimalFormat("#.##");
+	
 	public ItemStack toItemStack() {
 		item.resetLore();
 		if(level > 0)
@@ -52,11 +56,11 @@ public class RpgEquipment {
 		if(mana != 0)
 			item.addLoreLine(MANA_BEGIN + getSymbol(mana) + Math.abs(mana));
 		if(speed != 0)
-			item.addLoreLine(SPEED_BEGIN + getSymbol(speed) + Math.abs(speed)+ " %");
+			item.addLoreLine(SPEED_BEGIN + getSymbol(speed) + deF.format(Math.abs(speed)) + " %");
 		if(damagesInt != 0)
 			item.addLoreLine(DAMAGES_INT_BEGIN + getSymbol(damagesInt) + Math.abs(damagesInt));
 		if(damageBuff != 0)
-			item.addLoreLine(DAMAGES_BUFF_BEGIN + getSymbol(damageBuff) + Math.abs(damageBuff)+ " %");
+			item.addLoreLine(DAMAGES_BUFF_BEGIN + getSymbol(damageBuff) + deF.format(Math.abs(damageBuff)) + " %");
 		if( ! addionalLore.isEmpty()) {
 			item.addLoreLine("");
 			addionalLore.forEach(l -> item.addLoreLine(l));
@@ -210,6 +214,31 @@ public class RpgEquipment {
 	public RpgEquipment setSpeed(double speed) {
 		this.speed = speed;
 		return this;
+	}
+	
+	public void delta(SourceType type, double value) {
+		switch (type) {
+		case ARMOR:
+			armor += value;
+			break;
+		case DEGATS_INT:
+			damagesInt += value;
+			break;
+		case DEGATS_P:
+			damageBuff += value/100;
+			break;
+		case HEALTH:
+			health += value;
+			break;
+		case MANA:
+			mana += value;
+			break;
+		case SPEED:
+			speed += value/100;
+			break;
+		default:
+			break;
+		}
 	}
 	
 }

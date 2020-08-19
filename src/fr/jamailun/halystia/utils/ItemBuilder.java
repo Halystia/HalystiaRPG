@@ -196,7 +196,11 @@ public class ItemBuilder {
 	}
 
 	public ItemBuilder shine() {
-		return this.addEnchant(Enchantment.DURABILITY, 1).addItemFlag(ItemFlag.HIDE_ENCHANTS);
+		if( ! is.getEnchantments().isEmpty() )
+			return this;
+		addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+		addItemFlag(ItemFlag.HIDE_ENCHANTS);
+		return this;
 	}
 	/**
 	 * Re-sets the lore.

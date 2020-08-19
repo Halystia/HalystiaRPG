@@ -172,43 +172,43 @@ class JamailunStuffExtension extends JamailunItemModel {
 		
 	// émeraude
 		items.put("emeraudeH",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_HELMET).setLeatherArmorColor(Color.fromRGB(0, 255, 0))).setUnbreakable().setName(c() + "Casque d'émeraude")
-				.setArmor(12).setHealth(50).setLevel(50)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_HELMET).setLeatherArmorColor(Color.fromRGB(0, 255, 0))).setName(l() + "Casque d'émeraude")
+				.setArmor(12).setHealth(50).setLevel(50).shineAndUnbreak()
 		.toItemStack());
 		items.put("emeraudeC",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_CHESTPLATE).setLeatherArmorColor(Color.fromRGB(0, 255, 0))).setUnbreakable().setName(c() + "Plastron d'émeraude")
-				.setArmor(12).setDamageBuff(5).setHealth(60).setLevel(50)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_CHESTPLATE).setLeatherArmorColor(Color.fromRGB(0, 255, 0))).setName(l() + "Plastron d'émeraude")
+				.setArmor(12).setDamageBuff(5).setHealth(60).setLevel(50).shineAndUnbreak()
 		.toItemStack());
 		items.put("emeraudeL",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_LEGGINGS).setLeatherArmorColor(Color.fromRGB(0, 255, 0))).setUnbreakable().setName(c() + "Jambières d'émeraude")
-				.setArmor(12).setHealth(50).setLevel(50)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_LEGGINGS).setLeatherArmorColor(Color.fromRGB(0, 255, 0))).setName(l() + "Jambières d'émeraude")
+				.setArmor(12).setHealth(50).setLevel(50).shineAndUnbreak()
 		.toItemStack());
 		items.put("emeraudeB",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_BOOTS).setLeatherArmorColor(Color.fromRGB(0, 255, 0))).setUnbreakable().setName(c() + "Bottes d'émeraude")
-				.setArmor(12).setHealth(50).setLevel(50)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_BOOTS).setLeatherArmorColor(Color.fromRGB(0, 255, 0))).setName(l() + "Bottes d'émeraude")
+				.setArmor(12).setHealth(50).setLevel(50).shineAndUnbreak()
 		.toItemStack());
 	// rubis
 		items.put("rubisH",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_HELMET).setLeatherArmorColor(Color.fromRGB(255, 0, 0))).setUnbreakable().setName(c() + "Casque de rubis")
-				.setArmor(14).setHealth(80).setLevel(70)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_HELMET).setLeatherArmorColor(Color.fromRGB(255, 0, 0))).setName(l() + "Casque de rubis")
+				.setArmor(14).setHealth(80).setLevel(70).shineAndUnbreak()
 		.toItemStack());
 		items.put("rubisC",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_CHESTPLATE).setLeatherArmorColor(Color.fromRGB(255, 0, 0))).setUnbreakable().setName(c() + "Plastron de rubis")
-				.setArmor(14).setDamageBuff(7.5).setHealth(100).setLevel(70)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_CHESTPLATE).setLeatherArmorColor(Color.fromRGB(255, 0, 0))).setName(l() + "Plastron de rubis")
+				.setArmor(14).setDamageBuff(7.5).setHealth(100).setLevel(70).shineAndUnbreak()
 		.toItemStack());
 		items.put("rubisL",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_LEGGINGS).setLeatherArmorColor(Color.fromRGB(255, 0, 0))).setUnbreakable().setName(c() + "Jambières de rubis")
-				.setArmor(14).setHealth(80).setLevel(70)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_LEGGINGS).setLeatherArmorColor(Color.fromRGB(255, 0, 0))).setName(l() + "Jambières de rubis")
+				.setArmor(14).setHealth(80).setLevel(70).shineAndUnbreak()
 		.toItemStack());
 		items.put("rubisB",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_BOOTS).setLeatherArmorColor(Color.fromRGB(255, 0, 0))).setUnbreakable().setName(c() + "Bottes de rubis")
-				.setArmor(14).setHealth(80).setLevel(70)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_BOOTS).setLeatherArmorColor(Color.fromRGB(255, 0, 0))).setName(l() + "Bottes de rubis")
+				.setArmor(14).setHealth(80).setLevel(70).shineAndUnbreak()
 		.toItemStack());
 		
 	// ancestral
 		items.put("plastronAncestral",
-				new RpgEquipment(new ItemBuilder(Material.LEATHER_BOOTS).setLeatherArmorColor(Color.PURPLE)).setUnbreakable().setName(c() + "Plastron ancestral")
-				.setArmor(15).setHealth(200).setLevel(40).setDamageBuff(-10)
+				new RpgEquipment(new ItemBuilder(Material.LEATHER_CHESTPLATE).setLeatherArmorColor(Color.PURPLE)).setName(u() + "Plastron ancestral")
+				.setArmor(15).setHealth(200).setLevel(40).setDamageBuff(-10).shineAndUnbreak()
 		.toItemStack());
 		
 	
