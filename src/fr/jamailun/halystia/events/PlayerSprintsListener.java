@@ -32,12 +32,11 @@ public class PlayerSprintsListener extends HalystiaListener {
 					return;
 				}
 				timer++;
-				if(timer > 19) {
+				if(timer > 8) {
 					timer = 0;
 					p.setFoodLevel(p.getFoodLevel() - 1);
 				}
 			}
 		}.runTaskTimer(main, 4L, 4L);
 	}
-
 }
