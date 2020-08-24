@@ -163,7 +163,7 @@ public final class NpcManager {
 			
 			//Ensuite, si le npc commence une quete
 			Set<Quest> starting = main.getQuestManager().getQuestsStartedByNPC(npc);
-			starting.removeIf(q -> adv.knows(q));
+			starting.removeIf(q -> adv.knows(q) || ! q.hasRequiredTags(player) );
 			if(starting.isEmpty()) {
 				excl.changeState(player, ExclamationType.NONE);
 				continue;

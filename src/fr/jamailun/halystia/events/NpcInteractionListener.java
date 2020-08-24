@@ -153,7 +153,7 @@ public class NpcInteractionListener extends HalystiaListener {
 	//	System.out.println("quete non commencée");
 
 		//Quête non commencée : on la commence :D
-		if(quest.playerHasLevel(p)) {
+		if(quest.playerHasLevel(p) && quest.hasRequiredTags(p)) {
 			npc.setAsSpeaker(p);
 			int size = quest.sendIntroduction(npc, p);
 			Bukkit.getScheduler().runTaskLater(main, new Runnable() {

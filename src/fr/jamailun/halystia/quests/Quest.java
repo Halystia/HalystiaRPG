@@ -50,6 +50,7 @@ public class Quest extends FileDataRPG {
 	private ItemStack[] loots;
 	private QuestStep[] steps;
 	private List<String> tagsGifts;
+	private List<String> tagsRequired;
 	
 	private final HalystiaRPG main;
 	private Messages intro;
@@ -98,6 +99,7 @@ public class Quest extends FileDataRPG {
 		for(int i = 0; i < loots.length; i++)
 			loots[i] = config.getItemStack("gifts.loots."+i);
 		tagsGifts = config.getStringList("gifts.tags");
+		tagsRequired = config.getStringList("tags-required");
 
 		valid = true;
 		steps = new QuestStep[config.getInt("steps.n")];
@@ -137,6 +139,8 @@ public class Quest extends FileDataRPG {
 			config.set("gifts.xp", -1);
 		if(!config.contains("gifts.tags"))
 			config.set("gifts.tags", new ArrayList<>());
+		if(!config.contains("tags-required"))
+			config.set("tags-required", new ArrayList<>());
 		if(!config.contains("gifts.loots.n"))
 			config.set("gifts.loots.n", 0);
 		if(!config.contains("steps.n"))
@@ -186,6 +190,33 @@ public class Quest extends FileDataRPG {
 			}
 			save();
 		}
+	}
+	
+	private void saveRequiredTags() {
+		synchronized (file) {
+			config.set("tags-required", tagsRequired);
+			save();
+		}
+	}
+	
+	public List<String> getRequiredTags() {
+		return new ArrayList<>(tagsRequired);
+	}
+	
+	public boolean addRequiredTag(String tag) {
+		if(tag == null || tag.isEmpty() || tagsGifts.contains(tag) || tagsRequired.contains(tag))
+			return false;
+		tagsRequired.add(tag);
+		saveRequiredTags();
+		return true;
+	}
+	
+	public boolean removeRequiredTag(String tag) {
+		if(!tagsRequired.contains(tag))
+			return false;
+		tagsRequired.remove(tag);
+		saveRequiredTags();
+		return true;
 	}
 
 	public void clearLoots() {
@@ -251,6 +282,11 @@ public class Quest extends FileDataRPG {
 			config.set("gifts.tags", tagsGifts);
 			save();
 		}
+	}
+	
+	public void clearTagsRequired() {
+		tagsRequired.clear();
+		saveRequiredTags();
 	}
 	
 	public String getID() {
@@ -653,5 +689,14 @@ public class Quest extends FileDataRPG {
 		if(id < 0 || id >= steps.length)
 			return null;
 		return steps[id].getLoot();
+	}
+
+	public boolean hasRequiredTags(Player p) {
+		List<String> tags = main.getDataBase().getTagsOfPlayer(p);
+		for(String tag : tagsRequired) {
+			if(tags.contains(tag))
+				tags.remove(tag);
+		}
+		return tags.isEmpty();
 	}
 }
