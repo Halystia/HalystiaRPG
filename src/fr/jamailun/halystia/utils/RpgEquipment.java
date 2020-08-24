@@ -22,12 +22,15 @@ public class RpgEquipment {
 	public static final String ARMOR_BEGIN = ChatColor.BLUE + "Armure : ";
 	public static final String SPEED_BEGIN = ChatColor.BLUE + "Vitesse bonus : ";
 	public static final String MANA_BEGIN = ChatColor.BLUE + "Mana bonus : ";
+	public static final String LIFESTEAL_BEGIN = ChatColor.BLUE + "Vol de vie : ";
 	public static final String LEVEL_BEGIN = ChatColor.GRAY + "Équipement de niveau"+ChatColor.GOLD+" ";
 	
 	protected List<String> addionalLore;
 	protected int level = 0;
 	protected int health, armor, mana, damagesInt;
 	protected double speed, damageBuff;
+	protected double lifeSteal;
+	
 	protected ItemBuilder item;
 	
 	public RpgEquipment(Material material) {
@@ -61,6 +64,8 @@ public class RpgEquipment {
 			item.addLoreLine(DAMAGES_INT_BEGIN + getSymbol(damagesInt) + Math.abs(damagesInt));
 		if(damageBuff != 0)
 			item.addLoreLine(DAMAGES_BUFF_BEGIN + getSymbol(damageBuff) + deF.format(Math.abs(damageBuff)) + " %");
+		if(lifeSteal > 0)
+			item.addLoreLine(HEALTH_BEGIN + getSymbol(lifeSteal) + Math.abs(lifeSteal));
 		if( ! addionalLore.isEmpty()) {
 			item.addLoreLine("");
 			addionalLore.forEach(l -> item.addLoreLine(l));
@@ -117,6 +122,11 @@ public class RpgEquipment {
 				if(line.contains(DAMAGES_BUFF_BEGIN)) {
 					String nb = array[4];
 					damageBuff = Double.parseDouble(nb) * (double)readSymbol(array[3]);
+					continue;
+				}
+				if(line.contains(LIFESTEAL_BEGIN)) {
+					String nb = array[5];
+					lifeSteal = Double.parseDouble(nb) * (double)readSymbol(array[4]);
 					continue;
 				}
 			} catch(NumberFormatException | IndexOutOfBoundsException e) {
@@ -243,6 +253,15 @@ public class RpgEquipment {
 		default:
 			break;
 		}
+	}
+
+	public double getLifeSteal() {
+		return Math.max(0, lifeSteal);
+	}
+	
+	public RpgEquipment setLifeSteal(double lf) {
+		this.lifeSteal = lf;
+		return this;
 	}
 	
 }

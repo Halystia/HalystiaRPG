@@ -17,6 +17,9 @@ public class Statistics {
 	// Damages (bruts + buffs)
 	private double baseDamages, baseDamagesBuff, armorDamages, armorDamagesBuff;
 	
+	//Autre
+	private double lifeSteal;
+	
 	
 	private PlayerArmor playerArmor;
 	
@@ -43,6 +46,7 @@ public class Statistics {
 		baseArmor = level / 10;
 		baseDamages = level / 5 + .9;
 		baseDamagesBuff = 1.0;
+		lifeSteal = 0;
 		
 	//	Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "JOUEUR TOTAL : §aarmor="+getArmor()+", §dhealth="+getMaxHealth()+", §fspeed="+getSpeed()+", §cdmgs="+getDamages()+", §bmana="+getMaxMana()+".");
 	}
@@ -54,6 +58,7 @@ public class Statistics {
 		armorMaxMana = playerArmor.getMana();
 		armorDamages = playerArmor.getDamagesInteger();
 		armorDamagesBuff = playerArmor.getDamageBuff();
+		lifeSteal += playerArmor.getLifeSteal();
 		
 	//	Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "ARMURE UNQUEMENT : §aarmor="+playerArmor.getArmor()+", §dhealth="+playerArmor.getHealth()+", §fspeed="+playerArmor.getSpeed()+", §cdmgs="+playerArmor.getDamagesInteger()
 	//		+", dmgsBuff=" + playerArmor.getDamageBuff() +"%, §bmana="+playerArmor.getMana()+".");
@@ -77,6 +82,10 @@ public class Statistics {
 	
 	public double getDamages() {
 		return Math.max(0, (baseDamages + Math.max(0, armorDamages) ) * (baseDamagesBuff + (armorDamagesBuff/100.0)) );
+	}
+	
+	public double getLifeStealPercent() {
+		return lifeSteal;
 	}
 	
 	public void levelChanged(int level) {

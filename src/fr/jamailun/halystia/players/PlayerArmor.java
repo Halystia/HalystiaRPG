@@ -15,6 +15,7 @@ public class PlayerArmor {
 	protected final Map<EquipmentSlot, RpgEquipment> items;
 	protected int health, armor, mana, damages;
 	protected double speed, damageBuff;
+	protected double lifeSteal;
 	
 	public PlayerArmor(Player player) {
 		items = new HashMap<>();
@@ -34,6 +35,7 @@ public class PlayerArmor {
 		speed = 0;
 		damageBuff = 0;
 		damages = 0;
+		lifeSteal = 0;
 		for(RpgEquipment equip : items.values()) {
 			health += equip.getHealth();
 			armor += equip.getArmor();
@@ -41,6 +43,7 @@ public class PlayerArmor {
 			speed += equip.getSpeed();
 			damages += equip.getDamagesInt();
 			damageBuff += equip.getDamageBuff();
+			lifeSteal += equip.getLifeSteal();
 		}
 	}
 	
@@ -71,6 +74,10 @@ public class PlayerArmor {
 	
 	public double getDamageBuff() {
 		return damageBuff;
+	}
+	
+	public double getLifeSteal() {
+		return lifeSteal;
 	}
 	
 	public int getDamagesInteger() {
