@@ -73,6 +73,7 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 		}
 		
 		exclamations = new ExclamationManagement(this);
+		
 	}
 	
 	@Override
@@ -85,6 +86,17 @@ public class CitizenNpc2 extends FileDataRPG implements RpgNpc {
 			npc.addTrait(HalystiaRpgTrait.class);
 		}
 		this.npc = npc;
+		npc.getNavigator().getLocalParameters().addRunCallback(new Runnable() {
+			int delay = 0;
+			@Override
+			public void run() {
+				delay++;
+				if(delay > 5) {
+					delay = 0;
+					getExclamation().npcMoved(npc.getEntity().getLocation());
+				}
+			}
+		});
 	}
 	
 	public void spawn(Location location) {

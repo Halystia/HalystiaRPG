@@ -48,15 +48,12 @@ public class ExclamationManagement {
 		recipes.put(uuid, new ExclamationServerSide(npc.getLocation()));
 	}
 	
-	public void npcMoved() {
+	public void npcMoved(Location location) {
 		try {
-			npc.getLocation();
-		} catch(Exception e) {
-			return;
-		}
-		recipes.forEach((uid, exc) -> {
-			exc.move(npc.getLocation());
-		});
+			recipes.forEach((uid, exc) -> {
+				exc.move(location);
+			});
+		} catch(Exception e) {}
 	}
 
 	public static enum ExclamationType {
@@ -115,7 +112,7 @@ public class ExclamationManagement {
 		}
 		
 		public void move(Location loc) {
-			standServer.teleport( loc );
+			this.loc = loc;
 		}
 
 		public void delete() {
@@ -139,7 +136,6 @@ public class ExclamationManagement {
 			h += 0.005 * (up ? 1 : -1);
 			if(h > 0.06 || h < -0.06)
 				up = ! up;
-			standServer.teleport( new Location(loc.getWorld(), loc.getX(),  loc.getY() + h,  loc.getZ(), rot, 0) );
 			standClient.setLocation(loc.getX(), loc.getY() + h, loc.getZ(), rot, 0);
 			PacketPlayOutEntityTeleport packet = new PacketPlayOutEntityTeleport(standClient);
 			((CraftPlayer)recipe).getHandle().playerConnection.sendPacket(packet);

@@ -40,10 +40,10 @@ import fr.jamailun.halystia.quests.steps.QuestStepType;
 public class CommandEditQuests extends HalystiaCommand {
 
 	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "level", "loots", "xp", "rename", "steps", "list", "intro", "reset", "reload", "tags", "need-tags"));
-	private static final Set<String> loots = new HashSet<>(Arrays.asList("clear", "list", "add", "remove"));
+	private static final Set<String> loots = new HashSet<>(Arrays.asList("clear", "list", "add", "remove", "give"));
 	private static final Set<String> steps = new HashSet<>(Arrays.asList("list", "create", "remove", "message", "loot"));
 	private static final Set<String> messages = new HashSet<>(Arrays.asList("see", "add", "remove", "clear", "set", "insert"));
-	private static final Set<String> lootStep = new HashSet<>(Arrays.asList("see", "set", "clear", "give"));
+	private static final Set<String> lootStep = new HashSet<>(Arrays.asList("see", "set", "clear"));
 	
 	private final NpcManager npcs;
 	private final QuestManager quests;

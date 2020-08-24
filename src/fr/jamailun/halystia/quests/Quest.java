@@ -694,9 +694,9 @@ public class Quest extends FileDataRPG {
 	public boolean hasRequiredTags(Player p) {
 		List<String> tags = main.getDataBase().getTagsOfPlayer(p);
 		for(String tag : tagsRequired) {
-			if(tags.contains(tag))
-				tags.remove(tag);
+			if( ! tags.contains(tag) )
+				return false;
 		}
-		return tags.isEmpty();
+		return true;
 	}
 }
