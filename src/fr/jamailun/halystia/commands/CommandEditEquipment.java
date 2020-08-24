@@ -22,7 +22,7 @@ public class CommandEditEquipment extends HalystiaCommand {
 		super(main, "edit-equipment");
 	}
 	
-	private final static List<String> attr = Arrays.asList("health", "mana", "armor", "damages", "damageBuff");
+	private final static List<String> attr = Arrays.asList("health", "mana", "armor", "damages", "damageBuff", "level");
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String label, String[] args) {
@@ -52,6 +52,9 @@ public class CommandEditEquipment extends HalystiaCommand {
 		
 		if( args.length < 2 ) {
 			switch(args[0]) {
+			case "level":
+				p.sendMessage(ChatColor.GRAY + "Level : " + item.getHealth());
+				break;
 			case "health":
 				p.sendMessage(ChatColor.GRAY + "Vie : " + item.getHealth());
 				break;
@@ -80,6 +83,9 @@ public class CommandEditEquipment extends HalystiaCommand {
 		}
 		
 		switch(args[0]) {
+		case "level":
+			item.setLevel((int) data);
+			break;
 		case "health":
 			item.setHealth((int) data);
 			break;
