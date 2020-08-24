@@ -39,11 +39,11 @@ import fr.jamailun.halystia.quests.steps.QuestStepType;
 
 public class CommandEditQuests extends HalystiaCommand {
 
-	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "level", "loots", "xp", "rename", "steps", "list", "intro", "reset", "reload", "tags"));
+	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "level", "loots", "xp", "rename", "steps", "list", "intro", "reset", "reload", "tags", "need-tags"));
 	private static final Set<String> loots = new HashSet<>(Arrays.asList("clear", "list", "add", "remove"));
 	private static final Set<String> steps = new HashSet<>(Arrays.asList("list", "create", "remove", "message", "loot"));
 	private static final Set<String> messages = new HashSet<>(Arrays.asList("see", "add", "remove", "clear", "set", "insert"));
-	private static final Set<String> lootStep = new HashSet<>(Arrays.asList("see", "set", "clear"));
+	private static final Set<String> lootStep = new HashSet<>(Arrays.asList("see", "set", "clear", "give"));
 	
 	private final NpcManager npcs;
 	private final QuestManager quests;
@@ -335,9 +335,25 @@ public class CommandEditQuests extends HalystiaCommand {
 					return true;
 				}
 				if(quest.removeLoot(slot))
-					p.sendMessage(GREEN + "Loot supprimé avec succès.");
+					p.sendMessage(GREEN + "Loot n°"+slot+" avec succès.");
 				else
 					p.sendMessage(RED + "Le loot n'a pas pu être supprimé.");
+				return true;
+			}
+			if(args[2].equals("give")) {
+				if(args.length < 4) {
+					p.sendMessage(RED + "Il faut préciser l'id de loot à giver. Voir /"+label+ " loots " + args[1] + " list.");
+					return true;
+				}
+				int slot = -1;
+				try {
+					slot = Integer.parseInt(args[3]);
+				} catch (NumberFormatException e) {
+					p.sendMessage(RED + "La valeur ["+args[3]+"] n'est pas une valeur de numéro valide.");
+					return true;
+				}
+				p.getInventory().addItem(quest.getLoots().get(slot));
+				p.sendMessage(GREEN + "Loot n°"+slot+" givé avec succès.");
 				return true;
 			}
 			
@@ -371,7 +387,7 @@ public class CommandEditQuests extends HalystiaCommand {
 				if(quest.addTagGift(tag))
 					p.sendMessage(GREEN + "Tag de récompense ("+tag+") ajouté avec succès.");
 				else
-					p.sendMessage(RED + "Le tag ("+tag+") était déjà là.");
+					p.sendMessage(RED + "Le tag ("+tag+") n'était pas là.");
 				return true;
 			}
 			if(args[2].equals("remove")) {
@@ -379,6 +395,45 @@ public class CommandEditQuests extends HalystiaCommand {
 					p.sendMessage(GREEN + "Tag de récompense ("+tag+") ajouté avec succès.");
 				else
 					p.sendMessage(RED + "Le tag ("+tag+") était déjà là.");
+				return true;
+			}
+			sendHelpTags(p, label, quest.getDisplayName());
+			return true;
+		}
+		if(args[0].equals("need-tags")) {
+			if(args.length < 3) {
+				sendHelpTags(p, label, quest.getDisplayName());
+				return true;
+			}
+			if(args[2].equals("clear")) {
+				quest.clearTagsRequired();
+				p.sendMessage(GREEN + "Tags nécéessaires supprimés avec succès.");
+				return true;
+			}
+			if(args[2].equals("list")) {
+				p.sendMessage(BLUE + "< Tags nécessaires ["+quest.getID()+"] >");
+				for(String tag : quest.getRequiredTags())
+					p.sendMessage(BLUE+"["+GREEN+tag+BLUE+"]");
+				p.sendMessage(BLUE + "< ---------------- >");
+				return true;
+			}
+			if(args.length < 4) {
+				p.sendMessage(RED + "Il faut préciser le tag à " + args[2]+".");
+				return true;
+			}
+			final String tag = args[3].toLowerCase();
+			if(args[2].equals("add")) {
+				if(quest.addRequiredTag(tag))
+					p.sendMessage(GREEN + "Tag nécessaire ("+tag+") ajouté avec succès.");
+				else
+					p.sendMessage(RED + "Le tag ("+tag+") était déjà là (ou dans les tags données, ce qui est interdit).");
+				return true;
+			}
+			if(args[2].equals("remove")) {
+				if(quest.removeRequiredTag(tag))
+					p.sendMessage(GREEN + "Tag nécessaire ("+tag+") ajouté avec succès.");
+				else
+					p.sendMessage(RED + "Le tag ("+tag+") n'était pas là.");
 				return true;
 			}
 			sendHelpTags(p, label, quest.getDisplayName());
@@ -669,7 +724,7 @@ public class CommandEditQuests extends HalystiaCommand {
 		if(args.length <= 2)
 			return quests.getAllConfigIdsStream().filter(str -> str.startsWith(args[1])).collect(Collectors.toList());
 		if(args.length <= 3)
-			if(args[0].equals("loots") || args[0].equals("tags"))
+			if(args[0].equals("loots") || args[0].equals("tags") || args[0].equals("need-tags"))
 				return loots.stream().filter(str -> str.startsWith(args[2])).collect(Collectors.toList());
 			else if(args[0].equals("steps"))
 				return steps.stream().filter(str -> str.startsWith(args[2])).collect(Collectors.toList());
@@ -691,7 +746,7 @@ public class CommandEditQuests extends HalystiaCommand {
 					return list;
 				}
 				return new ArrayList<>();
-			} else if(args[0].equals("tags")) {
+			} else if(args[0].equals("tags") || args[0].equals("need-tags")) {
 				if(args[2].equals("remove")) {
 					Quest quest = quests.getQuestById(args[1]);
 					if(quest == null)
