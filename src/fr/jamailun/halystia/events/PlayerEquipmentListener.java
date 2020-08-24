@@ -2,6 +2,7 @@ package fr.jamailun.halystia.events;
 
 import static org.bukkit.ChatColor.RED;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -42,7 +43,7 @@ public class PlayerEquipmentListener extends HalystiaListener {
 			if(e.getNewArmorPiece() != null) {
 				Classe ob = main.getTradeManager().getClasseOfItem(e.getNewArmorPiece());
 				if(classe != ob && ob != Classe.NONE) {
-					e.setCancelled(true);
+					e.setCancelled(p.getGameMode() != GameMode.CREATIVE);
 					p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée pour équiper cet objet !");
 					p.updateInventory();
 					return;
@@ -50,7 +51,7 @@ public class PlayerEquipmentListener extends HalystiaListener {
 			}
 			if(new RpgEquipment(e.getNewArmorPiece()).getLevel() > pc.getLevel()) {
 				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas le niveau adaptée au maniement de cet objet !");
-				e.setCancelled(true);
+				e.setCancelled(p.getGameMode() != GameMode.CREATIVE);
 				return;
 			}
 			pc.playerEquipItem(translate(e.getType()), e.getNewArmorPiece());
@@ -82,19 +83,20 @@ public class PlayerEquipmentListener extends HalystiaListener {
 		final Player p = e.getPlayer();
 		PlayerData pc = main.getClasseManager().getPlayerData(p);
 		if(pc == null) {
-			e.setCancelled(true);
+			e.setCancelled(p.getGameMode() != GameMode.CREATIVE);
 			return;
 		}
 		ItemStack item = p.getInventory().getItem(e.getNewSlot());
 		if(item != null) {
 			Classe ob = main.getTradeManager().getClasseOfItem(item);
 			if(pc.getClasse() != ob && ob != Classe.NONE) {
-				e.setCancelled(true);
+				e.setCancelled(p.getGameMode() != GameMode.CREATIVE);
 				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas la classe adaptée pour équiper cet objet !");
 				return;
 			}
 			if(new RpgEquipment(item).getLevel() > pc.getLevel()) {
 				p.sendMessage(HalystiaRPG.PREFIX + RED + "Tu n'as pas le niveau adaptée au maniement de cet objet !");
+				e.setCancelled(p.getGameMode() != GameMode.CREATIVE);
 				return;
 			}
 		}
