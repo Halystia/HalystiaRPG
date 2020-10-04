@@ -52,6 +52,8 @@ public class Quest extends FileDataRPG {
 	private List<String> tagsGifts;
 	private List<String> tagsRequired;
 	
+	private boolean mainQuest = false;
+	
 	private final HalystiaRPG main;
 	private Messages intro;
 	
@@ -109,6 +111,8 @@ public class Quest extends FileDataRPG {
 		
 		if(npc == null)
 			npcID = config.getString("starts");
+
+		mainQuest = config.getBoolean("main-quest");
 	}
 
 	public int getXp() {
@@ -147,6 +151,8 @@ public class Quest extends FileDataRPG {
 			config.set("steps.n", 0);
 		if(!config.contains("intro"))
 			config.set("intro", new ArrayList<>());
+		if(!config.contains("main-quest"))
+			mainQuest = config.getBoolean("main-quest");
 		System.out.println("Lecture de la quete "+id+".");
 		save();
 	}
@@ -197,6 +203,18 @@ public class Quest extends FileDataRPG {
 			config.set("tags-required", tagsRequired);
 			save();
 		}
+	}
+	
+	public void setMainQuest(boolean is) {
+		mainQuest = is;
+		synchronized (file) {
+			config.set("main-quest", is);
+			save();
+		}
+	}
+	
+	public boolean isMainQuest() {
+		return mainQuest;
 	}
 	
 	public List<String> getRequiredTags() {
@@ -662,7 +680,7 @@ public class Quest extends FileDataRPG {
 			save();
 		}
 	}
-
+	
 	public boolean clearLootStep(int id) {
 		if(id < 0 || id >= steps.length)
 			return false;

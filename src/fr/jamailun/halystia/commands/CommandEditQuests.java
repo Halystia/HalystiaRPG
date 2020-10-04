@@ -1,6 +1,6 @@
 package fr.jamailun.halystia.commands;
 
-import static org.bukkit.ChatColor.AQUA;
+import static org.bukkit.ChatColor.*;
 import static org.bukkit.ChatColor.BLUE;
 import static org.bukkit.ChatColor.DARK_RED;
 import static org.bukkit.ChatColor.GRAY;
@@ -39,7 +39,7 @@ import fr.jamailun.halystia.quests.steps.QuestStepType;
 
 public class CommandEditQuests extends HalystiaCommand {
 
-	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "level", "loots", "xp", "rename", "steps", "list", "intro", "reset", "reload", "tags", "need-tags"));
+	private static final Set<String> firsts = new HashSet<>(Arrays.asList("create", "remove", "level", "loots", "xp", "rename", "steps", "list", "intro", "reset", "reload", "tags", "need-tags", "main-quest"));
 	private static final Set<String> loots = new HashSet<>(Arrays.asList("clear", "list", "add", "remove", "give"));
 	private static final Set<String> steps = new HashSet<>(Arrays.asList("list", "create", "remove", "message", "loot"));
 	private static final Set<String> messages = new HashSet<>(Arrays.asList("see", "add", "remove", "clear", "set", "insert"));
@@ -133,9 +133,32 @@ public class CommandEditQuests extends HalystiaCommand {
 			return true;
 		}
 		
+		if(args[0].equals("main-quest")) {
+			quests.getPlayerData(p).resetQuest(quest);
+			p.sendMessage(ChatColor.GREEN + "ok !");
+			return true;
+		}
+		
 		if(args[0].equals("remove")) {
-			quests.removeQuest(quest);
-			p.sendMessage(ChatColor.GREEN + "La quête ["+args[1]+"] a été supprimé avec succès !");
+			boolean now = quest.isMainQuest();
+			if(args.length == 2) {
+				quest.setMainQuest( ! now );
+				p.sendMessage(GREEN +"Quête " +quest.getDisplayName() +GREEN+ ", donnée MAIN-QUEST : " + LIGHT_PURPLE + (!now) + GREEN+".");
+				return true;
+			}
+			boolean newB;
+			try {
+				newB = Boolean.parseBoolean(args[2]);
+			} catch(Exception ee) {
+				p.sendMessage(ChatColor.RED + "Sous-argument inconnu : '" + args[2] + "'.");
+				return true;
+			}
+			if(newB == now) {
+				p.sendMessage(ChatColor.RED + "Rien n'a été changé.");
+				return true;
+			}
+			quest.setMainQuest( newB );
+			p.sendMessage(GREEN +"Quête " +quest.getDisplayName() +GREEN+ ", donnée MAIN-QUEST : " + LIGHT_PURPLE + newB + GREEN+".");
 			return true;
 		}
 		
@@ -717,6 +740,7 @@ public class CommandEditQuests extends HalystiaCommand {
 		return true;
 	}
 	
+	private final static List<String> booleansValues = Arrays.asList("true", "false");
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		if(args.length <= 1)
@@ -732,6 +756,8 @@ public class CommandEditQuests extends HalystiaCommand {
 				return npcs.getAllConfigIds().stream().filter(str -> str.startsWith(args[2])).collect(Collectors.toList());
 			else if(args[0].equals("intro"))
 				return messages.stream().filter(str -> str.startsWith(args[2])).collect(Collectors.toList());
+			else if(args[0].equals("main-quest"))
+				return booleansValues.stream().filter(str -> str.startsWith(args[2].toLowerCase())).collect(Collectors.toList());
 		if(args.length <= 4) {
 			if(args[0].equals("steps")) {
 				if(args[2].equals("create")) {

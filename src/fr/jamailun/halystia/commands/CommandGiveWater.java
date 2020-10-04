@@ -20,7 +20,7 @@ public class CommandGiveWater extends HalystiaCommand {
 	@Override
 	public boolean onCommand(CommandSender sender, Command arg1, String arg2, String[] args) {
 		if( (sender instanceof Player)) {
-			((Player) sender).getInventory().addItem(main.getJobManager().getItemManager().getWithKey("water"));
+			((Player) sender).getInventory().addItem(main.getJobManager().getItemManager().getWithKey("water").generate());
 			return true;
 		}
 		
@@ -36,7 +36,7 @@ public class CommandGiveWater extends HalystiaCommand {
 				}
 			}
 			if(cible != null)
-				cible.getInventory().addItem(main.getJobManager().getItemManager().getWithKey("water"));
+				cible.getInventory().addItem(main.getJobManager().getItemManager().getWithKey("water").generate());
 			return true;
 		}
 		

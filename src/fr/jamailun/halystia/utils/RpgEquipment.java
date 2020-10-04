@@ -46,6 +46,10 @@ public class RpgEquipment {
 		readItem();
 	}
 	
+	public ItemBuilder toItemBuilder() {
+		return item.clone();
+	}
+	
 	private final DecimalFormat deF = new DecimalFormat("#.##");
 	
 	public ItemStack toItemStack() {
@@ -65,7 +69,7 @@ public class RpgEquipment {
 		if(damageBuff != 0)
 			item.addLoreLine(DAMAGES_BUFF_BEGIN + getSymbol(damageBuff) + deF.format(Math.abs(damageBuff)) + " %");
 		if(lifeSteal > 0)
-			item.addLoreLine(HEALTH_BEGIN + getSymbol(lifeSteal) + Math.abs(lifeSteal));
+			item.addLoreLine(LIFESTEAL_BEGIN + getSymbol(lifeSteal) + deF.format(Math.abs(lifeSteal)) + " %");
 		if( ! addionalLore.isEmpty()) {
 			item.addLoreLine("");
 			addionalLore.forEach(l -> item.addLoreLine(l));

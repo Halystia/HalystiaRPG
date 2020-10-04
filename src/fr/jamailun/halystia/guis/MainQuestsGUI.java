@@ -1,6 +1,6 @@
 package fr.jamailun.halystia.guis;
 
-import static org.bukkit.ChatColor.BLUE;
+import static org.bukkit.ChatColor.*;
 import static org.bukkit.ChatColor.GRAY;
 import static org.bukkit.ChatColor.GREEN;
 import static org.bukkit.ChatColor.RED;
@@ -88,6 +88,11 @@ public class MainQuestsGUI extends MenuGUI {
 				builder.setLore(step.getObjectiveDescription());
 				builder.addLoreLine(" ");
 				builder.addLoreLine(GRAY + "[Étape " + GREEN + (step.getStep()+1) + GRAY + " sur " + (quest.getHowManySteps()) + "]");
+				if(step.getQuest().isMainQuest()) {
+					builder.addLoreLine(" ");
+					builder.addLoreLine(LIGHT_PURPLE + "(Quête principale)");
+				}
+				builder.addLoreLine(" ");
 				for(String line : additionalLore)
 					builder.addLoreLine(line);
 				builder.addItemFlag(ItemFlag.HIDE_ATTRIBUTES);

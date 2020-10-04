@@ -48,7 +48,6 @@ public class Statistics {
 		baseDamagesBuff = 1.0;
 		lifeSteal = 0;
 		
-	//	Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "JOUEUR TOTAL : §aarmor="+getArmor()+", §dhealth="+getMaxHealth()+", §fspeed="+getSpeed()+", §cdmgs="+getDamages()+", §bmana="+getMaxMana()+".");
 	}
 	
 	private void calculateArmor() {
@@ -60,8 +59,6 @@ public class Statistics {
 		armorDamagesBuff = playerArmor.getDamageBuff();
 		lifeSteal += playerArmor.getLifeSteal();
 		
-	//	Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "ARMURE UNQUEMENT : §aarmor="+playerArmor.getArmor()+", §dhealth="+playerArmor.getHealth()+", §fspeed="+playerArmor.getSpeed()+", §cdmgs="+playerArmor.getDamagesInteger()
-	//		+", dmgsBuff=" + playerArmor.getDamageBuff() +"%, §bmana="+playerArmor.getMana()+".");
 	}
 
 	public double getMaxHealth() {

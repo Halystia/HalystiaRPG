@@ -11,13 +11,14 @@ import org.bukkit.entity.Player;
 
 import fr.jamailun.halystia.HalystiaRPG;
 import fr.jamailun.halystia.jobs.JobResult.Type;
+import fr.jamailun.halystia.sql.temporary.ItemDataBase;
 
 public final class JobsManager {
 	
 	private List<JobType> jobs;
 	private final JobBlockManager blocs;
 	private final JobCraftsManager crafts;
-	private final JobsItemManager items;
+	private final ItemDataBase items;
 	
 	public JobsManager() {
 		jobs = new ArrayList<>();
@@ -34,7 +35,7 @@ public final class JobsManager {
 		return blocs;
 	}
 	
-	public JobsItemManager getItemManager() {
+	public ItemDataBase getItemManager() {
 		return items;
 	}
 	

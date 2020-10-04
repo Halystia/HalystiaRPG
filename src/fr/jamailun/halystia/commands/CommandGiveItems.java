@@ -16,8 +16,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs.JobsItemManager;
 import fr.jamailun.halystia.jobs.JobsManager;
+import fr.jamailun.halystia.sql.temporary.ItemDataBase;
 import fr.jamailun.halystia.utils.ItemBuilder;
 import fr.jamailun.halystia.utils.MenuGUI;
 
@@ -49,7 +49,7 @@ public class CommandGiveItems extends HalystiaCommand {
 	}
 	
 	private void givePlayerItem(Player p, String key) {
-		ItemStack item = jobs.getItemManager().getWithKey(key);
+		ItemStack item = jobs.getItemManager().getWithKey(key).generate();
 		if(item == null) {
 			p.sendMessage(HalystiaRPG.PREFIX + ChatColor.RED + "Item '"+key+"' non reconnu.");
 			return;
@@ -67,7 +67,7 @@ public class CommandGiveItems extends HalystiaCommand {
 	
 	private void openGUI(final Player player, final int page) {
 		
-		JobsItemManager items = main.getJobManager().getItemManager();
+		ItemDataBase items = main.getJobManager().getItemManager();
 		final List<String> keys = items.getAllKeys();
 		
 		final int nbPerPage = 9*5;
@@ -106,7 +106,7 @@ public class CommandGiveItems extends HalystiaCommand {
 				break;
 			int index = ( (page-1) * nbPerPage ) + i;
 			String key = keys.get(index);
-			gui.addOption(new ItemBuilder(items.getWithKey(key)).addLoreLine(ChatColor.GRAY+"Id: ["+key+"]").toItemStack(), i);
+			gui.addOption(new ItemBuilder(items.getWithKey(key).generate()).addLoreLine(ChatColor.GRAY+"Id: ["+key+"]").toItemStack(), i);
 		}
 		
 		for(int i = nbPerPage; i < gui.getSize(); i++)

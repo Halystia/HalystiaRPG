@@ -41,8 +41,8 @@ public class Banque {
 		rules = new BanqueRules()
 				.changeCostForLevel(1, new ArrayList<>())
 				.changeCostForLevel(2, new ItemStack(Material.EMERALD_BLOCK, 16))
-				.changeCostForLevel(3, jobs.getItemManager().getWithKey("gold2", 32), new ItemStack(Material.EMERALD_BLOCK, 32))
-				.changeCostForLevel(4, jobs.getItemManager().getWithKey("gold2", 64), new ItemStack(Material.EMERALD_BLOCK, 64));
+				.changeCostForLevel(3, jobs.getItemManager().getWithKey("gold2").getRpgItem().toItemBuilder().setAmount(32).toItemStack(), new ItemStack(Material.EMERALD_BLOCK, 32))
+				.changeCostForLevel(4, jobs.getItemManager().getWithKey("gold2").getRpgItem().toItemBuilder().setAmount(64).toItemStack(), new ItemStack(Material.EMERALD_BLOCK, 64));
 	}
 	
 	public BanqueRules getCurrentRules() {

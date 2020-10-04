@@ -43,7 +43,7 @@ public class JamailunJobExtension {
 			e.printStackTrace();
 		}
 
-		jobs.getItemManager().addAllContent(items);
+		jobs.getItemManager().registerNewAllContent(items);
 	}
 	
 	private Map<String, ItemStack> registerItems() {

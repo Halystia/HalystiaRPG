@@ -448,9 +448,12 @@ public class EntityDamageOtherListener extends HalystiaListener {
 		double localModifier = 1;
 
 		PlayerData pc = main.getClasseManager().getPlayerData(p);
-
+		if(pc == null) {
+			pc = main.getClasseManager().getPlayerData(p);
+		}
+		
 		if(p.getGameMode() != GameMode.CREATIVE) {
-			Classe classe =pc.getClasse();
+			Classe classe = pc.getClasse();
 			if(p.getInventory().getItemInMainHand() != null) {
 				Classe ob = main.getTradeManager().getClasseOfItem(p.getInventory().getItemInMainHand());
 				if(classe != ob && ob != Classe.NONE) {
