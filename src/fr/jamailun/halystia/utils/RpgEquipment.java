@@ -1,18 +1,17 @@
 package fr.jamailun.halystia.utils;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-
+import fr.jamailun.halystia.HalystiaRPG;
+import fr.jamailun.halystia.jobs.model.enchanteur.EnchanteurSources.SourceType;
+import fr.jamailun.halystia.players.PlayerData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
-import fr.jamailun.halystia.HalystiaRPG;
-import fr.jamailun.halystia.jobs.model.enchanteur.EnchanteurSources.SourceType;
-import fr.jamailun.halystia.players.PlayerData;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RpgEquipment {
 

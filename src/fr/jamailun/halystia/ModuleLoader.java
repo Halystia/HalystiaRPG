@@ -1,23 +1,13 @@
 package fr.jamailun.halystia;
 
-import static org.bukkit.ChatColor.BOLD;
-import static org.bukkit.ChatColor.DARK_RED;
-import static org.bukkit.ChatColor.GOLD;
-import static org.bukkit.ChatColor.GREEN;
-import static org.bukkit.ChatColor.RED;
-import static org.bukkit.ChatColor.WHITE;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import static  fr.jamailun.halystia.utils.FileDataRPG.*;
 
-import fr.jamailun.halystia.utils.FileDataRPG;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.bukkit.ChatColor.*;
 
 public class ModuleLoader extends FileDataRPG {
 	

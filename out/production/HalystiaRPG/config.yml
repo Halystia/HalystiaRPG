@@ -1,0 +1,77 @@
+path: 'plugins/HalystiaRPG/'
+
+# The little text that preceeds most messages. Accepts color codes.
+prefix: "&6&lR&6ole&lP&elay | &r"
+
+#Name of the main map. The one with the quests, jobs blocs, ...
+main-map: RolePlay
+
+#List of all dungeons map. Why 'all' ? I don't know, some could use several maps idk.
+# write 'dungeons-maps: []' if you do not intend to use dungeons maps.
+dungeons-maps:
+- donjon_rpg
+
+#Modules to turn on. You can comment lines fot the ones you do't like.
+# More informations on the wiki.
+modules:
+- TITLE
+- MOBS
+- NPCS
+- QUESTS
+- AUBERGISTES
+- BANQUE
+- DONJONS
+- JOBS
+- SPELLS
+- SHOPS
+- CLASSE
+- FISHING
+- BOATS
+- POTIONS
+- ROYAUMES
+
+# -------------------------------------------------------------------- #
+# ------------------------------ SAVING ------------------------------ #
+# -------------------------------------------------------------------- #
+
+# For now, please learn to code and extends 'fr.jamailun.halystia.bdd.temporary.Saver' class.
+# Then register it with 'HalystiaRPG.getInstance().setDataBase(Saver)' :D
+
+# ----------------------------------------------------------------- #
+# ---------------------------- CLASSES ---------------------------- #
+# ----------------------------------------------------------------- #
+
+# Here, you can register all classes data.
+classes:
+  ALCHEMIST:
+    display: "Alchemist"
+    names:
+      '10': "Magician"
+      '30': "Cleric"
+      '80': "Sorcerer"
+      '100': "Wizard"
+    icon: POTION
+  SUMMONEUR:
+    display: "Summoner"
+    names:
+      '10': "Druid"
+      '30': "Chaman"
+      '80': "Vaudou"
+      '100': "Illusionist"
+    icon: EGG
+  SWORDMAN:
+    display: "Swordman"
+    names:
+      '10': "Soldier"
+      '30': "Warrior"
+      '80': "Berserker"
+      '100': "Hero"
+    icon: IRON_SWORD
+  ARCHERY:
+    display: "Archer"
+    names:
+      '10': "Shooter"
+      '30': "Elite Shooter"
+      '80': "Sniper"
+      '100': "Elite Sniper"
+    icon: BOW
